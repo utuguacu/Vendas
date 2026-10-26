@@ -145,6 +145,15 @@ h1 em,h2 em{font-style:italic;color:var(--gold)}
 .msg-act{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 @media (max-width:620px){.msg-fill{grid-template-columns:minmax(0,1fr)}.msgs{grid-template-columns:minmax(0,1fr)}.msg-act{grid-template-columns:minmax(0,1fr)}}
 .docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:22px}
+.msg-fill{grid-template-columns:minmax(0,1fr)!important;gap:14px}
+.mf-row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px;align-items:end}
+.mf-row .seg{display:flex;width:100%}.mf-row .seg label{flex:1;text-align:center}
+.mf-prev{margin:0;font-size:12.5px;color:var(--muted)}
+.mf-prev b{color:var(--fg);font-weight:500}
+.chip-ia{border-style:dashed}
+.ia-box{background:var(--surface);border:1.5px dashed var(--gold);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.ia-box .msg-act .btn{min-width:0;white-space:normal;text-align:center}
+@media (max-width:620px){.mf-row{grid-template-columns:minmax(0,1fr)}}
 .card-admin{display:flex;gap:4px;border-top:1px solid var(--line);padding:6px 8px}
 .card-admin .btn{padding:6px 8px;font-size:12px}
 .note{border:1px dashed var(--line-strong);border-radius:var(--r);padding:28px 22px;text-align:center;color:var(--muted);background:var(--surface)}
@@ -421,18 +430,36 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     <div>
       <div class="eyebrow" id="msgEyebrow">Modelos de mensagem</div>
       <h1>O que dizer <em>em cada situação</em></h1>
-      <p class="lede">Escolha a situação, preencha o nome do cliente e o imóvel, e copie a mensagem pronta para o WhatsApp. Ajuste o que estiver entre [colchetes].</p>
+      <p class="lede">Preencha quem envia, quem recebe e o tipo de imóvel. As mensagens se ajustam sozinhas, inclusive no masculino ou feminino. Depois é só copiar ou enviar no WhatsApp e completar o que estiver entre [colchetes].</p>
     </div>
   </div>
   <div class="msg-fill">
-    <div class="field"><label for="mCliente">Nome do cliente</label><input id="mCliente" placeholder="Ex.: Carlos"></div>
-    <div class="field"><label for="mImovel">Imóvel</label><input id="mImovel" placeholder="Ex.: casa no Terras de São José" list="empList"></div>
-    <div class="field"><label for="mCorretor">Seu nome</label><input id="mCorretor" placeholder="Ex.: Rose"></div>
+    <div class="mf-row">
+      <div class="field"><label for="mCorretor">Seu nome</label><input id="mCorretor" placeholder="Ex.: Rose"></div>
+      <div class="field"><span class="legend">Você é</span><div class="seg"><label><input type="radio" name="corG" id="corM" value="m" checked><span>Corretor</span></label><label><input type="radio" name="corG" id="corF" value="f"><span>Corretora</span></label></div></div>
+    </div>
+    <div class="mf-row">
+      <div class="field"><label for="mCliente">Nome de quem vai receber</label><input id="mCliente" placeholder="Ex.: Carlos ou Ana"></div>
+      <div class="field"><span class="legend">É</span><div class="seg"><label><input type="radio" name="cliG" id="cliM" value="m" checked><span>Homem</span></label><label><input type="radio" name="cliG" id="cliF" value="f"><span>Mulher</span></label></div></div>
+    </div>
+    <div class="mf-row">
+      <div class="field"><label for="mTipo">Tipo de imóvel</label>
+        <select id="mTipo"><option value="">Escolha</option><option value="casa|f">Casa</option><option value="apartamento|m">Apartamento</option><option value="terreno|m">Terreno</option><option value="lote|m">Lote</option><option value="chácara|f">Chácara</option><option value="sítio|m">Sítio</option><option value="fazenda|f">Fazenda</option><option value="área|f">Área</option><option value="sala comercial|f">Sala comercial</option><option value="galpão|m">Galpão</option><option value="imóvel comercial|m">Imóvel comercial</option><option value="imóvel|m">Outro imóvel</option></select></div>
+      <div class="field"><label for="mLocal">Onde fica <span class="opt">(opcional)</span></label><input id="mLocal" placeholder="Ex.: no Terras de São José" list="locList"><datalist id="locList"><option value="no Terras de São José"><option value="no Altavista Reserva"><option value="no Centro de Itu"><option value="em Itu"><option value="em Boituva"></datalist></div>
+    </div>
+    <p class="mf-prev" id="mfPrev"></p>
   </div>
   <div class="toolbar">
     <div class="chips" id="msgChips"></div>
   </div>
   <div class="msgs" id="msgsOut"></div>
+  <article class="ia-box" id="iaBox">
+    <div class="msg-top"><span class="cat">Outra situação</span><h3>Não achou a situação? Monte uma mensagem sob medida</h3><p class="desc">Conte o que está acontecendo. O portal prepara o pedido com o jeito Utu-Guaçu de escrever (amigável, sem travessão e sem emoji) e abre no ChatGPT, que escreve a mensagem para você copiar.</p></div>
+    <div class="field"><label for="iaPara">Quem vai receber</label><select id="iaPara"><option value="é cliente e está buscando um imóvel para comprar">Cliente que quer comprar</option><option value="é dono do imóvel">Proprietário do imóvel</option><option value="tem interesse em alugar">Cliente de locação</option><option value="é de outra imobiliária, e estamos em parceria">Corretor parceiro</option></select></div>
+    <div class="field"><label for="iaSit">O que está acontecendo?</label><textarea id="iaSit" rows="4" placeholder="Ex.: o cliente visitou a casa, gostou, mas disse que a esposa achou o quintal pequeno e ele sumiu há uma semana."></textarea></div>
+    <div class="msg-act"><a class="btn gold" id="iaGo" href="#" target="_blank" rel="noopener">Criar mensagem no ChatGPT</a><button class="btn" type="button" id="iaCopy">Copiar pedido (Gemini ou outro)</button></div>
+    <p class="hint" style="font-size:12px;color:var(--muted);margin:0">Usa os campos lá de cima (seu nome, quem recebe e o imóvel). Confira a mensagem antes de enviar.</p>
+  </article>
 </section>
 
 <!-- ================= PROPOSTA ================= -->
@@ -586,7 +613,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 26/10/2026 21h00</p>
+<p class="ver">Portal de Vendas · versão 26/10/2026 21h10</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -606,54 +633,56 @@ let toastT; function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false
 const DOCS=[
  {id:"proposta",titulo:"Proposta de compra",desc:"Proposta formal com os dados do comprador, do imóvel, valor, forma de pagamento e comissão. Sai em duas folhas: proposta e aceite do vendedor.",abre:"proposta"}
 ];
-/* Modelos de mensagem: mantidos pela gerência via Claude. [cliente], [imóvel] e [corretor] são trocados pelos campos do topo; o resto entre colchetes o corretor completa. */
+/* Modelos de mensagem: mantidos pela gerência via Claude.
+   [cliente], [imóvel] e [corretor] vêm dos campos do topo; o resto entre colchetes o corretor completa.
+   Gênero: {c:masc|fem} = corretor, {k:masc|fem} = cliente, {i:masc|fem} = imóvel escolhido. Nunca usar travessão nem emoji. */
 const MENSAGENS=[
  {id:"capt-anuncio",cat:"Captação",titulo:"Proprietário anunciando por conta própria",quando:"Viu placa, anúncio em portal ou rede social do próprio dono.",
   texto:`Olá, [cliente]! Tudo bem?
 Aqui é [corretor], da Utu-Guaçu Imóveis, de Itu.
 
-Vi o anúncio do seu imóvel ([imóvel]) e fiquei interessado(a) em ajudar na venda. Atendemos hoje clientes buscando exatamente esse perfil na região.
+Vi o anúncio d{i:o|a} {i:seu|sua} [imóvel] e fiquei {c:interessado|interessada} em ajudar na venda. Hoje atendemos clientes buscando exatamente esse perfil na região.
 
 Há mais de 45 anos a Utu-Guaçu é especializada em imóveis de alto padrão e rurais. Cuidamos de tudo para você: fotos profissionais, divulgação no nosso site e nos principais portais, filtro dos interessados, visitas acompanhadas e toda a parte de documentação até a escritura.
 
-Posso te ligar para conversarmos 10 minutinhos sobre como trabalharíamos o seu imóvel?`},
+Posso te ligar para conversarmos 10 minutinhos sobre como trabalharíamos {i:o|a} {i:seu|sua} [imóvel]?`},
  {id:"capt-ativa",cat:"Captação",titulo:"Abordar proprietário de imóvel que não está à venda",quando:"Você conhece um imóvel com o perfil que seus clientes procuram.",
   texto:`Olá, [cliente], tudo bem?
-Sou [corretor], corretor(a) da Utu-Guaçu Imóveis.
+Sou [corretor], {c:corretor|corretora} da Utu-Guaçu Imóveis.
 
-Estou atendendo clientes qualificados procurando um imóvel com o perfil do seu ([imóvel]). Sei que talvez você não esteja pensando em vender, mas gostaria de saber se teria interesse em ouvir uma proposta ou em receber uma avaliação de mercado atualizada, sem compromisso.
+Estou atendendo clientes qualificados procurando um imóvel com o perfil d{i:o|a} {i:seu|sua} [imóvel]. Sei que talvez você não esteja pensando em vender, mas gostaria de saber se teria interesse em ouvir uma proposta ou em receber uma avaliação de mercado atualizada, sem compromisso.
 
-Se fizer sentido, combinamos um café ou uma ligação rápida. Obrigado(a) pela atenção!`},
+Se fizer sentido, combinamos um café ou uma ligação rápida. {c:Obrigado|Obrigada} pela atenção!`},
  {id:"capt-exclus",cat:"Captação",titulo:"Propor exclusividade ao proprietário",quando:"O proprietário vai trabalhar com a gente e você quer a exclusividade.",
-  texto:`[cliente], obrigado(a) pela confiança em deixar o seu imóvel com a Utu-Guaçu.
+  texto:`[cliente], {c:obrigado|obrigada} pela confiança em deixar {i:o|a} {i:seu|sua} [imóvel] com a Utu-Guaçu.
 
 Quero te propor trabalharmos com exclusividade, porque isso muda o resultado:
 • o imóvel ganha destaque no nosso site e nos portais, com fotos e anúncio profissionais;
 • um único preço e uma única apresentação no mercado, o que preserva o valor do imóvel;
-• investimos mais em divulgação e mantemos você informado(a) a cada visita e proposta;
-• toda a negociação e a documentação ficam centralizadas em quem conhece o imóvel a fundo.
+• investimos mais em divulgação e mantemos você {k:informado|informada} a cada visita e proposta;
+• toda a negociação e a documentação ficam com quem conhece o imóvel a fundo.
 
 Posso te enviar a autorização para você olhar com calma?`},
  {id:"lead-primeiro",cat:"Atendimento",titulo:"Primeiro contato com quem chamou pelo anúncio",quando:"Chegou um contato do site, portal ou Instagram.",
-  texto:`Olá, [cliente]! Aqui é [corretor], da Utu-Guaçu Imóveis. Obrigado(a) pelo interesse no [imóvel].
+  texto:`Olá, [cliente]! Aqui é [corretor], da Utu-Guaçu Imóveis. {c:Obrigado|Obrigada} pelo interesse n{i:o|a} [imóvel].
 
 Para te atender da melhor forma: você procura para morar ou para investir? E qual faixa de valor e região fazem mais sentido para você?
 
 Se preferir, já te mando fotos e detalhes por aqui e podemos agendar uma visita.`},
  {id:"visita-confirma",cat:"Atendimento",titulo:"Confirmar visita na véspera",quando:"Um dia antes da visita.",
-  texto:`Olá, [cliente], tudo bem? Passando para confirmar a nossa visita ao [imóvel] amanhã, [dia] às [horário].
+  texto:`Olá, [cliente], tudo bem? Passando para confirmar a nossa visita {i:ao|à} [imóvel] amanhã, [dia] às [horário].
 
 Te encontro no local ou, se preferir, combinamos de sair juntos da imobiliária (R. Paula Souza, 483, Centro, Itu). Qualquer imprevisto, me avise por aqui. Até amanhã!`},
  {id:"pos-visita",cat:"Atendimento",titulo:"Retorno depois da visita",quando:"No dia seguinte à visita.",
-  texto:`Olá, [cliente]! Foi um prazer te acompanhar na visita ao [imóvel].
+  texto:`Olá, [cliente]! Foi um prazer te acompanhar na visita {i:ao|à} [imóvel].
 
 O que achou? Quero entender o que mais te agradou e se ficou alguma dúvida, seja sobre o imóvel, a documentação ou as formas de pagamento.
 
-Se o imóvel fez sentido, posso te ajudar a montar uma proposta. E se não for exatamente esse, já separo outras opções no mesmo perfil.`},
+Se fez sentido para você, posso te ajudar a montar uma proposta. E se não for exatamente o que procura, já separo outras opções no mesmo perfil.`},
  {id:"sumiu",cat:"Atendimento",titulo:"Cliente parou de responder",quando:"Mandou informações e o cliente sumiu há alguns dias.",
   texto:`Olá, [cliente], tudo bem? Imagino que a rotina esteja corrida.
 
-Só para não te deixar sem retorno: o [imóvel] continua disponível e segue recebendo visitas. Ainda faz sentido para você, ou prefere que eu te mostre outras opções?
+Só para não te deixar sem retorno: {i:o|a} [imóvel] continua disponível e segue recebendo visitas. Ainda faz sentido para você, ou prefere que eu te mostre outras opções?
 
 Fico à disposição, sem pressa.`},
  {id:"cliente-antigo",cat:"Atendimento",titulo:"Retomar contato com cliente antigo",quando:"Cliente que conversou com a gente há meses ou anos.",
@@ -665,23 +694,23 @@ Seu plano de comprar ainda está de pé? Se quiser, te mando uma seleção atual
  {id:"lancamento",cat:"Atendimento",titulo:"Apresentar um lançamento",quando:"Enviar um dossiê de lançamento para clientes da sua carteira.",
   texto:`Olá, [cliente], tudo bem? Aqui é [corretor], da Utu-Guaçu Imóveis.
 
-Queria te apresentar em primeira mão o [imóvel], um lançamento com condições especiais para as primeiras unidades. Te envio o material completo, com localização, lazer e valores.
+Queria te apresentar em primeira mão um lançamento: [nome do empreendimento], com condições especiais para as primeiras unidades. Te envio o material completo, com localização, lazer e valores.
 
 Se gostar, organizo uma visita ao plantão e monto uma simulação no plano de pagamento que fizer mais sentido para você.`},
  {id:"prop-envio",cat:"Proposta",titulo:"Enviar proposta ao proprietário",quando:"Junto com o PDF da proposta gerada aqui no portal.",
   texto:`Olá, [cliente], tudo bem? Aqui é [corretor], da Utu-Guaçu Imóveis.
 
-Tenho uma boa notícia: recebemos uma proposta formal de compra para o seu imóvel ([imóvel]).
+Tenho uma boa notícia: recebemos uma proposta formal de compra para {i:o seu|a sua} [imóvel].
 
 Envio em anexo a proposta completa, com o valor e as condições de pagamento. Fico à disposição para conversarmos e te ajudar a avaliar com tranquilidade. Qual o melhor horário para falarmos?`},
  {id:"aceita-comprador",cat:"Proposta",titulo:"Proposta aceita: pedir dados ao comprador",quando:"O vendedor aceitou e vamos preparar o contrato de compra e venda.",
-  texto:`Olá, [cliente]! Trago ótimas notícias: a sua proposta para o [imóvel] foi aceita pelo proprietário! Parabéns!
+  texto:`Olá, [cliente]! Trago ótimas notícias: a sua proposta para {i:o|a} [imóvel] foi aceita pelo proprietário! Parabéns!
 
 Para darmos os próximos passos e prepararmos o contrato de compra e venda, preciso que você me envie por aqui:
 
 Dados pessoais (seus e do cônjuge, se houver)
 • nome completo, nacionalidade, profissão e e-mail
-• estado civil e, se casado(a), o regime de bens
+• estado civil e, se for {k:casado|casada}, o regime de bens
 • foto do RG e do CPF (ou da CNH)
 • certidão de casamento ou de união estável, se for o caso
 • comprovante de endereço atualizado
@@ -694,13 +723,13 @@ Pagamento
 
 Assim que eu receber, encaminho para a equipe preparar o contrato e te aviso sobre a data de assinatura. Qualquer dúvida, estou à disposição!`},
  {id:"aceita-vendedor",cat:"Proposta",titulo:"Proposta aceita: pedir dados ao vendedor",quando:"Logo após o aceite, para o proprietário providenciar documentos.",
-  texto:`Olá, [cliente]! Obrigado(a) pelo aceite da proposta do [imóvel]. Agora vamos preparar o contrato de compra e venda com toda a segurança.
+  texto:`Olá, [cliente]! {c:Obrigado|Obrigada} pelo aceite da proposta d{i:o|a} [imóvel]. Agora vamos preparar o contrato de compra e venda com toda a segurança.
 
 Para isso, preciso que você me envie por aqui:
 
 Dados pessoais (seus e do cônjuge, se houver)
 • nome completo, nacionalidade, profissão e e-mail
-• estado civil e, se casado(a), o regime de bens
+• estado civil e, se for {k:casado|casada}, o regime de bens
 • foto do RG e do CPF (ou da CNH)
 • certidão de casamento ou de união estável, se for o caso
 • comprovante de endereço atualizado
@@ -717,15 +746,15 @@ Do imóvel
 
 As certidões negativas pessoais (protesto, distribuidores, Justiça Federal, Receita e Trabalho) podemos solicitar juntos; te explico o passo a passo.
 
-Assim que eu receber, seguimos para a assinatura. Muito obrigado(a) pela confiança!`},
+Assim que eu receber, seguimos para a assinatura. Muito {c:obrigado|obrigada} pela confiança!`},
  {id:"prop-cobrar",cat:"Proposta",titulo:"Cobrar retorno da proposta",quando:"O proprietário recebeu a proposta e ainda não respondeu.",
-  texto:`Olá, [cliente], tudo bem? Conseguiu analisar a proposta que te enviei para o [imóvel]?
+  texto:`Olá, [cliente], tudo bem? Conseguiu analisar a proposta que te enviei para {i:o|a} [imóvel]?
 
 O comprador está bem interessado e aguarda o seu retorno para seguirmos. Se quiser, podemos conversar por telefone e eu te explico cada condição, ou levo uma contraproposta sua para ele.
 
 Me diga o que achou, mesmo que precise de mais um tempinho.`},
  {id:"prop-contra",cat:"Proposta",titulo:"Levar contraproposta ao comprador",quando:"O proprietário não aceitou o valor, mas fez uma contraproposta.",
-  texto:`Olá, [cliente]! Conversei com o proprietário do [imóvel] sobre a sua proposta.
+  texto:`Olá, [cliente]! Conversei com o proprietário d{i:o|a} [imóvel] sobre a sua proposta.
 
 Ele valorizou muito o seu interesse e apresentou uma contraproposta: [valor e condições].
 
@@ -733,21 +762,21 @@ Na minha avaliação, é uma condição justa para o imóvel e para o momento do
  {id:"prop-desconto",cat:"Proposta",titulo:"Comprador pede um desconto muito grande",quando:"A oferta do comprador está bem abaixo do pedido.",
   texto:`[cliente], entendo que você queira fazer um bom negócio, e é exatamente isso que eu quero para você.
 
-Para a proposta ter chance real de ser aceita, ela precisa estar próxima do valor de mercado do [imóvel]. Uma oferta muito abaixo costuma ser recusada de imediato e pode esfriar a negociação.
+Para a proposta ter chance real de ser aceita, ela precisa estar próxima do valor de mercado d{i:o|a} [imóvel]. Uma oferta muito abaixo costuma ser recusada de imediato e pode esfriar a negociação.
 
 Que tal chegarmos a um valor mais competitivo, ou melhorar a condição de pagamento (mais entrada, prazo menor)? Isso costuma pesar bastante na decisão do proprietário.`},
  {id:"prop-recusa",cat:"Proposta",titulo:"Proposta recusada, manter o cliente",quando:"O proprietário recusou e você quer manter o comprador por perto.",
-  texto:`[cliente], o proprietário do [imóvel] decidiu não seguir com a proposta neste momento. Sei que é frustrante, mas faz parte da negociação.
+  texto:`[cliente], o proprietário d{i:o|a} [imóvel] decidiu não seguir com a proposta neste momento. Sei que é frustrante, mas faz parte da negociação.
 
-Já estou separando outras opções com o mesmo perfil e, se a situação dele mudar, você será o(a) primeiro(a) a saber. Posso te mandar algumas alternativas ainda esta semana?`},
+Já estou separando outras opções com o mesmo perfil e, se a situação dele mudar, você {k:será o primeiro|será a primeira} a saber. Posso te mandar algumas alternativas ainda esta semana?`},
  {id:"preco-alto",cat:"Proprietário",titulo:"Imóvel com preço acima do mercado",quando:"O imóvel tem visitas mas não recebe propostas.",
-  texto:`Olá, [cliente], tudo bem? Quero te passar um retorno sincero sobre o [imóvel].
+  texto:`Olá, [cliente], tudo bem? Quero te passar um retorno sincero sobre {i:o|a} [imóvel].
 
-Nas últimas semanas tivemos [número] visitas e todos elogiaram o imóvel, mas o retorno mais frequente é sobre o valor, que está acima de imóveis parecidos vendidos recentemente na região.
+Nas últimas semanas tivemos [número] visitas e todos elogiaram, mas o retorno mais frequente é sobre o valor, que está acima de imóveis parecidos vendidos recentemente na região.
 
 Preparei um comparativo de mercado para te mostrar. Podemos conversar sobre um ajuste estratégico? Um preço alinhado costuma atrair mais visitas e propostas melhores.`},
  {id:"comissao",cat:"Proprietário",titulo:"Proprietário questiona a comissão",quando:"O proprietário pede para reduzir a comissão.",
-  texto:`[cliente], entendo a preocupação. Quero te mostrar o que está incluído no nosso trabalho:
+  texto:`[cliente], entendo a sua preocupação. Quero te mostrar o que está incluído no nosso trabalho:
 • avaliação e estratégia de preço;
 • fotos, anúncio e divulgação no nosso site e nos principais portais;
 • filtro dos interessados e visitas acompanhadas;
@@ -756,34 +785,73 @@ Preparei um comparativo de mercado para te mostrar. Podemos conversar sobre um a
 
 São mais de 45 anos fazendo isso em Itu e região. Nosso compromisso é que a comissão volte para você em um negócio mais seguro e bem fechado.`},
  {id:"pos-venda",cat:"Pós-venda",titulo:"Agradecer e pedir indicação",quando:"Depois da escritura ou da entrega das chaves.",
-  texto:`[cliente], parabéns pela conquista do [imóvel]! Foi um prazer fazer parte desse momento.
+  texto:`[cliente], parabéns pela conquista d{i:o|a} [imóvel]! Foi um prazer fazer parte desse momento.
 
-Muito obrigado(a) pela confiança na Utu-Guaçu. Se conhecer alguém pensando em comprar, vender ou alugar, ficarei feliz em atender com o mesmo cuidado.
+Muito {c:obrigado|obrigada} pela confiança na Utu-Guaçu. Se conhecer alguém pensando em comprar, vender ou alugar, vou ficar {c:feliz|feliz} em atender com o mesmo cuidado.
 
 Conte comigo para o que precisar!`}
 ];
 
 const MSG_CATS=["Todas",...[...new Set(MENSAGENS.map(m=>m.cat))]];
 let msgCat="Todas";
+const radioV=n=>(document.querySelector(`input[name="${n}"]:checked`)||{}).value;
+function msgCtx(){
+  const [tipo,ig]=($("#mTipo").value||"").split("|"), loc=($("#mLocal").value||"").trim();
+  let im=""; if(tipo)im=tipo+(loc?" "+loc:""); else if(loc)im="imóvel "+loc;
+  return {c:radioV("corG")==="f",k:radioV("cliG")==="f",i:ig==="f",im,cli:($("#mCliente").value||"").trim(),cor:($("#mCorretor").value||"").trim()};
+}
 function fillMsg(t){
-  const rep=(k,id)=>{const val=($("#"+id).value||"").trim();if(val)t=t.split(k).join(val)};
-  rep("[cliente]","mCliente");rep("[imóvel]","mImovel");rep("[corretor]","mCorretor");return t;
+  const x=msgCtx();
+  t=t.replace(/\{([cki]):([^|{}]*)\|([^{}]*)\}/g,(_,w,m,f)=>x[w]?f:m);
+  if(x.cli)t=t.split("[cliente]").join(x.cli);
+  if(x.cor)t=t.split("[corretor]").join(x.cor);
+  if(x.im)t=t.split("[imóvel]").join(x.im);
+  return t;
 }
 function msgHTML(t){return esc(t).replace(/\[([^\]]+)\]/g,'<mark>[$1]</mark>')}
 function renderMsgs(){
-  $("#msgChips").innerHTML=MSG_CATS.map(c=>`<button class="chip" type="button" aria-pressed="${c===msgCat}" data-mc="${esc(c)}">${esc(c)}</button>`).join("");
-  const list=MENSAGENS.filter(m=>msgCat==="Todas"||m.cat===msgCat);
+  const x=msgCtx();
+  $("#mfPrev").innerHTML=x.im?`As mensagens vão falar ${x.i?"da":"do"} <b>${esc(x.im)}</b>.`:"Escolha o tipo de imóvel para as mensagens ficarem certinhas.";
+  $("#msgChips").innerHTML=[...MSG_CATS,"Outra situação"].map(c=>`<button class="chip${c==="Outra situação"?" chip-ia":""}" type="button" aria-pressed="${c===msgCat}" data-mc="${esc(c)}">${esc(c)}</button>`).join("");
+  $("#iaBox").hidden=!(msgCat==="Todas"||msgCat==="Outra situação");
+  const list=msgCat==="Outra situação"?[]:MENSAGENS.filter(m=>msgCat==="Todas"||m.cat===msgCat);
   $("#msgsOut").innerHTML=list.map(m=>{const t=fillMsg(m.texto);return `<article class="msg-card">
     <div class="msg-top"><span class="cat">${esc(m.cat)}</span><h3>${esc(m.titulo)}</h3><p class="desc">${esc(m.quando)}</p></div>
     <div class="msg-text">${msgHTML(t)}</div>
     <div class="msg-act"><button class="btn primary" type="button" data-copy="${esc(m.id)}">Copiar mensagem</button><a class="btn" href="https://wa.me/?text=${encodeURIComponent(t)}" target="_blank" rel="noopener">Enviar no WhatsApp</a></div>
   </article>`}).join("");
 }
+function iaPrompt(){
+  const x=msgCtx(), sit=($("#iaSit").value||"").trim(), para=$("#iaPara").value;
+  return `Você vai me ajudar a escrever uma mensagem de WhatsApp. Eu sou ${x.cor||"[meu nome]"}, ${x.c?"corretora":"corretor"} da Utu-Guaçu Imóveis, imobiliária de Itu-SP com mais de 45 anos, especializada em imóveis de alto padrão e rurais.
+
+Quem vai receber: ${x.cli||"[nome]"} (${x.k?"mulher":"homem"}), que ${para}.
+${x.im?`Imóvel: ${x.im}.\n`:""}
+Situação: ${sit||"[descreva a situação]"}
+
+Como a mensagem deve ser:
+- amigável, próxima e profissional, do jeito que uma pessoa escreveria de verdade no WhatsApp;
+- sem cara de texto feito por inteligência artificial, sem frases feitas nem exageros;
+- não use travessão em nenhuma parte do texto;
+- não use emoji;
+- use o gênero certo para mim e para quem vai receber;
+- passe segurança e valorize o trabalho da Utu-Guaçu, sem soar como propaganda;
+- frases curtas, no máximo 8 linhas, terminando com uma pergunta ou um próximo passo claro.
+
+Responda só com a mensagem pronta, sem explicações. Se faltar alguma informação, deixe entre colchetes para eu completar.`;
+}
 function renderDocs(){$("#docsOut").innerHTML=DOCS.map(d=>`<button class="blk doc" type="button" data-doc="${esc(d.abre)}"><span class="txt"><span class="k">Documento</span><h2>${esc(d.titulo)}</h2><p>${esc(d.desc)}</p></span><span class="go">Preencher${ARROW}</span></button>`).join("")}
 $("#docsOut").addEventListener("click",e=>{const b=e.target.closest("[data-doc]");if(b)show(b.dataset.doc)});
+function syncIa(){$("#iaGo").href="https://chatgpt.com/?q="+encodeURIComponent(iaPrompt())}
+["iaSit","iaPara"].forEach(id=>{$("#"+id).addEventListener("input",syncIa);$("#"+id).addEventListener("change",syncIa)});
+$("#view-mensagens").addEventListener("input",syncIa);$("#view-mensagens").addEventListener("change",syncIa);
+$("#iaGo").addEventListener("click",e=>{syncIa();if(!($("#iaSit").value||"").trim()){e.preventDefault();toast("Descreva a situação primeiro.");$("#iaSit").focus();return}try{navigator.clipboard&&navigator.clipboard.writeText(iaPrompt()).catch(()=>{})}catch(_){}});
+$("#iaCopy").addEventListener("click",()=>{if(!($("#iaSit").value||"").trim()){toast("Descreva a situação primeiro.");$("#iaSit").focus();return}copyText(iaPrompt(),"Pedido copiado. Cole no Gemini ou no ChatGPT.")});
 $("#msgChips").addEventListener("click",e=>{const b=e.target.closest("[data-mc]");if(!b)return;msgCat=b.dataset.mc;renderMsgs()});
-["mCliente","mImovel","mCorretor"].forEach(id=>$("#"+id).addEventListener("input",()=>{if(id==="mCorretor")LS.set("utu.msg.corretor",$("#mCorretor").value);renderMsgs()}));
-try{$("#mCorretor").value=LS.get("utu.msg.corretor","")||""}catch(_){}
+function saveMe(){LS.set("utu.msg.eu",{nome:$("#mCorretor").value,g:radioV("corG")})}
+$("#view-mensagens").addEventListener("input",e=>{if(e.target.closest(".msg-fill")){if(e.target.id==="mCorretor"||e.target.name==="corG")saveMe();renderMsgs()}});
+$("#view-mensagens").addEventListener("change",e=>{if(e.target.closest(".msg-fill")){if(e.target.name==="corG")saveMe();renderMsgs()}});
+{const eu=LS.get("utu.msg.eu",null);if(eu){$("#mCorretor").value=eu.nome||"";if(eu.g==="f")$("#corF").checked=true}}
 function copyText(t,okMsg){
   const fb=()=>{const ta=document.createElement("textarea");ta.value=t;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand("copy")}catch(_){}ta.remove();toast(ok?okMsg:"Não consegui copiar. Segure o dedo sobre o texto para copiar.")};
   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>toast(okMsg),fb);else fb();
