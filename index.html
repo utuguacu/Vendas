@@ -480,7 +480,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
       <fieldset>
         <legend><small>4</small>Proposta</legend>
         <div class="two">
-          <div class="field" data-req><label for="valor">Valor ofertado (R$)</label><input id="valor" inputmode="decimal" placeholder="0,00" data-money></div>
+          <div class="field" data-req><label for="valor">Valor ofertado (R$)</label><input id="valor" inputmode="decimal" placeholder="0,00" data-money><span class="hint" id="valorHint"></span></div>
           <div class="field" data-req><label for="forma">Forma de pagamento</label>
             <select id="forma"><option value="">Selecione</option><option value="avista">À vista</option><option value="parcelado">Entrada + parcelas</option><option value="financiamento">Entrada + financiamento bancário</option><option value="livre">Outra (descrever)</option></select></div>
         </div>
@@ -539,7 +539,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 26/10/2026 20h30</p>
+<p class="ver">Portal de Vendas · versão 26/10/2026 20h40</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -790,8 +790,9 @@ function ate999(n){
 }
 function inteiroExtenso(n){
   if(n===0)return"zero";
+  if(!isFinite(n)||n>=1e15)return Math.round(n).toLocaleString("pt-BR");
   const g=[];let x=n;while(x>0){g.push(x%1000);x=Math.floor(x/1000)}
-  const nomes=[["",""],["mil","mil"],["milhão","milhões"],["bilhão","bilhões"]];
+  const nomes=[["",""],["mil","mil"],["milhão","milhões"],["bilhão","bilhões"],["trilhão","trilhões"]];
   const parts=[];
   for(let i=g.length-1;i>=0;i--){
     const v=g[i]; if(!v)continue;
@@ -864,7 +865,7 @@ function collect(){
   }
   need("endereco","endereço"); need("telefone",v("telefone")?"telefone com DDD":"telefone",onlyDig(v("telefone")).length>=10);
   need("imTipo","tipo do imóvel"); need("imCidade","cidade do imóvel");
-  const valor=parseMoney(v("valor")); need("valor","valor ofertado",valor>0);
+  const valor=parseMoney(v("valor")); need("valor",valor>=1e10?"valor ofertado (número muito alto, confira)":"valor ofertado",valor>0&&valor<1e10);
   const forma=v("forma"); need("forma","forma de pagamento");
   const entrada=parseMoney(v("entrada")),nParc=parseInt(onlyDig(v("nParc")),10),vParc=parseMoney(v("vParc")),finE=parseMoney(v("finEntrada"));
   if(forma==="parcelado"){need("entrada","entrada",entrada>=0);need("nParc","nº de parcelas",nParc>0);need("vParc","valor da parcela",vParc>0)}
@@ -1087,6 +1088,7 @@ function update(){
   $$(".field").forEach(el=>el.classList.remove("err"));
   Object.keys(m.errs).forEach(id=>{const i=$("#"+id);if(!i)return;const fl=i.closest(".field");if(fl&&(i.dataset.touched||document.body.dataset.tried))fl.classList.add("err")});
   ["cpf","conjCpf","repCpf","cnpj"].forEach(id=>{const i=$("#"+id),h=i.closest(".field").querySelector(".hint");if(!h)return;const ok=id==="cnpj"?cnpjOk(i.value):cpfOk(i.value);h.textContent=i.value&&onlyDig(i.value).length>=(id==="cnpj"?14:11)&&!ok?(id==="cnpj"?"CNPJ inválido, confira os números.":"CPF inválido, confira os números."):""});
+  {const vv=m.calc.valor;$("#valorHint").textContent=vv>0?(vv<1e10?reaisExtenso(vv):"Número muito alto, confira."):"";}
   {const ci=m.comInfo;$("#comCalc").textContent=ci.com>0?`${ci.pc.toLocaleString("pt-BR",{maximumFractionDigits:2})}% de ${brl(m.calc.valor)} = comissão de ${brl(ci.com)}`:(ci.pc>0?"Preencha o valor ofertado para ver o valor da comissão.":"");}
   /* calc helpers */
   const c=m.calc;
