@@ -132,6 +132,7 @@ h1 em,h2 em{font-style:italic;color:var(--gold)}
 .card-actions .btn{flex:1}
 .three-act{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .three-act .btn.primary{grid-column:1/-1}
+@media (max-width:620px){.three-act .btn{padding:8px 4px;font-size:12.5px;gap:5px;min-width:0}.three-act .btn svg{width:13px;height:13px}}
 .blk.msg{background:var(--gold-soft);border-color:var(--line-strong)}
 .msg-fill{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-top:22px}
 .msgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
@@ -143,6 +144,7 @@ h1 em,h2 em{font-style:italic;color:var(--gold)}
 .msg-text mark{background:var(--gold-soft);color:var(--gold);border-radius:3px;padding:0 2px}
 .msg-act{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 @media (max-width:620px){.msg-fill{grid-template-columns:minmax(0,1fr)}.msgs{grid-template-columns:minmax(0,1fr)}.msg-act{grid-template-columns:minmax(0,1fr)}}
+.docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:22px}
 .card-admin{display:flex;gap:4px;border-top:1px solid var(--line);padding:6px 8px}
 .card-admin .btn{padding:6px 8px;font-size:12px}
 .note{border:1px dashed var(--line-strong);border-radius:var(--r);padding:28px 22px;text-align:center;color:var(--muted);background:var(--surface)}
@@ -329,7 +331,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
       <span class="logo" role="img" aria-label="Utu-Guaçu"></span>
       <span class="brandtxt"><b>Portal de Vendas</b><span>Uso interno · corretores</span></span>
     </button>
-    <button class="crumb" id="crumb" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>Início</button>
+    <button class="crumb" id="crumb" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg><span id="crumbLbl">Início</span></button>
   </div>
 </header>
 
@@ -341,7 +343,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     <div>
       <div class="eyebrow">Equipe de vendas</div>
       <h1>O que você <em>precisa hoje?</em></h1>
-      <p class="lede">Gere uma proposta pronta ou abra os materiais de cada lançamento. Toque num bloco para entrar.</p>
+      <p class="lede">Gere documentos prontos, abra os dossiês e materiais de apoio ou copie uma mensagem para o cliente. Toque num bloco para entrar.</p>
     </div>
     <button class="btn" id="btnAddHome" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Adicionar arquivo</button>
   </div>
@@ -399,6 +401,18 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
   </div>
   <div id="filesOut"><div class="note"><b>Carregando os arquivos…</b>Só um instante.</div></div>
   <datalist id="empList"></datalist>
+</section>
+
+<!-- ================= DOCUMENTOS ================= -->
+<section id="view-documentos" hidden>
+  <div class="files-head">
+    <div>
+      <div class="eyebrow">Gerar documentos</div>
+      <h1>Escolha o documento <em>para gerar</em></h1>
+      <p class="lede">Você preenche uma ficha simples e o portal monta o documento completo, pronto para baixar ou enviar.</p>
+    </div>
+  </div>
+  <div class="docs" id="docsOut"></div>
 </section>
 
 <!-- ================= MENSAGENS ================= -->
@@ -572,7 +586,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 26/10/2026 20h50</p>
+<p class="ver">Portal de Vendas · versão 26/10/2026 21h00</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -588,6 +602,10 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 let toastT; function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,3600)}
+/* Documentos que o portal gera. Para incluir um novo, a gerência envia o modelo ao Claude. */
+const DOCS=[
+ {id:"proposta",titulo:"Proposta de compra",desc:"Proposta formal com os dados do comprador, do imóvel, valor, forma de pagamento e comissão. Sai em duas folhas: proposta e aceite do vendedor.",abre:"proposta"}
+];
 /* Modelos de mensagem: mantidos pela gerência via Claude. [cliente], [imóvel] e [corretor] são trocados pelos campos do topo; o resto entre colchetes o corretor completa. */
 const MENSAGENS=[
  {id:"capt-anuncio",cat:"Captação",titulo:"Proprietário anunciando por conta própria",quando:"Viu placa, anúncio em portal ou rede social do próprio dono.",
@@ -761,6 +779,8 @@ function renderMsgs(){
     <div class="msg-act"><button class="btn primary" type="button" data-copy="${esc(m.id)}">Copiar mensagem</button><a class="btn" href="https://wa.me/?text=${encodeURIComponent(t)}" target="_blank" rel="noopener">Enviar no WhatsApp</a></div>
   </article>`}).join("");
 }
+function renderDocs(){$("#docsOut").innerHTML=DOCS.map(d=>`<button class="blk doc" type="button" data-doc="${esc(d.abre)}"><span class="txt"><span class="k">Documento</span><h2>${esc(d.titulo)}</h2><p>${esc(d.desc)}</p></span><span class="go">Preencher${ARROW}</span></button>`).join("")}
+$("#docsOut").addEventListener("click",e=>{const b=e.target.closest("[data-doc]");if(b)show(b.dataset.doc)});
 $("#msgChips").addEventListener("click",e=>{const b=e.target.closest("[data-mc]");if(!b)return;msgCat=b.dataset.mc;renderMsgs()});
 ["mCliente","mImovel","mCorretor"].forEach(id=>$("#"+id).addEventListener("input",()=>{if(id==="mCorretor")LS.set("utu.msg.corretor",$("#mCorretor").value);renderMsgs()}));
 try{$("#mCorretor").value=LS.get("utu.msg.corretor","")||""}catch(_){}
@@ -775,22 +795,24 @@ $("#msgsOut").addEventListener("click",e=>{const b=e.target.closest("[data-copy]
 const slug=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 let pendingHash=location.hash.replace("#","");
 function show(view,cat){
-  $("#view-inicio").hidden=view!=="inicio"; $("#view-arquivos").hidden=view!=="arquivos"; $("#view-proposta").hidden=view!=="proposta"; $("#view-mensagens").hidden=view!=="mensagens";
+  $("#view-inicio").hidden=view!=="inicio"; $("#view-arquivos").hidden=view!=="arquivos"; $("#view-proposta").hidden=view!=="proposta"; $("#view-mensagens").hidden=view!=="mensagens"; $("#view-documentos").hidden=view!=="documentos";
   if(view==="mensagens")renderMsgs();
   $("#crumb").hidden=view==="inicio";
+  curView=view; $("#crumbLbl").textContent=view==="proposta"?"Documentos":"Início";
   if(view==="arquivos"){S.filter=cat;S.q="";$("#q").value="";renderFiles()}
   const h=view==="arquivos"?slug(cat):view;
   try{history.replaceState(null,"",h==="inicio"?location.pathname+location.search:"#"+h)}catch(e){}
   window.scrollTo({top:0});
 }
-$("#crumb").addEventListener("click",()=>show("inicio"));
+let curView="inicio";
+$("#crumb").addEventListener("click",()=>show(curView==="proposta"?"documentos":"inicio"));
 $("#brandHome").addEventListener("click",()=>show("inicio"));
-$("#home").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(!b)return;const t=b.dataset.open;if(t==="__proposta")show("proposta");else if(t==="__mensagens")show("mensagens");else show("arquivos",t)});
+$("#home").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(!b)return;const t=b.dataset.open;if(t==="__proposta")show("proposta");else if(t==="__documentos")show("documentos");else if(t==="__mensagens")show("mensagens");else show("arquivos",t)});
 
 /* =====================================================
    ARQUIVOS
    ===================================================== */
-const CATS=["Dossiês","Tabelas de preço","Contratos e modelos","Fichas e formulários","Marketing","Outros"];
+const CATS=["Dossiês","Aprendizado","Tabelas de preço","Contratos e modelos","Fichas e formulários","Marketing","Outros"];
 const S={files:[],filter:"Todos",q:"",editor:false,db:null,assets:null,downloads:null,editing:null,ready:false,dbMissing:false};
 const fmtSize=b=>!b?"":b>=1048576?(b/1048576).toFixed(1).replace(".",",")+" MB":Math.max(1,Math.round(b/1024))+" KB";
 const extOf=f=>{if(f.tipo==="link")return"Link";const n=(f.nomeArquivo||"").split(".").pop();return n&&n.length<6?n.toUpperCase():"Arquivo"};
@@ -799,6 +821,7 @@ const capaOf=f=>f.capa?"arquivos/"+f.capa:"";
 
 const CAT_INFO={
   "Dossiês":"Apresentações completas de cada lançamento, prontas para enviar ao cliente.",
+  "Aprendizado":"Manuais e materiais para o dia a dia do corretor.",
   "Tabelas de preço":"Tabelas e simulações atualizadas dos empreendimentos.",
   "Contratos e modelos":"Modelos de contrato, autorizações e termos.",
   "Fichas e formulários":"Fichas de cadastro e formulários para o cliente preencher.",
@@ -812,14 +835,14 @@ function catsInUse(){
   return order.map(c=>({c,n:seen.get(c)}));
 }
 function renderHome(){
-  const lead=`<button class="blk lead" type="button" data-open="__proposta">
+  const lead=`<button class="blk lead" type="button" data-open="__documentos">
       <span class="minisheet" aria-hidden="true"><i class="h"></i><i></i><i></i><i class="g"></i><i></i><i></i><i></i><i class="g"></i><i></i></span>
-      <span class="txt"><span class="k">Ferramenta</span><h2>Gerador de proposta</h2><p>Preencha a ficha do cliente e baixe a proposta de compra pronta, em PDF ou Word.</p></span>
-      <span class="go">Abrir gerador${ARROW}</span></button>`;
+      <span class="txt"><span class="k">Ferramenta · ${DOCS.length} ${DOCS.length===1?"documento":"documentos"}</span><h2>Gerar documentos</h2><p>Preencha a ficha e baixe o documento pronto, com a marca Utu-Guaçu, em PDF ou Word.</p></span>
+      <span class="go">Ver documentos${ARROW}</span></button>`;
   const msgTile=`<button class="blk msg" type="button" data-open="__mensagens">
       <span class="txt"><span class="k">${MENSAGENS.length} modelos</span><h2>Modelos de mensagem</h2><p>Textos prontos para captação, follow-up, proposta e pós-venda. É só copiar e mandar no WhatsApp.</p></span>
       <span class="go">Ver mensagens${ARROW}</span></button>`;
-  let blocks=msgTile;
+  let blocks="";
   if(S.dbMissing) blocks=`<div class="note" style="grid-column:1/-1"><b>Os materiais não carregaram nesta tela</b>Abra o portal pelo link, já entrado na sua conta do Claude. O gerador de proposta funciona mesmo assim.</div>`;
   else if(!S.ready) blocks=`<div class="blk empty" aria-busy="true"><span class="txt"><span class="k">Materiais</span><h2>Carregando…</h2></span></div>`;
   else{
@@ -834,7 +857,7 @@ function renderHome(){
     if(!cats.length) blocks=`<div class="note" style="grid-column:span 1"><b>Nenhum material ainda</b>${S.editor?"Use “Adicionar arquivo” para criar a primeira seção.":"A gerência adiciona os materiais por aqui."}</div>`;
     if(S.editor) blocks+=`<button class="blk empty" type="button" data-addhome><span class="txt"><span class="k">Gerência</span><h2>Nova seção</h2><p>Adicione um arquivo com um nome de seção novo e ele vira um bloco aqui.</p></span><span class="go">Adicionar${ARROW}</span></button>`;
   }
-  $("#home").innerHTML=lead+blocks;
+  $("#home").innerHTML=lead+blocks+msgTile;
   $("#catList").innerHTML=[...new Set([...CATS,...catsInUse().map(x=>x.c)])].map(c=>`<option value="${esc(c)}">`).join("");
 }
 $("#home").addEventListener("click",e=>{if(e.target.closest("[data-addhome]"))openPanel(null,"")});
@@ -984,10 +1007,11 @@ $("#addPanel").addEventListener("submit",async e=>{
 const ARQUIVOS=[
  {id:"altavista",titulo:"Altavista Itu & Reserva",categoria:"Dossiês",empreendimento:"Altavista",descricao:"Loteamento aberto e residencial fechado em Itu, 632 lotes a partir de R$ 178 mil.",tipo:"arquivo",assetId:"237382785e47592fdb8f577d876ece18",_capa:"32f91069216c042b967407152e66dac1",tamanho:2666124,paginas:9,nomeArquivo:"Altavista-Utu-Guacu.pdf",capa:"capa-Altavista-Utu-Guacu-1.jpg",ordem:1},
  {id:"gran-reserva-boituva",titulo:"Gran Reserva Boituva",categoria:"Dossiês",empreendimento:"Gran Reserva Boituva",descricao:"Horizon, Skyline e Ventura, lotes a partir de R$ 288 mil à vista.",tipo:"arquivo",assetId:"46c9e4d34ce2f78c275621398798d1b6",_capa:"e2fd332a15acb1bfc393dcc9c6d667b0",tamanho:2689720,paginas:8,nomeArquivo:"Dossie-Gran-Reserva-Boituva.pdf",capa:"capa-Dossie-Gran-Reserva-Boituva-1.jpg",ordem:2},
- {id:"praia-do-terras",titulo:"Praia do Terras",categoria:"Dossiês",empreendimento:"Praia do Terras",descricao:"Clube com praia e onda Endless Surf no Terras de São José, títulos a partir de R$ 500 mil.",tipo:"arquivo",assetId:"1dd3558b3f399340977e8880a4240aef",_capa:"52d18fedabc8c2e523f434f8d162ab0d",tamanho:4780758,paginas:6,nomeArquivo:"Praia-do-Terras-Utu-Guacu.pdf",capa:"capa-Praia-do-Terras-Utu-Guacu-1.jpg",ordem:3}
+ {id:"praia-do-terras",titulo:"Praia do Terras",categoria:"Dossiês",empreendimento:"Praia do Terras",descricao:"Clube com praia e onda Endless Surf no Terras de São José, títulos a partir de R$ 500 mil.",tipo:"arquivo",assetId:"1dd3558b3f399340977e8880a4240aef",_capa:"52d18fedabc8c2e523f434f8d162ab0d",tamanho:4780758,paginas:6,nomeArquivo:"Praia-do-Terras-Utu-Guacu.pdf",capa:"capa-Praia-do-Terras-Utu-Guacu-1.jpg",ordem:3},
+ {id:"manual-corretor",titulo:"Manual do Corretor",categoria:"Aprendizado",empreendimento:"Kenlo",descricao:"Como usar o Kenlo: esteira de leads, passo a passo do atendimento, boas práticas e prompts de IA para registros.",tipo:"arquivo",tamanho:1304400,paginas:19,nomeArquivo:"Manual-do-Corretor.pdf",capa:"capa-Manual-do-Corretor-1.jpg",ordem:1}
 ];
 S.files=ARQUIVOS; S.ready=true; S.editor=false;
-renderFiles(); refreshEmpList();
+renderDocs(); renderFiles(); refreshEmpList();
 if(pendingHash&&pendingHash!=="proposta"){const c=catsInUse().find(x=>slug(x.c)===pendingHash);if(c)show("arquivos",c.c)}
 if(window.claude&&typeof window.claude.use==="function"){window.claude.use("downloads").then(d=>{S.downloads=d;S.dlChecked=true;renderFiles()}).catch(()=>{S.dlChecked=true;renderFiles()})}else{S.dlChecked=true;renderFiles()}
 
