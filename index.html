@@ -132,6 +132,17 @@ h1 em,h2 em{font-style:italic;color:var(--gold)}
 .card-actions .btn{flex:1}
 .three-act{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .three-act .btn.primary{grid-column:1/-1}
+.blk.msg{background:var(--gold-soft);border-color:var(--line-strong)}
+.msg-fill{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-top:22px}
+.msgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.msg-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.msg-top{display:flex;flex-direction:column;gap:4px}
+.msg-top .cat{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.msg-top h3{font-size:18px;line-height:1.25}
+.msg-text{white-space:pre-wrap;font-size:13.5px;line-height:1.55;background:var(--bg);border-radius:var(--r);padding:12px 14px;flex:1;word-break:break-word}
+.msg-text mark{background:var(--gold-soft);color:var(--gold);border-radius:3px;padding:0 2px}
+.msg-act{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (max-width:620px){.msg-fill{grid-template-columns:minmax(0,1fr)}.msgs{grid-template-columns:minmax(0,1fr)}.msg-act{grid-template-columns:minmax(0,1fr)}}
 .card-admin{display:flex;gap:4px;border-top:1px solid var(--line);padding:6px 8px}
 .card-admin .btn{padding:6px 8px;font-size:12px}
 .note{border:1px dashed var(--line-strong);border-radius:var(--r);padding:28px 22px;text-align:center;color:var(--muted);background:var(--surface)}
@@ -212,6 +223,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
 .missing a{color:var(--fg);text-decoration:underline;text-decoration-color:var(--line-strong);cursor:pointer}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
 .actions .btn{flex:1 1 auto}
+.actions .share-prop{flex:1 1 100%;padding:13px 14px;font-size:14px}
 
 .sheet-scroll{overflow-x:auto;border-radius:var(--r)}
 .sheet{background:var(--sheet);color:var(--sheet-fg);border:1px solid var(--line);box-shadow:0 1px 0 var(--line),0 18px 40px -28px rgba(0,0,0,.35);padding:52px 56px 60px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.55;max-width:760px;margin:0 auto}
@@ -389,6 +401,26 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
   <datalist id="empList"></datalist>
 </section>
 
+<!-- ================= MENSAGENS ================= -->
+<section id="view-mensagens" hidden>
+  <div class="files-head">
+    <div>
+      <div class="eyebrow" id="msgEyebrow">Modelos de mensagem</div>
+      <h1>O que dizer <em>em cada situação</em></h1>
+      <p class="lede">Escolha a situação, preencha o nome do cliente e o imóvel, e copie a mensagem pronta para o WhatsApp. Ajuste o que estiver entre [colchetes].</p>
+    </div>
+  </div>
+  <div class="msg-fill">
+    <div class="field"><label for="mCliente">Nome do cliente</label><input id="mCliente" placeholder="Ex.: Carlos"></div>
+    <div class="field"><label for="mImovel">Imóvel</label><input id="mImovel" placeholder="Ex.: casa no Terras de São José" list="empList"></div>
+    <div class="field"><label for="mCorretor">Seu nome</label><input id="mCorretor" placeholder="Ex.: Rose"></div>
+  </div>
+  <div class="toolbar">
+    <div class="chips" id="msgChips"></div>
+  </div>
+  <div class="msgs" id="msgsOut"></div>
+</section>
+
 <!-- ================= PROPOSTA ================= -->
 <section id="view-proposta" hidden>
   <div class="prop-head">
@@ -531,6 +563,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
         <span class="missing" id="missing"></span>
       </div>
       <div class="actions">
+        <button class="btn gold share-prop" id="shareProp" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Enviar ao proprietário (WhatsApp)</button>
         <button class="btn primary" id="dlPdf" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v11m0 0 4-4m-4 4-4-4M5 19h14"/></svg>Baixar PDF</button>
         <button class="btn" id="dlDocx" type="button">Baixar Word</button>
         <button class="btn" id="cpTxt" type="button">Copiar texto</button>
@@ -539,7 +572,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 26/10/2026 20h40</p>
+<p class="ver">Portal de Vendas · versão 26/10/2026 20h50</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -555,12 +588,195 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 let toastT; function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,3600)}
+/* Modelos de mensagem: mantidos pela gerência via Claude. [cliente], [imóvel] e [corretor] são trocados pelos campos do topo; o resto entre colchetes o corretor completa. */
+const MENSAGENS=[
+ {id:"capt-anuncio",cat:"Captação",titulo:"Proprietário anunciando por conta própria",quando:"Viu placa, anúncio em portal ou rede social do próprio dono.",
+  texto:`Olá, [cliente]! Tudo bem?
+Aqui é [corretor], da Utu-Guaçu Imóveis, de Itu.
+
+Vi o anúncio do seu imóvel ([imóvel]) e fiquei interessado(a) em ajudar na venda. Atendemos hoje clientes buscando exatamente esse perfil na região.
+
+Há mais de 45 anos a Utu-Guaçu é especializada em imóveis de alto padrão e rurais. Cuidamos de tudo para você: fotos profissionais, divulgação no nosso site e nos principais portais, filtro dos interessados, visitas acompanhadas e toda a parte de documentação até a escritura.
+
+Posso te ligar para conversarmos 10 minutinhos sobre como trabalharíamos o seu imóvel?`},
+ {id:"capt-ativa",cat:"Captação",titulo:"Abordar proprietário de imóvel que não está à venda",quando:"Você conhece um imóvel com o perfil que seus clientes procuram.",
+  texto:`Olá, [cliente], tudo bem?
+Sou [corretor], corretor(a) da Utu-Guaçu Imóveis.
+
+Estou atendendo clientes qualificados procurando um imóvel com o perfil do seu ([imóvel]). Sei que talvez você não esteja pensando em vender, mas gostaria de saber se teria interesse em ouvir uma proposta ou em receber uma avaliação de mercado atualizada, sem compromisso.
+
+Se fizer sentido, combinamos um café ou uma ligação rápida. Obrigado(a) pela atenção!`},
+ {id:"capt-exclus",cat:"Captação",titulo:"Propor exclusividade ao proprietário",quando:"O proprietário vai trabalhar com a gente e você quer a exclusividade.",
+  texto:`[cliente], obrigado(a) pela confiança em deixar o seu imóvel com a Utu-Guaçu.
+
+Quero te propor trabalharmos com exclusividade, porque isso muda o resultado:
+• o imóvel ganha destaque no nosso site e nos portais, com fotos e anúncio profissionais;
+• um único preço e uma única apresentação no mercado, o que preserva o valor do imóvel;
+• investimos mais em divulgação e mantemos você informado(a) a cada visita e proposta;
+• toda a negociação e a documentação ficam centralizadas em quem conhece o imóvel a fundo.
+
+Posso te enviar a autorização para você olhar com calma?`},
+ {id:"lead-primeiro",cat:"Atendimento",titulo:"Primeiro contato com quem chamou pelo anúncio",quando:"Chegou um contato do site, portal ou Instagram.",
+  texto:`Olá, [cliente]! Aqui é [corretor], da Utu-Guaçu Imóveis. Obrigado(a) pelo interesse no [imóvel].
+
+Para te atender da melhor forma: você procura para morar ou para investir? E qual faixa de valor e região fazem mais sentido para você?
+
+Se preferir, já te mando fotos e detalhes por aqui e podemos agendar uma visita.`},
+ {id:"visita-confirma",cat:"Atendimento",titulo:"Confirmar visita na véspera",quando:"Um dia antes da visita.",
+  texto:`Olá, [cliente], tudo bem? Passando para confirmar a nossa visita ao [imóvel] amanhã, [dia] às [horário].
+
+Te encontro no local ou, se preferir, combinamos de sair juntos da imobiliária (R. Paula Souza, 483, Centro, Itu). Qualquer imprevisto, me avise por aqui. Até amanhã!`},
+ {id:"pos-visita",cat:"Atendimento",titulo:"Retorno depois da visita",quando:"No dia seguinte à visita.",
+  texto:`Olá, [cliente]! Foi um prazer te acompanhar na visita ao [imóvel].
+
+O que achou? Quero entender o que mais te agradou e se ficou alguma dúvida, seja sobre o imóvel, a documentação ou as formas de pagamento.
+
+Se o imóvel fez sentido, posso te ajudar a montar uma proposta. E se não for exatamente esse, já separo outras opções no mesmo perfil.`},
+ {id:"sumiu",cat:"Atendimento",titulo:"Cliente parou de responder",quando:"Mandou informações e o cliente sumiu há alguns dias.",
+  texto:`Olá, [cliente], tudo bem? Imagino que a rotina esteja corrida.
+
+Só para não te deixar sem retorno: o [imóvel] continua disponível e segue recebendo visitas. Ainda faz sentido para você, ou prefere que eu te mostre outras opções?
+
+Fico à disposição, sem pressa.`},
+ {id:"cliente-antigo",cat:"Atendimento",titulo:"Retomar contato com cliente antigo",quando:"Cliente que conversou com a gente há meses ou anos.",
+  texto:`Olá, [cliente]! Aqui é [corretor], da Utu-Guaçu Imóveis. Há um tempo conversamos sobre imóveis aqui na região.
+
+Lembrei de você porque surgiram oportunidades novas no perfil que você buscava, inclusive alguns lançamentos com condições especiais de entrada.
+
+Seu plano de comprar ainda está de pé? Se quiser, te mando uma seleção atualizada por aqui.`},
+ {id:"lancamento",cat:"Atendimento",titulo:"Apresentar um lançamento",quando:"Enviar um dossiê de lançamento para clientes da sua carteira.",
+  texto:`Olá, [cliente], tudo bem? Aqui é [corretor], da Utu-Guaçu Imóveis.
+
+Queria te apresentar em primeira mão o [imóvel], um lançamento com condições especiais para as primeiras unidades. Te envio o material completo, com localização, lazer e valores.
+
+Se gostar, organizo uma visita ao plantão e monto uma simulação no plano de pagamento que fizer mais sentido para você.`},
+ {id:"prop-envio",cat:"Proposta",titulo:"Enviar proposta ao proprietário",quando:"Junto com o PDF da proposta gerada aqui no portal.",
+  texto:`Olá, [cliente], tudo bem? Aqui é [corretor], da Utu-Guaçu Imóveis.
+
+Tenho uma boa notícia: recebemos uma proposta formal de compra para o seu imóvel ([imóvel]).
+
+Envio em anexo a proposta completa, com o valor e as condições de pagamento. Fico à disposição para conversarmos e te ajudar a avaliar com tranquilidade. Qual o melhor horário para falarmos?`},
+ {id:"aceita-comprador",cat:"Proposta",titulo:"Proposta aceita: pedir dados ao comprador",quando:"O vendedor aceitou e vamos preparar o contrato de compra e venda.",
+  texto:`Olá, [cliente]! Trago ótimas notícias: a sua proposta para o [imóvel] foi aceita pelo proprietário! Parabéns!
+
+Para darmos os próximos passos e prepararmos o contrato de compra e venda, preciso que você me envie por aqui:
+
+Dados pessoais (seus e do cônjuge, se houver)
+• nome completo, nacionalidade, profissão e e-mail
+• estado civil e, se casado(a), o regime de bens
+• foto do RG e do CPF (ou da CNH)
+• certidão de casamento ou de união estável, se for o caso
+• comprovante de endereço atualizado
+
+Se a compra for no nome de uma empresa
+• contrato social e última alteração, cartão CNPJ e documentos do representante
+
+Pagamento
+• confirmação da forma de pagamento combinada e, se houver financiamento, o banco escolhido
+
+Assim que eu receber, encaminho para a equipe preparar o contrato e te aviso sobre a data de assinatura. Qualquer dúvida, estou à disposição!`},
+ {id:"aceita-vendedor",cat:"Proposta",titulo:"Proposta aceita: pedir dados ao vendedor",quando:"Logo após o aceite, para o proprietário providenciar documentos.",
+  texto:`Olá, [cliente]! Obrigado(a) pelo aceite da proposta do [imóvel]. Agora vamos preparar o contrato de compra e venda com toda a segurança.
+
+Para isso, preciso que você me envie por aqui:
+
+Dados pessoais (seus e do cônjuge, se houver)
+• nome completo, nacionalidade, profissão e e-mail
+• estado civil e, se casado(a), o regime de bens
+• foto do RG e do CPF (ou da CNH)
+• certidão de casamento ou de união estável, se for o caso
+• comprovante de endereço atualizado
+• dados bancários para receber os pagamentos
+
+Se o imóvel estiver no nome de uma empresa
+• contrato social e última alteração, cartão CNPJ e documentos do representante
+
+Do imóvel
+• matrícula atualizada (certidão de propriedade com negativa de ônus)
+• carnê ou certidão de débitos do IPTU
+• declaração de quitação do condomínio, se houver
+• se for imóvel rural: CCIR, ITR dos últimos 5 anos e CAR
+
+As certidões negativas pessoais (protesto, distribuidores, Justiça Federal, Receita e Trabalho) podemos solicitar juntos; te explico o passo a passo.
+
+Assim que eu receber, seguimos para a assinatura. Muito obrigado(a) pela confiança!`},
+ {id:"prop-cobrar",cat:"Proposta",titulo:"Cobrar retorno da proposta",quando:"O proprietário recebeu a proposta e ainda não respondeu.",
+  texto:`Olá, [cliente], tudo bem? Conseguiu analisar a proposta que te enviei para o [imóvel]?
+
+O comprador está bem interessado e aguarda o seu retorno para seguirmos. Se quiser, podemos conversar por telefone e eu te explico cada condição, ou levo uma contraproposta sua para ele.
+
+Me diga o que achou, mesmo que precise de mais um tempinho.`},
+ {id:"prop-contra",cat:"Proposta",titulo:"Levar contraproposta ao comprador",quando:"O proprietário não aceitou o valor, mas fez uma contraproposta.",
+  texto:`Olá, [cliente]! Conversei com o proprietário do [imóvel] sobre a sua proposta.
+
+Ele valorizou muito o seu interesse e apresentou uma contraproposta: [valor e condições].
+
+Na minha avaliação, é uma condição justa para o imóvel e para o momento do mercado. Vamos conversar sobre como fechar nesse formato?`},
+ {id:"prop-desconto",cat:"Proposta",titulo:"Comprador pede um desconto muito grande",quando:"A oferta do comprador está bem abaixo do pedido.",
+  texto:`[cliente], entendo que você queira fazer um bom negócio, e é exatamente isso que eu quero para você.
+
+Para a proposta ter chance real de ser aceita, ela precisa estar próxima do valor de mercado do [imóvel]. Uma oferta muito abaixo costuma ser recusada de imediato e pode esfriar a negociação.
+
+Que tal chegarmos a um valor mais competitivo, ou melhorar a condição de pagamento (mais entrada, prazo menor)? Isso costuma pesar bastante na decisão do proprietário.`},
+ {id:"prop-recusa",cat:"Proposta",titulo:"Proposta recusada, manter o cliente",quando:"O proprietário recusou e você quer manter o comprador por perto.",
+  texto:`[cliente], o proprietário do [imóvel] decidiu não seguir com a proposta neste momento. Sei que é frustrante, mas faz parte da negociação.
+
+Já estou separando outras opções com o mesmo perfil e, se a situação dele mudar, você será o(a) primeiro(a) a saber. Posso te mandar algumas alternativas ainda esta semana?`},
+ {id:"preco-alto",cat:"Proprietário",titulo:"Imóvel com preço acima do mercado",quando:"O imóvel tem visitas mas não recebe propostas.",
+  texto:`Olá, [cliente], tudo bem? Quero te passar um retorno sincero sobre o [imóvel].
+
+Nas últimas semanas tivemos [número] visitas e todos elogiaram o imóvel, mas o retorno mais frequente é sobre o valor, que está acima de imóveis parecidos vendidos recentemente na região.
+
+Preparei um comparativo de mercado para te mostrar. Podemos conversar sobre um ajuste estratégico? Um preço alinhado costuma atrair mais visitas e propostas melhores.`},
+ {id:"comissao",cat:"Proprietário",titulo:"Proprietário questiona a comissão",quando:"O proprietário pede para reduzir a comissão.",
+  texto:`[cliente], entendo a preocupação. Quero te mostrar o que está incluído no nosso trabalho:
+• avaliação e estratégia de preço;
+• fotos, anúncio e divulgação no nosso site e nos principais portais;
+• filtro dos interessados e visitas acompanhadas;
+• negociação para defender o seu valor;
+• análise de documentação e acompanhamento até a escritura, com segurança jurídica.
+
+São mais de 45 anos fazendo isso em Itu e região. Nosso compromisso é que a comissão volte para você em um negócio mais seguro e bem fechado.`},
+ {id:"pos-venda",cat:"Pós-venda",titulo:"Agradecer e pedir indicação",quando:"Depois da escritura ou da entrega das chaves.",
+  texto:`[cliente], parabéns pela conquista do [imóvel]! Foi um prazer fazer parte desse momento.
+
+Muito obrigado(a) pela confiança na Utu-Guaçu. Se conhecer alguém pensando em comprar, vender ou alugar, ficarei feliz em atender com o mesmo cuidado.
+
+Conte comigo para o que precisar!`}
+];
+
+const MSG_CATS=["Todas",...[...new Set(MENSAGENS.map(m=>m.cat))]];
+let msgCat="Todas";
+function fillMsg(t){
+  const rep=(k,id)=>{const val=($("#"+id).value||"").trim();if(val)t=t.split(k).join(val)};
+  rep("[cliente]","mCliente");rep("[imóvel]","mImovel");rep("[corretor]","mCorretor");return t;
+}
+function msgHTML(t){return esc(t).replace(/\[([^\]]+)\]/g,'<mark>[$1]</mark>')}
+function renderMsgs(){
+  $("#msgChips").innerHTML=MSG_CATS.map(c=>`<button class="chip" type="button" aria-pressed="${c===msgCat}" data-mc="${esc(c)}">${esc(c)}</button>`).join("");
+  const list=MENSAGENS.filter(m=>msgCat==="Todas"||m.cat===msgCat);
+  $("#msgsOut").innerHTML=list.map(m=>{const t=fillMsg(m.texto);return `<article class="msg-card">
+    <div class="msg-top"><span class="cat">${esc(m.cat)}</span><h3>${esc(m.titulo)}</h3><p class="desc">${esc(m.quando)}</p></div>
+    <div class="msg-text">${msgHTML(t)}</div>
+    <div class="msg-act"><button class="btn primary" type="button" data-copy="${esc(m.id)}">Copiar mensagem</button><a class="btn" href="https://wa.me/?text=${encodeURIComponent(t)}" target="_blank" rel="noopener">Enviar no WhatsApp</a></div>
+  </article>`}).join("");
+}
+$("#msgChips").addEventListener("click",e=>{const b=e.target.closest("[data-mc]");if(!b)return;msgCat=b.dataset.mc;renderMsgs()});
+["mCliente","mImovel","mCorretor"].forEach(id=>$("#"+id).addEventListener("input",()=>{if(id==="mCorretor")LS.set("utu.msg.corretor",$("#mCorretor").value);renderMsgs()}));
+try{$("#mCorretor").value=LS.get("utu.msg.corretor","")||""}catch(_){}
+function copyText(t,okMsg){
+  const fb=()=>{const ta=document.createElement("textarea");ta.value=t;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand("copy")}catch(_){}ta.remove();toast(ok?okMsg:"Não consegui copiar. Segure o dedo sobre o texto para copiar.")};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>toast(okMsg),fb);else fb();
+}
+$("#msgsOut").addEventListener("click",e=>{const b=e.target.closest("[data-copy]");if(!b)return;const m=MENSAGENS.find(x=>x.id===b.dataset.copy);copyText(fillMsg(m.texto),"Mensagem copiada. É só colar no WhatsApp.")});
+
 
 /* ---------- Navegação: início · seção · proposta ---------- */
 const slug=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 let pendingHash=location.hash.replace("#","");
 function show(view,cat){
-  $("#view-inicio").hidden=view!=="inicio"; $("#view-arquivos").hidden=view!=="arquivos"; $("#view-proposta").hidden=view!=="proposta";
+  $("#view-inicio").hidden=view!=="inicio"; $("#view-arquivos").hidden=view!=="arquivos"; $("#view-proposta").hidden=view!=="proposta"; $("#view-mensagens").hidden=view!=="mensagens";
+  if(view==="mensagens")renderMsgs();
   $("#crumb").hidden=view==="inicio";
   if(view==="arquivos"){S.filter=cat;S.q="";$("#q").value="";renderFiles()}
   const h=view==="arquivos"?slug(cat):view;
@@ -569,7 +785,7 @@ function show(view,cat){
 }
 $("#crumb").addEventListener("click",()=>show("inicio"));
 $("#brandHome").addEventListener("click",()=>show("inicio"));
-$("#home").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(!b)return;const t=b.dataset.open;if(t==="__proposta")show("proposta");else show("arquivos",t)});
+$("#home").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(!b)return;const t=b.dataset.open;if(t==="__proposta")show("proposta");else if(t==="__mensagens")show("mensagens");else show("arquivos",t)});
 
 /* =====================================================
    ARQUIVOS
@@ -600,12 +816,15 @@ function renderHome(){
       <span class="minisheet" aria-hidden="true"><i class="h"></i><i></i><i></i><i class="g"></i><i></i><i></i><i></i><i class="g"></i><i></i></span>
       <span class="txt"><span class="k">Ferramenta</span><h2>Gerador de proposta</h2><p>Preencha a ficha do cliente e baixe a proposta de compra pronta, em PDF ou Word.</p></span>
       <span class="go">Abrir gerador${ARROW}</span></button>`;
-  let blocks="";
+  const msgTile=`<button class="blk msg" type="button" data-open="__mensagens">
+      <span class="txt"><span class="k">${MENSAGENS.length} modelos</span><h2>Modelos de mensagem</h2><p>Textos prontos para captação, follow-up, proposta e pós-venda. É só copiar e mandar no WhatsApp.</p></span>
+      <span class="go">Ver mensagens${ARROW}</span></button>`;
+  let blocks=msgTile;
   if(S.dbMissing) blocks=`<div class="note" style="grid-column:1/-1"><b>Os materiais não carregaram nesta tela</b>Abra o portal pelo link, já entrado na sua conta do Claude. O gerador de proposta funciona mesmo assim.</div>`;
   else if(!S.ready) blocks=`<div class="blk empty" aria-busy="true"><span class="txt"><span class="k">Materiais</span><h2>Carregando…</h2></span></div>`;
   else{
     const cats=catsInUse();
-    blocks=cats.map(({c,n})=>{
+    blocks+=cats.map(({c,n})=>{
       const covers=S.files.filter(f=>(f.categoria||"Outros")===c&&f.capa).sort((a,b)=>(a.ordem??999)-(b.ordem??999)).slice(0,3);
       const stack=covers.length?`<span class="stack" aria-hidden="true">${covers.map((f,i)=>`<img src="${esc(capaOf(f))}" alt="" style="--rot:${[-8,2,10][i]}deg">`).join("")}</span>`:"";
       return `<button class="blk${stack?" has-stack":""}" type="button" data-open="${esc(c)}">
@@ -1144,6 +1363,25 @@ async function offer(filename,data,okMsg){
   if(!dls){toast("Download indisponível nesta tela. Use “Copiar texto”.");return}
   try{await dls.save({filename,data});toast(okMsg)}catch(err){if(err?.code==="declined")return;toast(err?.code==="rate_limited"?"Já há um download aguardando confirmação.":"Não deu para baixar agora. Tente de novo.")}
 }
+function msgProposta(m){
+  const corr=(m.corretor&&!m.corretor.ph)?m.corretor.t:"[corretor]";
+  const vend=(m.vend&&!m.vend.ph)?m.vend.t.split(" ")[0]:"[proprietário]";
+  const im=[v("imTipo"),v("imIdent")?"nº "+v("imIdent"):"",v("imEmp")?"no "+v("imEmp"):"",v("imEndereco")].filter(Boolean).join(" ")||"seu imóvel";
+  return `Olá, ${vend}! Tudo bem? Aqui é ${corr}, da Utu-Guaçu Imóveis.\n\nTenho uma boa notícia: recebemos uma proposta formal de compra para o seu imóvel (${im}).\n\nEnvio em anexo a proposta completa, com o valor e as condições de pagamento. Fico à disposição para conversarmos e te ajudar a avaliar com tranquilidade. Qual o melhor horário para falarmos?`;
+}
+$("#shareProp").addEventListener("click",async()=>{
+  if(!ready())return;
+  if(!window.jspdf){toast("O gerador de PDF não carregou. Recarregue a página.");return}
+  const texto=msgProposta(last), name=last.fileBase+".pdf";
+  try{navigator.clipboard&&navigator.clipboard.writeText(texto).catch(()=>{})}catch(_){}
+  const blob=toPDF(blocks(last)), file=new File([blob],name,{type:"application/pdf"});
+  try{
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:texto,title:"Proposta de compra"});toast("Se a mensagem não aparecer junto do PDF, cole no WhatsApp: ela já está copiada.");return}
+  }catch(err){if(err&&err.name==="AbortError")return}
+  nativeSave(name,blob);
+  window.open("https://wa.me/?text="+encodeURIComponent(texto),"_blank","noopener");
+  toast("PDF baixado. Anexe o arquivo na conversa do WhatsApp.");
+});
 $("#dlPdf").addEventListener("click",async()=>{if(!ready())return;if(!window.jspdf){toast("O gerador de PDF não carregou. Recarregue a página.");return}offer(last.fileBase+".pdf",toPDF(blocks(last)),"PDF pronto.")});
 $("#dlDocx").addEventListener("click",async()=>{if(!ready())return;if(!window.JSZip){toast("O gerador de Word não carregou. Recarregue a página.");return}offer(last.fileBase+".docx",await toDOCX(blocks(last)),"Arquivo Word pronto.")});
 $("#cpTxt").addEventListener("click",()=>{
