@@ -180,6 +180,14 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
 .gen{display:flex;flex-direction:column;gap:8px;padding:6px 0 4px}
 .btn.big{padding:15px 18px;font-size:15px;font-weight:600;width:100%}
 .btn.big svg{width:18px;height:18px}
+.field[data-req]>label::after{content:" *";color:var(--gold);font-weight:600}
+.needbar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:2px solid var(--warn);box-shadow:0 -10px 30px rgba(0,0,0,.18);padding:14px max(16px,env(safe-area-inset-right,0px)) calc(14px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.needbar-in{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
+.needbar b{color:var(--warn);font-size:14px}
+.needbar ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.needbar a{color:var(--fg);text-decoration:underline;cursor:pointer;font-size:14px}
+.needbar .btn{align-self:flex-end}
+.ver{margin:40px 0 0;text-align:center;font-size:11px;color:var(--muted)}
 .gen-missing{font-size:13px;line-height:1.6;background:var(--warn-soft);color:var(--warn);border-radius:var(--r);padding:10px 12px}
 .gen-missing a{color:inherit;font-weight:600;text-decoration:underline;cursor:pointer}
 .gen-note{font-size:12px;color:var(--muted);text-align:center}
@@ -497,10 +505,14 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
           <label><input type="radio" name="vendTipo" id="vendPJ" value="PJ"><span>Empresa</span></label>
         </div>
         <div class="field" data-req><label for="vendNome">Nome do vendedor / proprietário</label><input id="vendNome" placeholder="Ex.: Moura Leite Loteamentos"></div>
-        <div class="two">
-          <div class="field" data-req><label for="comissao">Comissão (R$)</label><input id="comissao" inputmode="decimal" data-money></div>
-          <div class="field"><label for="comPct">ou % sobre o valor</label><input id="comPct" inputmode="decimal" placeholder="Ex.: 6"></div>
+        <div class="field"><span class="legend">Comissão: como informar?</span>
+          <div class="seg">
+            <label><input type="radio" name="comTipo" id="comR" value="R" checked><span>Valor em R$</span></label>
+            <label><input type="radio" name="comTipo" id="comP" value="P"><span>% do valor</span></label>
+          </div>
         </div>
+        <div class="field" id="fComR" data-req><label for="comissao">Valor da comissão (R$)</label><input id="comissao" inputmode="decimal" placeholder="0,00" data-money></div>
+        <div class="field" id="fComP" data-req hidden><label for="comPct">Porcentagem sobre o valor ofertado (%)</label><input id="comPct" inputmode="decimal" placeholder="Ex.: 6"><span class="hint" id="comCalc"></span></div>
         <div class="field" style="max-width:200px"><label for="dataEm">Data de emissão</label><input id="dataEm" type="date"></div>
       </fieldset>
       <div class="gen">
@@ -525,8 +537,10 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
+<p class="ver">Portal de Vendas · versão 26/10/2026 20h15</p>
 </main>
 
+<div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -807,7 +821,7 @@ const MESES=["janeiro","fevereiro","março","abril","maio","junho","julho","agos
 const dataExt=iso=>{const [y,m,d]=(iso||"").split("-").map(Number);if(!y)return null;return `${d} de ${MESES[m-1]} de ${y}`};
 
 const FIELDS=["corretor","corretorOutro","creci","nome","cpf","rg","estadoCivil","nacionalidade","profissao","conjNome","conjCpf","razao","cnpj","repNome","repCpf","endereco","telefone","email","imTipo","imEmp","imIdent","imQuadra","imArea","imEndereco","imCidade","imMatricula","imCartorio","imObs","valor","forma","entrada","nParc","vParc","periodo","indice","primeira","finEntrada","condicoes","validade","vendNome","comissao","comPct","dataEm"];
-const RADIOS=["propTipo","vendTipo"];
+const RADIOS=["propTipo","vendTipo","comTipo"];
 const v=id=>($("#"+id).value||"").trim();
 const radio=n=>(document.querySelector(`input[name="${n}"]:checked`)||{}).value;
 function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
@@ -826,9 +840,6 @@ let saveT;function saveDraft(){clearTimeout(saveT);saveT=setTimeout(()=>{const d
 $("#cnpj").addEventListener("input",e=>{e.target.value=maskCnpj(e.target.value)});
 $("#telefone").addEventListener("input",e=>{e.target.value=maskTel(e.target.value)});
 $$("[data-money]").forEach(i=>i.addEventListener("blur",()=>{const n=parseMoney(i.value);if(!isNaN(n))i.value=fmtMoney(n);update()}));
-function recalcCom(){const p=parseMoney($("#comPct").value),val=parseMoney(v("valor"));if(!isNaN(p)&&p>0&&!isNaN(val)&&val>0)$("#comissao").value=fmtMoney(Math.round(val*p)/100)}
-$("#comPct").addEventListener("input",recalcCom);$("#valor").addEventListener("input",recalcCom);$("#valor").addEventListener("blur",recalcCom);
-$("#comissao").addEventListener("input",()=>{$("#comPct").value=""});
 
 /* --------- build model + validation --------- */
 function collect(){
@@ -850,8 +861,12 @@ function collect(){
   const entrada=parseMoney(v("entrada")),nParc=parseInt(onlyDig(v("nParc")),10),vParc=parseMoney(v("vParc")),finE=parseMoney(v("finEntrada"));
   if(forma==="parcelado"){need("entrada","entrada",entrada>=0);need("nParc","nº de parcelas",nParc>0);need("vParc","valor da parcela",vParc>0)}
   if(forma==="financiamento"){need("finEntrada","recursos próprios",finE>=0&&(!(valor>0)||finE<valor))}
-  if(forma==="livre") need("condicoes","condições de pagamento");
-  need("vendNome","vendedor"); const com=parseMoney(v("comissao")); need("comissao","comissão (em R$ ou %)",com>0);
+  if(forma==="livre") need("condicoes","como será o pagamento (campo Condições)");
+  need("vendNome","vendedor");
+  const ct=radio("comTipo"); let com=NaN, pc=NaN;
+  if(ct==="P"){pc=parseMoney(v("comPct"));need("comPct","porcentagem da comissão",pc>0&&pc<100);if(pc>0&&valor>0)com=Math.round(valor*pc)/100}
+  else{com=parseMoney(v("comissao"));need("comissao","valor da comissão",com>0)}
+  m.comInfo={ct,pc,com};
 
   /* text pieces: null = missing (placeholder) */
   const P=(val,ph)=>val?{t:val}:{t:ph,ph:true};
@@ -907,7 +922,7 @@ function collect(){
   m.cond=v("condicoes")?v("condicoes"):(forma==="livre"?null:"");
   const val=parseInt(onlyDig(v("validade")),10); m.validade=val>0?val:0;
   m.vend=P(v("vendNome"),"nome do vendedor"); m.vendPJ=vt==="PJ";
-  m.comissao=com>0?{t:money(com)}:{t:"valor da comissão",ph:true};
+  m.comissao=com>0?{t:money(com)+(ct==="P"?`, correspondente a ${pc.toLocaleString("pt-BR",{maximumFractionDigits:2})}% do valor ofertado`:"")}:{t:ct==="P"?"comissão (preencha o valor ofertado e a %)":"valor da comissão",ph:true};
   m.data=dataExt(v("dataEm"))||dataExt(today());
   m.comprador=pt==="PF"?v("nome"):v("razao"); m.conj=pt==="PF"&&/casado|união/.test(v("estadoCivil"))?v("conjNome"):"";
   m.compradorSub=pt==="PJ"&&v("repNome")?`p.p. ${v("repNome")}`:"";
@@ -1057,13 +1072,15 @@ function update(){
   const pt=radio("propTipo"); $("#boxPF").hidden=pt!=="PF"; $("#boxPJ").hidden=pt!=="PJ";
   $("#fCorretorOutro").hidden=v("corretor")!=="__outro";
   $("#boxConj").hidden=!/casado|união/.test(v("estadoCivil"));
+  {const P=radio("comTipo")==="P";$("#fComR").hidden=P;$("#fComP").hidden=!P;}
   const f=v("forma"); $("#boxParc").hidden=f!=="parcelado"; $("#boxFin").hidden=f!=="financiamento";
-  $("#condOpt").textContent=f==="livre"?"(descreva como será pago)":"(opcional)";
+  $("#condOpt").textContent=f==="livre"?"(obrigatório: descreva como será pago)":"(opcional)";
   const m=collect(); last=m;
   /* field error marks: only after the field was touched or after a blocked download */
   $$(".field").forEach(el=>el.classList.remove("err"));
   Object.keys(m.errs).forEach(id=>{const i=$("#"+id);if(!i)return;const fl=i.closest(".field");if(fl&&(i.dataset.touched||document.body.dataset.tried))fl.classList.add("err")});
   ["cpf","conjCpf","repCpf","cnpj"].forEach(id=>{const i=$("#"+id),h=i.closest(".field").querySelector(".hint");if(!h)return;const ok=id==="cnpj"?cnpjOk(i.value):cpfOk(i.value);h.textContent=i.value&&onlyDig(i.value).length>=(id==="cnpj"?14:11)&&!ok?(id==="cnpj"?"CNPJ inválido, confira os números.":"CPF inválido, confira os números."):""});
+  {const ci=m.comInfo;$("#comCalc").textContent=ci.ct==="P"&&ci.com>0?`Comissão de ${brl(ci.com)}.`:(ci.ct==="P"?"Calculada sobre o valor ofertado.":"");}
   /* calc helpers */
   const c=m.calc;
   if(c.forma==="parcelado"){const el=$("#calcParc");
@@ -1086,13 +1103,15 @@ function update(){
 $("#pf").addEventListener("input",e=>{if(e.target.id)e.target.dataset.touched="1";update()});
 $("#pf").addEventListener("change",update);
 $("#pf").addEventListener("submit",e=>e.preventDefault());
+$("#needList").addEventListener("click",e=>{const a=e.target.closest("[data-go]");if(a){$("#needbar").hidden=true;go(a.dataset.go)}});
+$("#needClose").addEventListener("click",()=>{$("#needbar").hidden=true});
 $("#genMissing").addEventListener("click",e=>{const a=e.target.closest("[data-go]");if(a)go(a.dataset.go)});
 $("#missing").addEventListener("click",e=>{const a=e.target.closest("[data-go]");if(a)go(a.dataset.go)});
 function go(id){document.body.dataset.tried="1";update();setPane("form");const i=$("#"+id);if(i){i.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>i.focus({preventScroll:true}),250)}}
 function setPane(p){$("#split").dataset.pane=p;$("#paneForm").checked=p==="form";$("#paneSheet").checked=p==="sheet";if(p==="form"){$("#split").classList.remove("result");$("#view-proposta").classList.remove("done");$("#backEdit").hidden=true}}
 function gerar(){
   update();
-  if(last.missing.length){document.body.dataset.tried="1";update();$("#genMissing").scrollIntoView({behavior:"smooth",block:"center"});return}
+  if(last.missing.length){document.body.dataset.tried="1";update();$("#needList").innerHTML=last.missing.map(x=>`<li><a data-go="${x.id}">${esc(x.label)}</a></li>`).join("");$("#needbar").hidden=false;return}
   setPane("sheet");$("#split").classList.add("result");$("#view-proposta").classList.add("done");$("#backEdit").hidden=false;
   $("#view-proposta").scrollIntoView({block:"start"});window.scrollTo({top:0});
 }
