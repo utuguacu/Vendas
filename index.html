@@ -613,7 +613,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 26/10/2026 21h10</p>
+<p class="ver">Portal de Vendas · versão 26/10/2026 21h15</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -702,7 +702,7 @@ Se gostar, organizo uma visita ao plantão e monto uma simulação no plano de p
 
 Tenho uma boa notícia: recebemos uma proposta formal de compra para {i:o seu|a sua} [imóvel].
 
-Envio em anexo a proposta completa, com o valor e as condições de pagamento. Fico à disposição para conversarmos e te ajudar a avaliar com tranquilidade. Qual o melhor horário para falarmos?`},
+Envio em anexo a proposta completa, com o valor e as condições de pagamento. Analise com calma e, qualquer dúvida, estou à disposição.`},
  {id:"aceita-comprador",cat:"Proposta",titulo:"Proposta aceita: pedir dados ao comprador",quando:"O vendedor aceitou e vamos preparar o contrato de compra e venda.",
   texto:`Olá, [cliente]! Trago ótimas notícias: a sua proposta para {i:o|a} [imóvel] foi aceita pelo proprietário! Parabéns!
 
@@ -1459,7 +1459,7 @@ function msgProposta(m){
   const corr=(m.corretor&&!m.corretor.ph)?m.corretor.t:"[corretor]";
   const vend=(m.vend&&!m.vend.ph)?m.vend.t.split(" ")[0]:"[proprietário]";
   const im=[v("imTipo"),v("imIdent")?"nº "+v("imIdent"):"",v("imEmp")?"no "+v("imEmp"):"",v("imEndereco")].filter(Boolean).join(" ")||"seu imóvel";
-  return `Olá, ${vend}! Tudo bem? Aqui é ${corr}, da Utu-Guaçu Imóveis.\n\nTenho uma boa notícia: recebemos uma proposta formal de compra para o seu imóvel (${im}).\n\nEnvio em anexo a proposta completa, com o valor e as condições de pagamento. Fico à disposição para conversarmos e te ajudar a avaliar com tranquilidade. Qual o melhor horário para falarmos?`;
+  return `Olá, ${vend}! Tudo bem? Aqui é ${corr}, da Utu-Guaçu Imóveis.\n\nTenho uma boa notícia: recebemos uma proposta formal de compra para o seu imóvel (${im}).\n\nEnvio em anexo a proposta completa, com o valor e as condições de pagamento. Analise com calma e, qualquer dúvida, estou à disposição.`;
 }
 $("#shareProp").addEventListener("click",async()=>{
   if(!ready())return;
