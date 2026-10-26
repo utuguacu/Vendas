@@ -180,6 +180,8 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
 .gen{display:flex;flex-direction:column;gap:8px;padding:6px 0 4px}
 .btn.big{padding:15px 18px;font-size:15px;font-weight:600;width:100%}
 .btn.big svg{width:18px;height:18px}
+.gen-missing{font-size:13px;line-height:1.6;background:var(--warn-soft);color:var(--warn);border-radius:var(--r);padding:10px 12px}
+.gen-missing a{color:inherit;font-weight:600;text-decoration:underline;cursor:pointer}
 .gen-note{font-size:12px;color:var(--muted);text-align:center}
 .back{align-self:flex-start;padding-left:4px}
 #view-proposta.done .prop-head,#view-proposta.done .switch{display:none}
@@ -446,7 +448,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
           <div class="field"><label for="imEmp">Empreendimento ou condomínio <span class="opt">(opc.)</span></label><input id="imEmp" list="empList" placeholder="Ex.: Altavista Reserva"></div>
         </div>
         <div class="three">
-          <div class="field"><label for="imIdent">Lote / unidade nº</label><input id="imIdent" placeholder="A6-87"></div>
+          <div class="field"><label for="imIdent">Lote / unidade nº <span class="opt">(opc.)</span></label><input id="imIdent" placeholder="A6-87"></div>
           <div class="field"><label for="imQuadra">Quadra <span class="opt">(opc.)</span></label><input id="imQuadra"></div>
           <div class="field"><label for="imArea">Área (m²) <span class="opt">(opc.)</span></label><input id="imArea" inputmode="decimal"></div>
         </div>
@@ -457,7 +459,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
           <div class="field"><label for="imCartorio">Cartório <span class="opt">(opc.)</span></label><input id="imCartorio" placeholder="RI de Itu"></div>
         </div>
         <div class="field"><label for="imObs">Observações sobre o imóvel <span class="opt">(opc.)</span></label><textarea id="imObs" rows="2" placeholder="Ex.: com benfeitorias, móveis planejados…"></textarea></div>
-        <span class="hint" id="imHint" style="font-size:11.5px;color:var(--muted)">Informe pelo menos o lote/unidade, o empreendimento ou o endereço.</span>
+        
       </fieldset>
 
       <fieldset>
@@ -504,6 +506,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
       <div class="gen">
         <button class="btn gold big" id="btnGerar" type="button">Gerar proposta<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button>
         <span class="gen-note" id="genNote"></span>
+        <div class="gen-missing" id="genMissing" hidden></div>
       </div>
     </form>
 
@@ -823,7 +826,8 @@ let saveT;function saveDraft(){clearTimeout(saveT);saveT=setTimeout(()=>{const d
 $("#cnpj").addEventListener("input",e=>{e.target.value=maskCnpj(e.target.value)});
 $("#telefone").addEventListener("input",e=>{e.target.value=maskTel(e.target.value)});
 $$("[data-money]").forEach(i=>i.addEventListener("blur",()=>{const n=parseMoney(i.value);if(!isNaN(n))i.value=fmtMoney(n);update()}));
-$("#comPct").addEventListener("input",()=>{const p=parseMoney($("#comPct").value),val=parseMoney(v("valor"));if(!isNaN(p)&&!isNaN(val))$("#comissao").value=fmtMoney(Math.round(val*p)/100)});
+function recalcCom(){const p=parseMoney($("#comPct").value),val=parseMoney(v("valor"));if(!isNaN(p)&&p>0&&!isNaN(val)&&val>0)$("#comissao").value=fmtMoney(Math.round(val*p)/100)}
+$("#comPct").addEventListener("input",recalcCom);$("#valor").addEventListener("input",recalcCom);$("#valor").addEventListener("blur",recalcCom);
 $("#comissao").addEventListener("input",()=>{$("#comPct").value=""});
 
 /* --------- build model + validation --------- */
@@ -834,21 +838,20 @@ function collect(){
   need(v("corretor")==="__outro"?"corretorOutro":"corretor","corretor"); need("creci","CRECI");
   const pt=radio("propTipo"), vt=radio("vendTipo");
   if(pt==="PF"){
-    need("nome","nome do proponente"); need("cpf","CPF válido",cpfOk(v("cpf"))); need("estadoCivil","estado civil");
+    need("nome","nome do proponente"); need("cpf",v("cpf")?"CPF (número inválido, confira)":"CPF",cpfOk(v("cpf"))); need("estadoCivil","estado civil");
     if(v("conjCpf")&&!cpfOk(v("conjCpf"))){m.missing.push({id:"conjCpf",label:"CPF do cônjuge válido"});m.errs.conjCpf=true}
   }else{
-    need("razao","razão social"); need("cnpj","CNPJ válido",cnpjOk(v("cnpj"))); need("repNome","representante"); need("repCpf","CPF do representante",cpfOk(v("repCpf")));
+    need("razao","razão social"); need("cnpj",v("cnpj")?"CNPJ (número inválido, confira)":"CNPJ",cnpjOk(v("cnpj"))); need("repNome","representante"); need("repCpf",v("repCpf")?"CPF do representante (inválido)":"CPF do representante",cpfOk(v("repCpf")));
   }
-  need("endereco","endereço"); need("telefone","telefone",onlyDig(v("telefone")).length>=10);
+  need("endereco","endereço"); need("telefone",v("telefone")?"telefone com DDD":"telefone",onlyDig(v("telefone")).length>=10);
   need("imTipo","tipo do imóvel"); need("imCidade","cidade do imóvel");
-  if(!v("imIdent")&&!v("imEmp")&&!v("imEndereco")){m.missing.push({id:"imIdent",label:"identificação do imóvel"});m.errs.imIdent=m.errs.imEmp=m.errs.imEndereco=true}
   const valor=parseMoney(v("valor")); need("valor","valor ofertado",valor>0);
   const forma=v("forma"); need("forma","forma de pagamento");
   const entrada=parseMoney(v("entrada")),nParc=parseInt(onlyDig(v("nParc")),10),vParc=parseMoney(v("vParc")),finE=parseMoney(v("finEntrada"));
   if(forma==="parcelado"){need("entrada","entrada",entrada>=0);need("nParc","nº de parcelas",nParc>0);need("vParc","valor da parcela",vParc>0)}
   if(forma==="financiamento"){need("finEntrada","recursos próprios",finE>=0&&(!(valor>0)||finE<valor))}
   if(forma==="livre") need("condicoes","condições de pagamento");
-  need("vendNome","vendedor"); const com=parseMoney(v("comissao")); need("comissao","comissão",com>0);
+  need("vendNome","vendedor"); const com=parseMoney(v("comissao")); need("comissao","comissão (em R$ ou %)",com>0);
 
   /* text pieces: null = missing (placeholder) */
   const P=(val,ph)=>val?{t:val}:{t:ph,ph:true};
@@ -1075,19 +1078,21 @@ function update(){
   const n=m.missing.length, done=n===0;
   $("#pill").className="pill "+(done?"ok":"warn"); $("#pill").textContent=done?"Ficha completa":`Faltam ${n} ${n===1?"item":"itens"}`;
   $("#missing").innerHTML=done?"Confira a folha e baixe a proposta.":m.missing.slice(0,6).map(x=>`<a data-go="${x.id}">${esc(x.label)}</a>`).join(", ")+(n>6?` e mais ${n-6}`:"");
-  $("#genNote").textContent=done?"Tudo preenchido. Toque para ver e baixar a proposta.":`Ainda faltam ${n} ${n===1?"item":"itens"}. Ao tocar, mostramos o que falta.`;
+  {const gm=$("#genMissing");gm.hidden=done||!document.body.dataset.tried;gm.innerHTML=done?"":"Falta preencher: "+m.missing.map(x=>`<a data-go="${x.id}">${esc(x.label)}</a>`).join(", ")+". Toque no item para ir até ele.";}
+  $("#genNote").textContent=done?"Tudo preenchido. Toque para ver e baixar a proposta.":(n===1?"Ainda falta 1 item obrigatório.":`Ainda faltam ${n} itens obrigatórios.`);
   $("#paneSheetLbl").textContent=done?"Ver proposta ✓":`Ver proposta · faltam ${n}`;
   saveDraft();
 }
 $("#pf").addEventListener("input",e=>{if(e.target.id)e.target.dataset.touched="1";update()});
 $("#pf").addEventListener("change",update);
 $("#pf").addEventListener("submit",e=>e.preventDefault());
+$("#genMissing").addEventListener("click",e=>{const a=e.target.closest("[data-go]");if(a)go(a.dataset.go)});
 $("#missing").addEventListener("click",e=>{const a=e.target.closest("[data-go]");if(a)go(a.dataset.go)});
 function go(id){document.body.dataset.tried="1";update();setPane("form");const i=$("#"+id);if(i){i.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>i.focus({preventScroll:true}),250)}}
 function setPane(p){$("#split").dataset.pane=p;$("#paneForm").checked=p==="form";$("#paneSheet").checked=p==="sheet";if(p==="form"){$("#split").classList.remove("result");$("#view-proposta").classList.remove("done");$("#backEdit").hidden=true}}
 function gerar(){
   update();
-  if(last.missing.length){document.body.dataset.tried="1";update();toast(`Falta preencher: ${last.missing.map(x=>x.label).slice(0,3).join(", ")}${last.missing.length>3?"…":""}`);go(last.missing[0].id);return}
+  if(last.missing.length){document.body.dataset.tried="1";update();$("#genMissing").scrollIntoView({behavior:"smooth",block:"center"});return}
   setPane("sheet");$("#split").classList.add("result");$("#view-proposta").classList.add("done");$("#backEdit").hidden=false;
   $("#view-proposta").scrollIntoView({block:"start"});window.scrollTo({top:0});
 }
