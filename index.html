@@ -189,6 +189,10 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
 .needbar .btn{align-self:flex-end}
 .ver{margin:40px 0 0;text-align:center;font-size:11px;color:var(--muted)}
 .gen-missing{font-size:13px;line-height:1.6;background:var(--warn-soft);color:var(--warn);border-radius:var(--r);padding:10px 12px}
+.gen-missing b{display:block;margin-bottom:4px}
+.gen-missing ul{margin:0 0 6px;padding-left:20px}
+.gen-missing li{margin:2px 0}
+.gen-missing span{font-size:12px;opacity:.85}
 .gen-missing a{color:inherit;font-weight:600;text-decoration:underline;cursor:pointer}
 .gen-note{font-size:12px;color:var(--muted);text-align:center}
 .back{align-self:flex-start;padding-left:4px}
@@ -537,7 +541,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 26/10/2026 20h15</p>
+<p class="ver">Portal de Vendas · versão 26/10/2026 20h20</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -807,7 +811,11 @@ function reaisExtenso(v){
   return s||"zero real";
 }
 window.__extenso=reaisExtenso;
-const parseMoney=s=>{if(s==null)return NaN;s=String(s).replace(/[^\d,.-]/g,"");if(!s)return NaN;if(s.includes(","))s=s.replace(/\./g,"").replace(",",".");else if((s.match(/\./g)||[]).length>1||/\.\d{3}$/.test(s))s=s.replace(/\./g,"");return parseFloat(s)};
+const parseMoney=s=>{if(s==null)return NaN;s=String(s).replace(/[^\d,.]/g,"");if(!s)return NaN;
+  if(/^\d{1,3}(,\d{3})+$/.test(s))s=s.replace(/,/g,"");
+  else if(s.includes(",")){const i=s.lastIndexOf(",");s=s.slice(0,i).replace(/[.,]/g,"")+"."+s.slice(i+1).replace(/[.,]/g,"")}
+  else if(s.includes(".")){const i=s.lastIndexOf("."),dec=s.slice(i+1);s=dec.length<=2?s.slice(0,i).replace(/\./g,"")+"."+dec:s.replace(/\./g,"")}
+  return parseFloat(s)};
 const fmtMoney=v=>v.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
 const brl=v=>"R$ "+fmtMoney(v);
 const money=v=>`${brl(v)} (${reaisExtenso(v)})`;
@@ -1080,7 +1088,7 @@ function update(){
   $$(".field").forEach(el=>el.classList.remove("err"));
   Object.keys(m.errs).forEach(id=>{const i=$("#"+id);if(!i)return;const fl=i.closest(".field");if(fl&&(i.dataset.touched||document.body.dataset.tried))fl.classList.add("err")});
   ["cpf","conjCpf","repCpf","cnpj"].forEach(id=>{const i=$("#"+id),h=i.closest(".field").querySelector(".hint");if(!h)return;const ok=id==="cnpj"?cnpjOk(i.value):cpfOk(i.value);h.textContent=i.value&&onlyDig(i.value).length>=(id==="cnpj"?14:11)&&!ok?(id==="cnpj"?"CNPJ inválido, confira os números.":"CPF inválido, confira os números."):""});
-  {const ci=m.comInfo;$("#comCalc").textContent=ci.ct==="P"&&ci.com>0?`Comissão de ${brl(ci.com)}.`:(ci.ct==="P"?"Calculada sobre o valor ofertado.":"");}
+  {const ci=m.comInfo;$("#comCalc").textContent=ci.ct==="P"&&ci.com>0?`${ci.pc.toLocaleString("pt-BR",{maximumFractionDigits:2})}% de ${brl(m.calc.valor)} = comissão de ${brl(ci.com)}`:(ci.ct==="P"?"Preencha o valor ofertado para calcular.":"");}
   /* calc helpers */
   const c=m.calc;
   if(c.forma==="parcelado"){const el=$("#calcParc");
@@ -1095,7 +1103,7 @@ function update(){
   const n=m.missing.length, done=n===0;
   $("#pill").className="pill "+(done?"ok":"warn"); $("#pill").textContent=done?"Ficha completa":`Faltam ${n} ${n===1?"item":"itens"}`;
   $("#missing").innerHTML=done?"Confira a folha e baixe a proposta.":m.missing.slice(0,6).map(x=>`<a data-go="${x.id}">${esc(x.label)}</a>`).join(", ")+(n>6?` e mais ${n-6}`:"");
-  {const gm=$("#genMissing");gm.hidden=done||!document.body.dataset.tried;gm.innerHTML=done?"":"Falta preencher: "+m.missing.map(x=>`<a data-go="${x.id}">${esc(x.label)}</a>`).join(", ")+". Toque no item para ir até ele.";}
+  {const gm=$("#genMissing");gm.hidden=done||!document.body.dataset.tried;gm.innerHTML=done?"":`<b>Para gerar a proposta, falta preencher:</b><ul>${m.missing.map(x=>`<li><a data-go="${x.id}">${esc(x.label)}</a></li>`).join("")}</ul><span>Toque no item para ir até o campo.</span>`;}
   $("#genNote").textContent=done?"Tudo preenchido. Toque para ver e baixar a proposta.":(n===1?"Ainda falta 1 item obrigatório.":`Ainda faltam ${n} itens obrigatórios.`);
   $("#paneSheetLbl").textContent=done?"Ver proposta ✓":`Ver proposta · faltam ${n}`;
   saveDraft();
@@ -1111,7 +1119,7 @@ function go(id){document.body.dataset.tried="1";update();setPane("form");const i
 function setPane(p){$("#split").dataset.pane=p;$("#paneForm").checked=p==="form";$("#paneSheet").checked=p==="sheet";if(p==="form"){$("#split").classList.remove("result");$("#view-proposta").classList.remove("done");$("#backEdit").hidden=true}}
 function gerar(){
   update();
-  if(last.missing.length){document.body.dataset.tried="1";update();$("#needList").innerHTML=last.missing.map(x=>`<li><a data-go="${x.id}">${esc(x.label)}</a></li>`).join("");$("#needbar").hidden=false;return}
+  if(last.missing.length){document.body.dataset.tried="1";update();$("#genMissing").scrollIntoView({behavior:"smooth",block:"center"});return}
   setPane("sheet");$("#split").classList.add("result");$("#view-proposta").classList.add("done");$("#backEdit").hidden=false;
   $("#view-proposta").scrollIntoView({block:"start"});window.scrollTo({top:0});
 }
