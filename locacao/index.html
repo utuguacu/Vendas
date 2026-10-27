@@ -522,7 +522,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
   <div id="apOut" style="margin-top:22px"></div>
 </section>
 
-<p class="ver">Portal de Locação · versão 27/10/2026 13h50 · <a href="../" style="color:inherit">ir para o Portal de Vendas</a></p>
+<p class="ver">Portal de Locação · versão 27/10/2026 17h00 · <a href="../" style="color:inherit">ir para o Portal de Vendas</a></p>
 </main>
 
 <div class="toast" id="toast" hidden></div>
@@ -710,17 +710,13 @@ const FICHAS=[
       F("gFMatInfo","","info",{hint:"Pode ser a matrícula antiga ou vencida. A atualizada é tirada pela imobiliária."})],sh("gTipo","Fiador"))]},
   OBS("Observações para o administrativo")],
  docs:[
-  {id:"pDoc",l:"RG e CPF ou CNH do locatário",r:1,show:sh("pTipo","PF")},
-  {id:"pRendaC",l:"Comprovante de renda (últimos 3 meses)",r:1,show:sh("pTipo","PF")},
-  {id:"pCj",l:"Certidão de casamento e documentos do cônjuge",r:1,show:[sh("pTipo","PF"),shre("pEc","casad|união")]},
-  {id:"pjContrato",l:"Contrato social e última alteração",r:1,show:sh("pTipo","PJ")},
-  {id:"pjCnpj",l:"Cartão do CNPJ",r:1,show:sh("pTipo","PJ")},
-  {id:"pjSocios",l:"RG e CPF ou CNH dos sócios",r:1,show:sh("pTipo","PJ")},
-  {id:"pjFat",l:"Faturamento ou balanço",show:sh("pTipo","PJ")},
-  {id:"pEndC",l:"Comprovante de endereço",r:1},
-  {id:"fDoc",l:"RG e CPF ou CNH do fiador",r:1,show:sh("gTipo","Fiador")},
-  {id:"fRendaC",l:"Comprovante de renda do fiador",r:1,show:sh("gTipo","Fiador")},
-  {id:"fMat",l:"Matrícula do imóvel do fiador (se tiver)",show:sh("gTipo","Fiador"),hint:"Pode ser antiga ou vencida."},
+  {id:"pDoc",l:"Cópia dos documentos do locatário (RG e CPF ou CNH)",r:1,show:sh("pTipo","PF")},
+  {id:"pRendaC",l:"Comprovante de renda do locatário",r:1,show:sh("pTipo","PF")},
+  {id:"pCj",l:"Cópia dos documentos do cônjuge",show:[sh("pTipo","PF"),shre("pEc","casad|união")],hint:"Se o cônjuge também for locatário."},
+  {id:"pjDoc",l:"Contrato social, cartão CNPJ e documentos dos sócios",r:1,show:sh("pTipo","PJ")},
+  {id:"pjFat",l:"Comprovante de faturamento da empresa",r:1,show:sh("pTipo","PJ")},
+  {id:"fDoc",l:"Cópia dos documentos do fiador",r:1,show:sh("gTipo","Fiador")},
+  {id:"fMat",l:"Cópia da matrícula do imóvel dado como garantia",r:1,show:sh("gTipo","Fiador"),hint:"Pode ser a matrícula antiga ou vencida."},
   {id:"outros",l:"Outros documentos"}],
  calc:m=>{const r={hints:{},alerts:[]};const al=m.n("imAluguel"),renda=(m.n("pRenda")||0)+(m.n("pCjRenda")||0);
   if(m.vis("pRenda")&&al>0&&renda>0){const x=renda/al;const t=`Renda ${x.toLocaleString("pt-BR",{maximumFractionDigits:1})} vezes o aluguel.`;r.hints.pRenda={t,c:x>=3?"okh":"warn"};if(x<3)r.alerts.push(t+" Abaixo de 3 vezes.")}
@@ -746,7 +742,8 @@ const FICHAS=[
     F("vInicio","Início do contrato","date",{r:1,w:3}),
     F("vIndice","Índice de reajuste","select",{r:1,w:3,o:["IGP-M","IPCA","IVAR"]}),
     F("vIptu","IPTU pago por","select",{r:1,w:3,o:["Inquilino","Proprietário","Já incluso no aluguel"]}),
-    F("vCond","Condomínio pago por","select",{w:3,o:["Inquilino","Proprietário","Não tem condomínio"]}),
+    F("vCond","Condomínio","select",{r:1,w:3,o:["Tem, pago pelo inquilino","Tem, pago pelo proprietário","Não tem condomínio"]}),
+    F("vGas","Gás cobrado separado","seg",{w:3,o:["Não","Sim"],def:"Não"}),
     F("vEsp","Carência, desconto ou combinado especial","textarea",{ph:"Ex.: 1º mês com 50% de desconto pela pintura"})]},
   garantia(),
   {t:"Situação",f:[
@@ -755,17 +752,26 @@ const FICHAS=[
     F("sEntrada","Entrada prevista","date",{w:3})]},
   OBS("Cláusulas especiais ou observações")],
  docs:[
-  {id:"lDoc",l:"RG e CPF ou CNH do proprietário",r:1,show:sh("lTipo","PF")},
-  {id:"lPj",l:"Contrato social e documentos do representante do proprietário",r:1,show:sh("lTipo","PJ")},
-  {id:"mat",l:"Matrícula atualizada do imóvel",r:1},
-  {id:"iptu",l:"Carnê ou capa do IPTU",r:1},
-  {id:"tDoc",l:"RG e CPF ou CNH do inquilino",r:1,show:sh("tTipo","PF")},
-  {id:"tCj",l:"Documentos do cônjuge do inquilino",r:1,show:[sh("tTipo","PF"),shre("tEc","casad|união")]},
-  {id:"tPj",l:"Contrato social, cartão CNPJ e documentos do representante do inquilino",r:1,show:sh("tTipo","PJ")},
-  {id:"fDoc",l:"RG e CPF ou CNH do fiador e do cônjuge",r:1,show:sh("gTipo","Fiador")},
-  {id:"fMat",l:"Matrícula do imóvel do fiador",r:1,show:sh("gTipo","Fiador")},
-  {id:"gComp",l:"Apólice ou comprovante da garantia",r:1,show:sh("gTipo",["Seguro-fiança","Título de capitalização"])},
-  {id:"gCau",l:"Comprovante do depósito da caução",show:sh("gTipo","Caução (depósito)"),hint:"Se já tiver sido feito."},
+  {id:"lDoc",l:"Locador: cópia dos documentos (RG e CPF ou CNH)",r:1,show:sh("lTipo","PF")},
+  {id:"lPj",l:"Locador: contrato social, cartão CNPJ e documentos do representante",r:1,show:sh("lTipo","PJ")},
+  {id:"lCert",l:"Locador: certidão de nascimento ou casamento",r:1,show:sh("lTipo","PF")},
+  {id:"lEnd",l:"Locador: comprovante de endereço",r:1},
+  {id:"tDoc",l:"Locatário: cópia dos documentos (RG e CPF ou CNH)",r:1,show:sh("tTipo","PF")},
+  {id:"tPj",l:"Locatário: contrato social, cartão CNPJ e documentos do representante",r:1,show:sh("tTipo","PJ")},
+  {id:"tRenda",l:"Locatário: comprovante de renda",r:1},
+  {id:"tCert",l:"Locatário: certidão de nascimento ou casamento",r:1,show:sh("tTipo","PF")},
+  {id:"tEnd",l:"Locatário: comprovante de endereço",r:1,show:sh("imFin","Comercial"),hint:"Obrigatório porque a locação é comercial."},
+  {id:"fDoc",l:"Fiador: cópia dos documentos",r:1,show:sh("gTipo","Fiador")},
+  {id:"fMat",l:"Fiador: matrícula atualizada do imóvel dado em garantia",r:1,show:sh("gTipo","Fiador")},
+  {id:"fCert",l:"Fiador: certidão de nascimento ou casamento",r:1,show:sh("gTipo","Fiador")},
+  {id:"fEnd",l:"Fiador: comprovante de endereço",r:1,show:sh("gTipo","Fiador")},
+  {id:"agua",l:"Imóvel: conta de água",r:1},
+  {id:"luz",l:"Imóvel: conta de luz",r:1},
+  {id:"iptu",l:"Imóvel: espelho do IPTU",r:1},
+  {id:"cond",l:"Imóvel: boleto do condomínio",r:1,show:shnot("vCond",["","Não tem condomínio"])},
+  {id:"gas",l:"Imóvel: boleto do gás",r:1,show:sh("vGas","Sim")},
+  {id:"mat",l:"Imóvel: matrícula do imóvel que está sendo alugado",r:1},
+  {id:"gComp",l:"Apólice ou comprovante da garantia",show:sh("gTipo",["Seguro-fiança","Título de capitalização","Caução (depósito)"])},
   {id:"aprov",l:"Aprovação da análise de crédito",hint:"Print ou PDF, se tiver."},
   {id:"outros",l:"Outros documentos"}],
  calc:m=>{const r={hints:{},alerts:[]};if(m.v("sAnalise")==="Em análise")r.alerts.push("A análise de crédito ainda não foi aprovada.");if(m.v("gTipo")==="Caução (depósito)"&&m.v("gCFica")==="Proprietário")r.alerts.push("Caução com o proprietário: o modelo de contrato prevê depósito na conta da Utu-Guaçu. Confirmar com o administrativo.");return r}},
@@ -1092,7 +1098,7 @@ function collect(){
   m.imgs=[];m.pdfs=[];m.slotVis={};
   if(fi.docs){const rows=[];
     fi.docs.forEach(d=>{const vis=isVis({id:"slot_"+d.id,show:d.show});m.slotVis[d.id]=vis;if(!vis)return;const L=ANEX[d.id]||[];
-      if(!L.length){if(d.r){m.missing.push({id:"slot_"+d.id,label:"Documentos: "+lc(d.l)});m.errs["slot_"+d.id]=1}return}
+      if(!L.length){if(d.r){m.missing.push({id:"slot_"+d.id,label:"Anexar "+lc(d.l)});m.errs["slot_"+d.id]=1}return}
       const ni=L.filter(f=>f.kind==="img").length,np=L.length-ni;
       L.forEach(f=>{if(f.kind==="img")m.imgs.push(Object.assign({slot:d.l},f));else m.pdfs.push({file:f.file,slot:d.l,name:f.name})});
       rows.push([d.l,[ni?`${ni} ${ni===1?"foto":"fotos"} nas folhas finais`:"",np?`${np} PDF enviado${np>1?"s":""} junto`:""].filter(Boolean).join(" e ")])});
@@ -1375,10 +1381,10 @@ Dá uma olhada com calma e me diz quais você gostaria de visitar. Consigo organ
 
 Para fazermos a análise de crédito, preciso destes documentos (pode ser foto bem nítida):
 
-1. RG e CPF ou CNH
-2. Comprovante de renda dos últimos 3 meses (holerite, extrato bancário ou declaração do Imposto de Renda)
-3. Comprovante de endereço atual
-4. Certidão de casamento, se for casad{k:o|a}, e documentos do cônjuge
+1. Cópia do RG e CPF ou da CNH
+2. Comprovante de renda
+
+Se mais alguém for assinar o contrato com você, preciso dos mesmos documentos dessa pessoa.
 
 Assim que eu receber, já encaminho para a nossa equipe. A análise costuma sair em [prazo].`},
  {id:"doc-pj",cat:"Documentação",titulo:"Documentos para a análise (empresa)",quando:"Quando quem vai alugar é uma empresa.",
@@ -1386,21 +1392,31 @@ Assim que eu receber, já encaminho para a nossa equipe. A análise costuma sair
 
 1. Contrato social e a última alteração
 2. Cartão do CNPJ
-3. RG e CPF dos sócios
-4. Faturamento ou balanço dos últimos 12 meses
-5. Comprovante de endereço da empresa
+3. Cópia dos documentos dos sócios
+4. Comprovante de faturamento
 
 Pode me mandar por aqui mesmo. Qualquer dúvida, estou à disposição.`},
- {id:"doc-fiador",cat:"Documentação",titulo:"Documentos do fiador",quando:"Quando a garantia escolhida é fiador.",
-  texto:`Olá, [cliente]! Como a garantia vai ser por fiador, preciso também dos documentos dele:
+ {id:"doc-fiador",cat:"Documentação",titulo:"Documentos do fiador para a análise",quando:"Quando a garantia escolhida é fiador.",
+  texto:`Olá, [cliente]! Como a garantia vai ser por fiador, preciso também de:
 
-1. RG e CPF ou CNH
-2. Comprovante de renda dos últimos 3 meses
+1. Cópia do RG e CPF ou da CNH do fiador
+2. Cópia da matrícula do imóvel que será dado como garantia
+
+A matrícula pode ser antiga ou vencida, a atualizada a gente mesmo tira.
+
+Pode me mandar por aqui mesmo. Qualquer dúvida, estou à disposição.`},
+ {id:"doc-contrato",cat:"Documentação",titulo:"Documentos para o contrato (inquilino)",quando:"Análise aprovada, para preparar o contrato.",
+  texto:`Olá, [cliente]! Para prepararmos o contrato {i:do|da} [imóvel], preciso de mais alguns documentos:
+
+1. Certidão de nascimento ou de casamento
+2. Comprovante de endereço (só se a locação for comercial)
+
+E do fiador, se tiver:
+1. Matrícula atualizada do imóvel dado em garantia
+2. Certidão de nascimento ou de casamento
 3. Comprovante de endereço
-4. Certidão de casamento, se for casado, e documentos do cônjuge
-5. Matrícula atualizada de um imóvel quitado em nome do fiador
 
-Pode me mandar por aqui mesmo. Qualquer dúvida, estou à disposição.`},
+Os documentos pessoais e o comprovante de renda que você já mandou para a análise valem para o contrato. Qualquer dúvida, me chama.`},
  {id:"doc-pendencia",cat:"Documentação",titulo:"Falta um documento",quando:"Quando a análise parou por falta de algo.",
   texto:`Olá, [cliente]! A análise está andando, só ficou faltando [documento ou informação].
 
@@ -1445,6 +1461,23 @@ Cuidamos de tudo: anúncio, visitas, análise de crédito, contrato, vistoria e 
 Nesta semana tivemos [número] visitas e [número] pedidos de informação. [O que os interessados comentaram].
 
 Seguimos divulgando. Se quiser, conversamos sobre algum ajuste para acelerar a locação.`},
+ {id:"pr-docs",cat:"Proprietário",titulo:"Documentos do proprietário para o contrato",quando:"Locação fechada, para preparar o contrato.",
+  texto:`Olá, [cliente]! Para prepararmos o contrato de locação {i:do seu|da sua} [imóvel], preciso destes documentos:
+
+Seus
+1. Cópia do RG e CPF ou da CNH
+2. Certidão de nascimento ou de casamento
+3. Comprovante de endereço
+
+Do imóvel
+1. Conta de água
+2. Conta de luz
+3. Espelho do IPTU
+4. Boleto do condomínio, se tiver
+5. Boleto do gás, se for cobrado separado
+6. Matrícula do imóvel
+
+Pode ser foto bem nítida, por aqui mesmo. Qualquer dúvida, estou à disposição.`},
  {id:"pr-alugado",cat:"Proprietário",titulo:"Imóvel alugado",quando:"Análise aprovada e locação fechada.",
   texto:`[cliente], boa notícia! {i:O seu|A sua} [imóvel] foi alugad{i:o|a}.
 
