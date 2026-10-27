@@ -373,6 +373,20 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
 .ph-del{position:absolute;top:5px;right:5px;width:30px;height:30px;border-radius:50%;border:0;background:rgba(0,0,0,.62);color:#fff;font-size:16px;line-height:1;cursor:pointer}
 .ph-add{position:relative;overflow:hidden;align-self:flex-start}
 .ph-add input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.dslots{display:flex;flex-direction:column;gap:10px}
+.dslot{border:1px solid var(--line);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:8px;background:var(--bg)}
+.dslot.err{border-color:var(--bad);background:var(--bad-soft)}
+.dhead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.dname{font-size:13px;font-weight:500;line-height:1.35}
+.dname .star{color:var(--gold)}
+.dstat{flex:none;font-size:11.5px;border-radius:999px;padding:2px 9px;font-weight:500}
+.dstat.warn{background:var(--warn-soft);color:var(--warn)}.dstat.ok{background:var(--ok-soft);color:var(--ok)}.dstat.opt{color:var(--muted)}
+.dfiles{display:flex;flex-wrap:wrap;gap:8px}.dfiles:empty{display:none}
+.dfile{position:relative;width:72px;height:92px;border-radius:4px;overflow:hidden;border:1px solid var(--line);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:9.5px;text-align:center;padding:4px;word-break:break-all;line-height:1.25}
+.dfile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.dfile .pdf{display:block;font-family:var(--display);font-size:17px;color:var(--gold)}
+.dfile .ph-del{width:24px;height:24px;font-size:14px;top:3px;right:3px}
+.dslot .ph-add{padding:7px 12px;font-size:12.5px}
 .sheet.auto{aspect-ratio:auto;min-height:0}
 .sheet .sigrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 28px}
 .sheet .sigrow .sig .line{width:100%}
@@ -450,7 +464,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
       <button class="btn ghost back" id="fiBack" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>Voltar e editar a ficha</button>
       <div class="actions">
         <button class="btn gold share-prop" id="fiShare" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg><span id="fiShareLbl">Enviar pelo WhatsApp</span></button>
-        <button class="btn primary" id="fiPdf" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v11m0 0 4-4m-4 4-4-4M5 19h14"/></svg>Baixar PDF</button>
+        <button class="btn primary" id="fiPdf" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v11m0 0 4-4m-4 4-4-4M5 19h14"/></svg><span id="fiPdfLbl">Baixar PDF</span></button>
         <button class="btn" id="fiTxt" type="button">Copiar texto</button>
         <button class="btn" id="fiNew" type="button">Nova ficha</button>
       </div>
@@ -508,7 +522,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
   <div id="apOut" style="margin-top:22px"></div>
 </section>
 
-<p class="ver">Portal de Locação · versão 27/10/2026 13h10 · <a href="../" style="color:inherit">ir para o Portal de Vendas</a></p>
+<p class="ver">Portal de Locação · versão 27/10/2026 13h50 · <a href="../" style="color:inherit">ir para o Portal de Vendas</a></p>
 </main>
 
 <div class="toast" id="toast" hidden></div>
@@ -674,6 +688,88 @@ const DOCS=(hint)=>({t:"Documentos",f:[F("docs","Fotos dos documentos","fotos",{
 const OBS=(l="Observações")=>({t:"Observações",f:[F("obs",l,"textarea")]});
 
 const FICHAS=[
+/* ---------- MAIS USADAS ---------- */
+{id:"analise",etapa:"Mais usadas",titulo:"Pedido de análise",hdr:["PEDIDO DE ","ANÁLISE"],para:"adm",
+ desc:"Faltou informação, não analisamos. Dados do imóvel, do locatário e do fiador, com os documentos anexados.",
+ secs:[
+  {t:"Imóvel",f:[
+    F("imAluguel","Valor do aluguel","money",{r:1,w:3}),
+    F("imCod","Código no Kenlo","text",{w:3,ph:"Ex.: CA0123"}),
+    F("imProp","Nome completo do proprietário","text",{r:1}),
+    F("imEnd","Endereço completo do imóvel","text",{r:1,ph:"Rua, nº, bairro, cidade"}),
+    F("imAdm","Quem vai administrar","seg",{r:1,o:["Utu-Guaçu","Proprietário"]})]},
+  {t:"Locatário",f:[
+    F("pTipo","Tipo de pessoa","seg",{o:["PF|Pessoa física","PJ|Empresa"],def:"PF"}),
+    ...withShow([F("pNome","Nome completo","text",{r:1}),F("pCpf","CPF","cpf",{r:1,w:3}),F("pNasc","Data de nascimento","date",{r:1,w:3}),F("pEc","Estado civil","select",{r:1,w:3,o:ESTCIVIL}),F("pProf","Profissão","text",{w:3}),F("pRenda","Renda mensal","money",{r:1,w:3}),...conjuge("p",true)],sh("pTipo","PF")),
+    ...withShow([F("pRazao","Razão social","text",{r:1}),F("pCnpj","CNPJ","cnpj",{r:1,w:3}),F("pFat","Faturamento mensal","money",{w:3}),F("pRep","Representante legal","text",{r:1,w:3}),F("pRepCpf","CPF do representante","cpf",{r:1,w:3})],sh("pTipo","PJ")),
+    F("pTel","Celular / WhatsApp","tel",{r:1,w:3}),F("pEmail","E-mail","email",{w:3})]},
+  {t:"Análise de fiador",f:[F("gTipo","Tipo de garantia","select",{r:1,o:GARANTIAS,hint:"Escolha Fiador para preencher os dados dele."}),
+    ...withShow([F("gFNome","Nome completo do fiador","text",{r:1}),F("gFCpf","CPF do fiador","cpf",{r:1,w:3}),F("gFNasc","Nascimento do fiador","date",{r:1,w:3,idade65:1}),
+      F("gFTel","Celular do fiador","tel",{w:3}),F("gFEc","Estado civil do fiador","select",{w:3,o:ESTCIVIL}),
+      F("gFMat","Nº da matrícula do imóvel","text",{r:1,w:3}),F("gFCart","Cartório","text",{r:1,w:3,ph:"Ex.: RI de Itu"}),
+      F("gFMatInfo","","info",{hint:"Pode ser a matrícula antiga ou vencida. A atualizada é tirada pela imobiliária."})],sh("gTipo","Fiador"))]},
+  OBS("Observações para o administrativo")],
+ docs:[
+  {id:"pDoc",l:"RG e CPF ou CNH do locatário",r:1,show:sh("pTipo","PF")},
+  {id:"pRendaC",l:"Comprovante de renda (últimos 3 meses)",r:1,show:sh("pTipo","PF")},
+  {id:"pCj",l:"Certidão de casamento e documentos do cônjuge",r:1,show:[sh("pTipo","PF"),shre("pEc","casad|união")]},
+  {id:"pjContrato",l:"Contrato social e última alteração",r:1,show:sh("pTipo","PJ")},
+  {id:"pjCnpj",l:"Cartão do CNPJ",r:1,show:sh("pTipo","PJ")},
+  {id:"pjSocios",l:"RG e CPF ou CNH dos sócios",r:1,show:sh("pTipo","PJ")},
+  {id:"pjFat",l:"Faturamento ou balanço",show:sh("pTipo","PJ")},
+  {id:"pEndC",l:"Comprovante de endereço",r:1},
+  {id:"fDoc",l:"RG e CPF ou CNH do fiador",r:1,show:sh("gTipo","Fiador")},
+  {id:"fRendaC",l:"Comprovante de renda do fiador",r:1,show:sh("gTipo","Fiador")},
+  {id:"fMat",l:"Matrícula do imóvel do fiador (se tiver)",show:sh("gTipo","Fiador"),hint:"Pode ser antiga ou vencida."},
+  {id:"outros",l:"Outros documentos"}],
+ calc:m=>{const r={hints:{},alerts:[]};const al=m.n("imAluguel"),renda=(m.n("pRenda")||0)+(m.n("pCjRenda")||0);
+  if(m.vis("pRenda")&&al>0&&renda>0){const x=renda/al;const t=`Renda ${x.toLocaleString("pt-BR",{maximumFractionDigits:1})} vezes o aluguel.`;r.hints.pRenda={t,c:x>=3?"okh":"warn"};if(x<3)r.alerts.push(t+" Abaixo de 3 vezes.")}
+  return r},
+ termo:{depois:1,txt:m=>["Declaro que as informações desta ficha são verdadeiras e autorizo a UTU-GUAÇU IMÓVEIS a consultar meu nome e CPF ou CNPJ em órgãos de proteção ao crédito e a usar estes dados e documentos somente para a análise desta locação, nos termos da Lei Geral de Proteção de Dados (Lei 13.709/2018)."],
+  sigs:m=>[{label:"LOCATÁRIO",name:m.nome("p")},...(m.v("gTipo")==="Fiador"?[{label:"FIADOR",name:m.v("gFNome")}]:[])]}},
+
+{id:"contrato",etapa:"Mais usadas",titulo:"Elaboração de contrato",hdr:["ELABORAÇÃO ","DE CONTRATO"],para:"adm",
+ desc:"Tudo o que o administrativo precisa para montar o contrato: partes, valores, prazo, reajuste, IPTU, garantia e quem administra.",
+ secs:[
+  IMOVEL([F("imMat","Matrícula","text",{w:3}),F("imFin","Finalidade","seg",{w:3,o:["Residencial","Comercial"],def:"Residencial"}),F("imMob","Mobiliado","seg",{o:["Não","Sim","Semimobiliado"],def:"Não"})]),
+  parte("l","Proprietário (locador)",{req:["tel"],tel:1}),
+  {t:"Administração",f:[
+    F("admQuem","Quem administra","seg",{r:1,o:["Utu-Guaçu","Proprietário"],def:"Utu-Guaçu"}),
+    F("admTaxa","Taxa de administração (%)","number",{w:3,suf:"%",show:sh("admQuem","Utu-Guaçu")}),
+    F("admRepasse","Dados para repasse ao proprietário","textarea",{show:sh("admQuem","Utu-Guaçu"),ph:"Banco, agência e conta ou chave PIX, e o titular"})]},
+  parte("t","Inquilino (locatário)",{req:["ec","prof","tel","email"],tel:1,email:1}),
+  {t:"Valores e prazo",f:[
+    F("vAluguel","Aluguel","money",{r:1,w:3}),
+    F("vVenc","Dia do vencimento","number",{r:1,w:3,ph:"Ex.: 10",min:1,max:31}),
+    F("vPrazo","Prazo do contrato","select",{r:1,w:3,o:PRAZOS}),
+    F("vPrazoOutro","Prazo (meses)","number",{r:1,w:3,suf:" meses",show:sh("vPrazo","Outro")}),
+    F("vInicio","Início do contrato","date",{r:1,w:3}),
+    F("vIndice","Índice de reajuste","select",{r:1,w:3,o:["IGP-M","IPCA","IVAR"]}),
+    F("vIptu","IPTU pago por","select",{r:1,w:3,o:["Inquilino","Proprietário","Já incluso no aluguel"]}),
+    F("vCond","Condomínio pago por","select",{w:3,o:["Inquilino","Proprietário","Não tem condomínio"]}),
+    F("vEsp","Carência, desconto ou combinado especial","textarea",{ph:"Ex.: 1º mês com 50% de desconto pela pintura"})]},
+  garantia(),
+  {t:"Situação",f:[
+    F("sAnalise","Análise de crédito","seg",{r:1,o:["Aprovada","Em análise"],def:"Aprovada"}),
+    F("sAssin","Assinatura","select",{w:3,o:["Digital","No escritório"]}),
+    F("sEntrada","Entrada prevista","date",{w:3})]},
+  OBS("Cláusulas especiais ou observações")],
+ docs:[
+  {id:"lDoc",l:"RG e CPF ou CNH do proprietário",r:1,show:sh("lTipo","PF")},
+  {id:"lPj",l:"Contrato social e documentos do representante do proprietário",r:1,show:sh("lTipo","PJ")},
+  {id:"mat",l:"Matrícula atualizada do imóvel",r:1},
+  {id:"iptu",l:"Carnê ou capa do IPTU",r:1},
+  {id:"tDoc",l:"RG e CPF ou CNH do inquilino",r:1,show:sh("tTipo","PF")},
+  {id:"tCj",l:"Documentos do cônjuge do inquilino",r:1,show:[sh("tTipo","PF"),shre("tEc","casad|união")]},
+  {id:"tPj",l:"Contrato social, cartão CNPJ e documentos do representante do inquilino",r:1,show:sh("tTipo","PJ")},
+  {id:"fDoc",l:"RG e CPF ou CNH do fiador e do cônjuge",r:1,show:sh("gTipo","Fiador")},
+  {id:"fMat",l:"Matrícula do imóvel do fiador",r:1,show:sh("gTipo","Fiador")},
+  {id:"gComp",l:"Apólice ou comprovante da garantia",r:1,show:sh("gTipo",["Seguro-fiança","Título de capitalização"])},
+  {id:"gCau",l:"Comprovante do depósito da caução",show:sh("gTipo","Caução (depósito)"),hint:"Se já tiver sido feito."},
+  {id:"aprov",l:"Aprovação da análise de crédito",hint:"Print ou PDF, se tiver."},
+  {id:"outros",l:"Outros documentos"}],
+ calc:m=>{const r={hints:{},alerts:[]};if(m.v("sAnalise")==="Em análise")r.alerts.push("A análise de crédito ainda não foi aprovada.");if(m.v("gTipo")==="Caução (depósito)"&&m.v("gCFica")==="Proprietário")r.alerts.push("Caução com o proprietário: o modelo de contrato prevê depósito na conta da Utu-Guaçu. Confirmar com o administrativo.");return r}},
+
 /* ---------- CAPTAÇÃO ---------- */
 {id:"autorizacao",etapa:"Captação",titulo:"Autorização de locação e administração",hdr:["AUTORIZAÇÃO ","DE LOCAÇÃO"],para:"adm",
  desc:"Proprietário autoriza a Utu-Guaçu a anunciar e alugar, com valores, taxas, garantias aceitas e dados para repasse. Sai com espaço para assinatura.",
@@ -718,58 +814,6 @@ const FICHAS=[
  termo:{antes:1,txt:m=>[`Por intermédio da UTU-GUAÇU IMÓVEIS, apresento proposta para a locação do imóvel situado em {{imEnd|endereço do imóvel}}, {{imCidade|cidade}}, nas condições abaixo, sujeita à aprovação do proprietário e à análise de crédito.`],
   sigs:m=>[{label:"INTERESSADO",name:m.v("pNome")},{label:"DE ACORDO, PROPRIETÁRIO",name:""}]},
  msg:m=>`Olá! Tudo bem? Aqui é ${m.cor}, da Utu-Guaçu Imóveis.\n\nRecebemos uma proposta de locação para o seu imóvel${m.v("imEnd")?" na "+m.v("imEnd"):""}: aluguel de ${m.disp("prValor")}, prazo de ${m.disp("prPrazo")==="Outro"?m.disp("prPrazoOutro"):m.disp("prPrazo")}, com garantia por ${m.disp("prGar").toLowerCase()}.\n\nEnvio em anexo a proposta completa. Analise com calma e, qualquer dúvida, estou à disposição.`},
-
-{id:"analise",etapa:"Novo inquilino",titulo:"Análise de crédito",hdr:["ANÁLISE ","DE CRÉDITO"],para:"adm",
- desc:"Cadastro do pretendente (pessoa física ou empresa), renda, garantia e fotos dos documentos para o administrativo consultar o nome.",
- secs:[
-  IMOVEL([F("imAluguel","Aluguel","money",{r:1,w:2}),F("imCond","Condomínio","money",{w:2}),F("imIptu","IPTU mensal","money",{w:2}),F("imFin","Finalidade","seg",{o:["Residencial","Comercial"],def:"Residencial"})]),
-  parte("p","Pretendente",{req:["nasc","ec","prof","tel","end"],tel:1,end:1,cjRenda:1,
-    extraPF:[F("pTrab","Empresa onde trabalha","text",{w:3}),F("pTempo","Tempo de empresa","text",{w:3,ph:"Ex.: 3 anos"}),F("pRenda","Renda mensal","money",{r:1,w:3}),F("pMora","Mora hoje em","select",{w:3,o:["Imóvel alugado","Imóvel próprio","Com familiares","Outro"]})],
-    extraPJ:[F("pFat","Faturamento mensal","money",{w:3}),F("pAtiv","Tempo de atividade","text",{w:3})]}),
-  {t:"Ocupação",f:[
-    F("ocMor","Quantas pessoas vão morar","number",{w:3,show:sh("imFin","Residencial")}),
-    F("ocPet","Animais de estimação","seg",{w:3,o:["Não","Sim"],def:"Não"}),
-    F("ocUso","Atividade que vai funcionar no imóvel","text",{r:1,show:sh("imFin","Comercial"),ph:"Ex.: escritório de contabilidade"})]},
-  garantia({full:1}),
-  {t:"Referências",f:[F("ref1","Referência pessoal 1 (nome e telefone)"),F("ref2","Referência pessoal 2 (nome e telefone)")]},
-  DOCS("RG ou CNH, CPF, comprovante de renda e de endereço do pretendente e do fiador. Pode tirar a foto na hora."),
-  OBS("Observações para o administrativo")],
- calc:m=>{const r={hints:{},alerts:[]};const tot=["imAluguel","imCond","imIptu"].reduce((s,k)=>s+(m.n(k)||0),0);
-  const renda=(m.n("pRenda")||0)+(m.n("pCjRenda")||0);
-  if(m.vis("pRenda")&&tot>0&&renda>0){const x=renda/tot;const t=`Renda ${x.toLocaleString("pt-BR",{maximumFractionDigits:1})} vezes o custo mensal (aluguel + condomínio + IPTU = ${brl(tot)}).`;r.hints.pRenda={t,c:x>=3?"okh":"warn"};if(x<3)r.alerts.push(t+" Abaixo de 3 vezes.")}
-  const fr=m.n("gFRenda");if(m.vis("gFRenda")&&fr>0&&tot>0){const x=fr/tot;r.hints.gFRenda={t:`Renda do fiador ${x.toLocaleString("pt-BR",{maximumFractionDigits:1})} vezes o custo mensal.`,c:x>=3?"okh":"warn"}}
-  return r},
- termo:{depois:1,txt:m=>["Declaro que as informações desta ficha são verdadeiras e autorizo a UTU-GUAÇU IMÓVEIS a consultar meu nome e CPF ou CNPJ em órgãos de proteção ao crédito e a usar estes dados e documentos somente para a análise desta locação, nos termos da Lei Geral de Proteção de Dados (Lei 13.709/2018)."],
-  sigs:m=>[{label:"PRETENDENTE",name:m.nome("p")},...(m.v("gTipo")==="Fiador"?[{label:"FIADOR",name:m.v("gFNome")}]:[])]}},
-
-{id:"contrato",etapa:"Novo inquilino",titulo:"Elaboração de contrato",hdr:["ELABORAÇÃO ","DE CONTRATO"],para:"adm",
- desc:"Tudo o que o administrativo precisa para montar o contrato: partes, valores, prazo, reajuste, IPTU, garantia e quem administra.",
- secs:[
-  IMOVEL([F("imMat","Matrícula","text",{w:3}),F("imFin","Finalidade","seg",{w:3,o:["Residencial","Comercial"],def:"Residencial"}),F("imMob","Mobiliado","seg",{o:["Não","Sim","Semimobiliado"],def:"Não"})]),
-  parte("l","Proprietário (locador)",{req:["tel"],tel:1}),
-  {t:"Administração",f:[
-    F("admQuem","Quem administra","seg",{r:1,o:["Utu-Guaçu","Proprietário"],def:"Utu-Guaçu"}),
-    F("admTaxa","Taxa de administração (%)","number",{w:3,suf:"%",show:sh("admQuem","Utu-Guaçu")}),
-    F("admRepasse","Dados para repasse ao proprietário","textarea",{show:sh("admQuem","Utu-Guaçu"),ph:"Banco, agência e conta ou chave PIX, e o titular"})]},
-  parte("t","Inquilino (locatário)",{req:["ec","prof","tel","email"],tel:1,email:1}),
-  {t:"Valores e prazo",f:[
-    F("vAluguel","Aluguel","money",{r:1,w:3}),
-    F("vVenc","Dia do vencimento","number",{r:1,w:3,ph:"Ex.: 10",min:1,max:31}),
-    F("vPrazo","Prazo do contrato","select",{r:1,w:3,o:PRAZOS}),
-    F("vPrazoOutro","Prazo (meses)","number",{r:1,w:3,suf:" meses",show:sh("vPrazo","Outro")}),
-    F("vInicio","Início do contrato","date",{r:1,w:3}),
-    F("vIndice","Índice de reajuste","select",{r:1,w:3,o:["IGP-M","IPCA","IVAR"]}),
-    F("vIptu","IPTU pago por","select",{r:1,w:3,o:["Inquilino","Proprietário","Já incluso no aluguel"]}),
-    F("vCond","Condomínio pago por","select",{w:3,o:["Inquilino","Proprietário","Não tem condomínio"]}),
-    F("vEsp","Carência, desconto ou combinado especial","textarea",{ph:"Ex.: 1º mês com 50% de desconto pela pintura"})]},
-  garantia(),
-  {t:"Situação",f:[
-    F("sAnalise","Análise de crédito","seg",{r:1,o:["Aprovada","Em análise"],def:"Aprovada"}),
-    F("sAssin","Assinatura","select",{w:3,o:["Digital","No escritório"]}),
-    F("sEntrada","Entrada prevista","date",{w:3})]},
-  DOCS("Matrícula, carnê do IPTU e documentos das partes que ainda não foram para o administrativo."),
-  OBS("Cláusulas especiais ou observações")],
- calc:m=>{const r={hints:{},alerts:[]};if(m.v("sAnalise")==="Em análise")r.alerts.push("A análise de crédito ainda não foi aprovada.");if(m.v("gTipo")==="Caução (depósito)"&&m.v("gCFica")==="Proprietário")r.alerts.push("Caução com o proprietário: o modelo de contrato prevê depósito na conta da Utu-Guaçu. Confirmar com o administrativo.");return r}},
 
 {id:"vistoriaEntrada",etapa:"Novo inquilino",titulo:"Vistoria de entrada",hdr:["VISTORIA ","DE ENTRADA"],para:"vis",
  desc:"Pedido de vistoria antes da entrega das chaves: data desejada, onde estão as chaves e quem dá acesso.",
@@ -833,8 +877,8 @@ const FICHAS=[
     F("adDesc","Descreva a alteração","textarea",{r:1,ph:"Ex.: aluguel passa de R$ 3.000,00 para R$ 3.200,00"}),
     F("adData","Vale a partir de","date",{r:1,w:3}),
     F("adOk","Todas as partes de acordo","seg",{w:3,o:["Sim","Aguardando"],def:"Sim"})]},
-  DOCS("Documentos de quem entra no contrato, se for o caso."),
-  OBS()]},
+  OBS()],
+ docs:[{id:"novos",l:"Documentos de quem entra no contrato",hint:"Se entrar inquilino ou fiador novo."},{id:"outros",l:"Outros documentos"}]},
 
 {id:"garantia",etapa:"Durante o contrato",titulo:"Troca de garantia",hdr:["TROCA ","DE GARANTIA"],para:"adm",
  desc:"Substituição de fiador, caução, seguro-fiança ou título, com os dados da nova garantia e o motivo.",
@@ -843,8 +887,8 @@ const FICHAS=[
   {t:"Contrato",f:[F("gaInq","Inquilino","text",{r:1,w:3}),F("gaTel","Celular do inquilino","tel",{w:3}),F("gaAtual","Garantia atual","select",{r:1,o:GARANTIAS})]},
   garantia({full:1,titulo:"Nova garantia",lbl:"Nova garantia"}),
   {t:"Motivo",f:[F("gaMotivo","Motivo da troca","textarea",{r:1}),F("gaOk","Proprietário de acordo","seg",{o:["Sim","Aguardando"],def:"Aguardando"})]},
-  DOCS("Documentos do novo fiador ou comprovante da nova garantia."),
-  OBS()]},
+  OBS()],
+ docs:[{id:"fDoc",l:"RG e CPF ou CNH do novo fiador",r:1,show:sh("gTipo","Fiador")},{id:"fRendaC",l:"Comprovante de renda do novo fiador",r:1,show:sh("gTipo","Fiador")},{id:"fMat",l:"Matrícula do imóvel do novo fiador",r:1,show:sh("gTipo","Fiador")},{id:"gComp",l:"Apólice ou comprovante da nova garantia",r:1,show:sh("gTipo",["Seguro-fiança","Título de capitalização","Caução (depósito)"])},{id:"outros",l:"Outros documentos"}]},
 
 {id:"declaracao",etapa:"Durante o contrato",titulo:"Declaração ou 2ª via",hdr:["PEDIDO DE ","DECLARAÇÃO"],para:"adm",
  desc:"Declaração de locação ou de quitação, 2ª via de boleto ou contrato, informe de rendimentos e extratos.",
@@ -931,13 +975,13 @@ const FICHAS=[
   if(m.v("cChaves"))r.alerts.push(`Prazo de devolução: até 5 dias úteis após a devolução das chaves e a vistoria (cl. 12.3), ou seja, por volta de ${maisDiasUteis(m.v("cChaves"),5)}.`);
   if(m.v("cVist")==="Ainda não feita")r.alerts.push("A vistoria de saída ainda não foi feita.");return r}}
 ];
-const ETAPAS=["Captação","Novo inquilino","Durante o contrato","Saída do inquilino"];
-const ETAPA_INFO={"Captação":"Quando o proprietário entrega o imóvel para alugar.","Novo inquilino":"Da proposta até a entrega das chaves.","Durante o contrato":"Mudanças e pedidos com o contrato em andamento.","Saída do inquilino":"Do aviso de saída até a devolução da caução."};
+const ETAPAS=["Mais usadas","Captação","Novo inquilino","Durante o contrato","Saída do inquilino"];
+const ETAPA_INFO={"Mais usadas":"As fichas do dia a dia entre a locação e o administrativo.","Captação":"Quando o proprietário entrega o imóvel para alugar.","Novo inquilino":"Da proposta até a entrega das chaves.","Durante o contrato":"Mudanças e pedidos com o contrato em andamento.","Saída do inquilino":"Do aviso de saída até a devolução da caução."};
 
 /* =====================================================
    MOTOR DAS FICHAS
    ===================================================== */
-let CUR=null, PHOTOS=[], fiLast=null;
+let CUR=null, ANEX={}, fiLast=null;
 const lc=l=>/^[A-ZÀ-Ú]{2}/.test(l)?l:l.charAt(0).toLowerCase()+l.slice(1);
 const allFields=fi=>fi.secs.flatMap(s=>s.f);
 const optVal=o=>String(o).split("|")[0], optLbl=o=>{const p=String(o).split("|");return p[1]||p[0]};
@@ -946,6 +990,7 @@ const PH_LBL=["RG ou CNH","CPF","Comprovante de renda","Comprovante de endereço
 
 function fieldHTML(f){
   const id="x_"+f.id, w=f.w&&f.w!==6?" w"+f.w:"", req=f.r?" data-req":"";
+  if(f.t==="info")return `<div class="field" data-f="${esc(f.id)}"><p class="hint" style="margin:-6px 0 0">${esc(f.hint||"")}</p></div>`;
   const lab=`<label for="${id}">${esc(f.l)}</label>`, hint=`<span class="hint" data-h="${esc(f.hint||"")}">${esc(f.hint||"")}</span>`;
   const ph=f.ph?` placeholder="${esc(f.ph)}"`:(f.t==="cpf"?' placeholder="000.000.000-00"':f.t==="cnpj"?' placeholder="00.000.000/0000-00"':f.t==="tel"?' placeholder="(11) 90000-0000"':f.t==="money"?' placeholder="0,00"':"");
   let inner;
@@ -954,11 +999,19 @@ function fieldHTML(f){
   else if(f.t==="select") inner=`${lab}<select id="${id}"><option value="">Selecione</option>${f.o.map(o=>`<option value="${esc(optVal(o))}">${esc(optLbl(o))}</option>`).join("")}</select>${hint}`;
   else if(f.t==="textarea") inner=`${lab}<textarea id="${id}" rows="3"${ph}></textarea>${hint}`;
   else if(f.t==="fotos") inner=`<span class="legend">${esc(f.l)}</span><div class="ph-box"><div class="ph-list" id="phList"></div><label class="btn ph-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Adicionar fotos<input type="file" id="phIn" accept="image/*" multiple></label></div>${hint}<span class="hint">As fotos entram nas últimas folhas do PDF. Elas não ficam salvas se você fechar a página. Documento em PDF, mande junto no WhatsApp.</span>`;
+  else if(f.t==="info") inner=`<p class="hint" style="margin:-4px 0 0">${esc(f.hint||"")}</p>`;
   else inner=`${lab}<input id="${id}"${f.t==="date"?' type="date"':f.t==="email"?' type="email"':""}${IMOD(f)?` inputmode="${IMOD(f)}"`:""}${f.t==="money"?" data-money":""}${ph}>${hint}`;
   return `<div class="field${w}" data-f="${esc(f.id)}"${req}>${inner}</div>`;
 }
+const ICON_ADD=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>`;
+function docsHTML(fi){if(!fi.docs)return "";
+  return `<fieldset data-docs><legend><small>${fi.secs.length+1}</small>Documentos</legend>
+  <p class="hint" style="margin:0">Tire a foto na hora ou escolha o arquivo (foto ou PDF). Sem os documentos obrigatórios (*), a ficha não é gerada.</p>
+  <div class="dslots">${fi.docs.map(d=>`<div class="dslot" data-slot="${esc(d.id)}"><div class="dhead"><span class="dname">${esc(d.l)}${d.r?' <b class="star">*</b>':""}</span><span class="dstat" id="ds_${esc(d.id)}"></span></div>${d.hint?`<span class="hint">${esc(d.hint)}</span>`:""}<div class="dfiles" id="df_${esc(d.id)}"></div><label class="btn ph-add">${ICON_ADD}Adicionar<input type="file" accept="image/*,application/pdf" multiple data-anexo="${esc(d.id)}"></label></div>`).join("")}</div></fieldset>`}
+function renderSlot(id){const el=document.getElementById("df_"+id);if(!el)return;const L=ANEX[id]||[];
+  el.innerHTML=L.map((f,i)=>`<div class="dfile">${f.kind==="img"?`<img src="${f.data}" alt="">`:`<span><span class="pdf">PDF</span>${esc(f.name.slice(0,28))}</span>`}<button type="button" class="ph-del" data-adel="${esc(id)}|${i}" aria-label="Remover">×</button></div>`).join("")}
 function renderFicha(fi){
-  CUR=fi; PHOTOS=[];
+  CUR=fi; ANEX={};
   $("#fiEyebrow").textContent="Ficha · "+fi.etapa; $("#fiTitle").innerHTML=esc(fi.titulo);
   $("#fiLede").textContent=fi.desc+" Os campos com * são obrigatórios.";
   const d=DEST[fi.para]; $("#fiDest").textContent=fi.para==="prop"?"Proprietário (você envia ao dono do imóvel)":`${d.setor} (${d.quem})`;
@@ -967,11 +1020,11 @@ function renderFicha(fi){
     <div class="field w4" data-f="cor" data-req><label for="x_cor">Seu nome</label><input id="x_cor" list="eqList" placeholder="Ex.: Karine"><span class="hint"></span></div>
     <div class="field w2" data-f="urg"><span class="legend">Prioridade</span><label class="check" style="padding-top:8px"><input type="checkbox" id="x_urg"><span>Urgente</span></label></div>
   </div><datalist id="eqList">${EQUIPE.map(n=>`<option value="${esc(n)}">`).join("")}</datalist></fieldset>`;
-  const body=fi.secs.map((s,i)=>`<fieldset data-sec="${i}"><legend><small>${i+1}</small>${esc(s.t)}</legend><div class="fgrid">${s.f.map(fieldHTML).join("")}</div></fieldset>`).join("");
-  $("#fiForm").innerHTML=head+body+`<p class="privacy">Os dados ficam só neste aparelho até você enviar. Depois de enviar, toque em Nova ficha para apagar.</p>
+  const body=fi.secs.map((s,i)=>`<fieldset data-sec="${i}"><legend><small>${i+1}</small>${esc(s.t)}</legend><div class="fgrid">${s.f.map(fieldHTML).join("")}</div></fieldset>`).join("")+docsHTML(fi);
+  $("#fiForm").innerHTML=head+body+`<p class="privacy">Os dados ficam só neste aparelho até você enviar. Depois de enviar, toque em Nova ficha para apagar.${fi.docs?" Os documentos anexados não ficam salvos se você fechar a página.":""}</p>
     <div class="gen"><button class="btn gold big" id="fiGerar" type="button">Gerar ficha<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button>
     <div class="gen-missing" id="fiMissing" hidden></div><div class="errbox" id="fiErr" hidden></div></div>`;
-  restoreDraft(fi); renderPhotos();
+  restoreDraft(fi); (fi.docs||[]).forEach(d=>renderSlot(d.id));
   delete document.body.dataset.fiTried;
   fiShowForm(); fiUpdate();
 }
@@ -1020,7 +1073,7 @@ function collect(){
   if(!m.cor){m.missing.push({id:"cor",label:"seu nome (quem está enviando)"});m.errs.cor=1}
   /* validação + linhas do PDF */
   m.secs=fi.secs.map(s=>{const rows=[];
-    s.f.forEach(f=>{if(!isVis(f))return;const val=vals[f.id],has=Array.isArray(val)?val.length>0:!!val;const L=`${s.t}: ${lc(f.l)}`;
+    s.f.forEach(f=>{if(!isVis(f)||f.t==="info")return;const val=vals[f.id],has=Array.isArray(val)?val.length>0:!!val;const L=`${s.t}: ${lc(f.l)}`;
       const bad=(msg)=>{m.missing.push({id:f.id,label:`${s.t}: ${msg}`});m.errs[f.id]=1};
       if(f.t==="fotos"){if(f.r&&!PHOTOS.length)bad(lc(f.l));if(PHOTOS.length)rows.push(["Fotos anexadas",`${PHOTOS.length} ${PHOTOS.length===1?"foto":"fotos"} nas folhas finais: ${PHOTOS.map(p=>p.label).join(", ")}`]);return}
       if(!has){if(f.r)bad(lc(f.l));return}
@@ -1035,6 +1088,15 @@ function collect(){
       rows.push([f.l,m.disp(f.id)]);
     });
     return {t:s.t,rows}});
+  /* documentos anexados */
+  m.imgs=[];m.pdfs=[];m.slotVis={};
+  if(fi.docs){const rows=[];
+    fi.docs.forEach(d=>{const vis=isVis({id:"slot_"+d.id,show:d.show});m.slotVis[d.id]=vis;if(!vis)return;const L=ANEX[d.id]||[];
+      if(!L.length){if(d.r){m.missing.push({id:"slot_"+d.id,label:"Documentos: "+lc(d.l)});m.errs["slot_"+d.id]=1}return}
+      const ni=L.filter(f=>f.kind==="img").length,np=L.length-ni;
+      L.forEach(f=>{if(f.kind==="img")m.imgs.push(Object.assign({slot:d.l},f));else m.pdfs.push({file:f.file,slot:d.l,name:f.name})});
+      rows.push([d.l,[ni?`${ni} ${ni===1?"foto":"fotos"} nas folhas finais`:"",np?`${np} PDF enviado${np>1?"s":""} junto`:""].filter(Boolean).join(" e ")])});
+    m.secs.push({t:"Documentos anexados",rows});}
   /* dicas automáticas */
   allFields(fi).forEach(f=>{if(!isVis(f))return;const val=vals[f.id];
     if(f.t==="money"){const n=parseMoney(val);if(n>0&&n<1e10)m.hints[f.id]={t:reaisExtenso(n),c:""}}
@@ -1065,7 +1127,7 @@ function fiBlocks(m,proto){
     p([{t:`Itu, ${dataExt(today())}.`}],{align:"right"});
     B.push({t:"sigs",items:fi.termo.sigs(m).map(g=>({label:g.label,name:g.name||"",sub:g.sub||""}))});
   }
-  PHOTOS.forEach((ph,i)=>{B.push({t:"page"});B.push({t:"img",data:ph.data,w:ph.w,h:ph.h,label:`Anexo ${i+1} de ${PHOTOS.length} · ${ph.label}`})});
+  m.imgs.forEach((ph,i)=>{B.push({t:"page"});B.push({t:"img",data:ph.data,w:ph.w,h:ph.h,label:`Anexo ${i+1} de ${m.imgs.length} · ${ph.slot}`})});
   return B;
 }
 let PROTO="";
@@ -1169,12 +1231,16 @@ function loadImg(file){return new Promise((res,rej)=>{const u=URL.createObjectUR
 async function compress(file){const im=await loadImg(file);const max=1600;let w=im.naturalWidth,h=im.naturalHeight;const s=Math.min(1,max/Math.max(w,h));w=Math.max(1,Math.round(w*s));h=Math.max(1,Math.round(h*s));const c=document.createElement("canvas");c.width=w;c.height=h;const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,w,h);g.drawImage(im,0,0,w,h);return {data:c.toDataURL("image/jpeg",0.78),w,h}}
 function renderPhotos(){const el=$("#phList");if(!el)return;el.innerHTML=PHOTOS.map((p,i)=>`<div class="ph-item"><img src="${p.data}" alt=""><button type="button" class="ph-del" data-phdel="${i}" aria-label="Remover foto">×</button><select data-phlbl="${i}">${PH_LBL.map(l=>`<option${l===p.label?" selected":""}>${esc(l)}</option>`).join("")}</select></div>`).join("")}
 $("#fiForm").addEventListener("change",async e=>{
-  if(e.target.id==="phIn"){const files=[...e.target.files];e.target.value="";if(!files.length)return;toast("Preparando as fotos…");
-    for(const f of files){try{const c=await compress(f);c.label=PH_LBL[Math.min(PHOTOS.length,PH_LBL.length-1)];PHOTOS.push(c)}catch(err){toast("Não consegui ler uma das fotos. Tente tirar de novo.")}}
-    renderPhotos();fiUpdate();toast(`${PHOTOS.length} ${PHOTOS.length===1?"foto anexada":"fotos anexadas"}.`);return}
-  const s=e.target.closest("[data-phlbl]");if(s){PHOTOS[+s.dataset.phlbl].label=s.value;fiUpdate()}
+  const inp=e.target.closest("[data-anexo]");if(!inp)return;
+  const id=inp.dataset.anexo,files=[...inp.files];inp.value="";if(!files.length)return;toast("Preparando os arquivos…");
+  const arr=ANEX[id]||(ANEX[id]=[]);
+  for(const f of files){try{
+    if(f.type==="application/pdf"||/\.pdf$/i.test(f.name)){if(f.size>15*1048576){toast("PDF acima de 15 MB: "+f.name);continue}arr.push({kind:"pdf",file:f,name:f.name})}
+    else{const c=await compress(f);c.kind="img";c.name=f.name;arr.push(c)}
+  }catch(err){toast("Não consegui ler "+f.name+". Tente de novo.")}}
+  renderSlot(id);fiUpdate();
 });
-$("#fiForm").addEventListener("click",e=>{const b=e.target.closest("[data-phdel]");if(b){PHOTOS.splice(+b.dataset.phdel,1);renderPhotos();fiUpdate()}
+$("#fiForm").addEventListener("click",e=>{const b=e.target.closest("[data-adel]");if(b){const [id,i]=b.dataset.adel.split("|");(ANEX[id]||[]).splice(+i,1);renderSlot(id);fiUpdate()}
   const a=e.target.closest("[data-fgo]");if(a)fiGo(a.dataset.fgo)});
 
 /* ---------- interface da ficha ---------- */
@@ -1184,7 +1250,7 @@ $("#fiForm").addEventListener("input",e=>{
   if(f&&maskers[f.t]&&e.target.id){const pos=e.target.value;e.target.value=maskers[f.t](pos)}
   fiUpdate();
 });
-$("#fiForm").addEventListener("change",e=>{if(e.target.id!=="phIn"&&!e.target.closest("[data-phlbl]"))fiUpdate()});
+$("#fiForm").addEventListener("change",e=>{if(!e.target.closest("[data-anexo]"))fiUpdate()});
 $("#fiForm").addEventListener("focusout",e=>{if(e.target.matches&&e.target.matches("[data-money]")){const n=parseMoney(e.target.value);if(!isNaN(n)&&n<1e10)e.target.value=fmtMoney(n);fiUpdate()}});
 $("#fiForm").addEventListener("submit",e=>e.preventDefault());
 function fiUpdate(){
@@ -1196,6 +1262,10 @@ function fiUpdate(){
   /* dicas */
   $$("#fiForm .field[data-f]").forEach(el=>{const h=el.querySelector(".hint[data-h]")||el.querySelector(".hint");if(!h)return;const x=m.hints[el.dataset.f];el.classList.remove("warn","okh");
     if(x){h.textContent=x.t;if(x.c)el.classList.add(x.c)}else h.textContent=h.dataset.h||""});
+  /* documentos: mostrar, situação */
+  (CUR.docs||[]).forEach(d=>{const el=$(`#fiForm .dslot[data-slot="${CSS.escape(d.id)}"]`);if(!el)return;el.hidden=!m.slotVis[d.id];
+    const n=(ANEX[d.id]||[]).length,st=document.getElementById("ds_"+d.id);st.className="dstat "+(n?"ok":d.r?"warn":"opt");st.textContent=n?`✓ ${n} ${n===1?"arquivo":"arquivos"}`:d.r?"Falta":"Opcional";
+    el.classList.toggle("err",!!(document.body.dataset.fiTried&&m.errs["slot_"+d.id]))});
   /* erros, só depois de tentar gerar */
   $$("#fiForm .field").forEach(el=>el.classList.remove("err"));
   if(document.body.dataset.fiTried)Object.keys(m.errs).forEach(id=>{const fl=$(`#fiForm .field[data-f="${CSS.escape(id)}"]`);if(fl)fl.classList.add("err")});
@@ -1204,7 +1274,8 @@ function fiUpdate(){
   else{gm.hidden=false;gm.innerHTML=`<b>Para gerar a ficha, falta preencher:</b><ul>${m.missing.map(x=>`<li><a data-fgo="${esc(x.id)}">${esc(x.label)}</a></li>`).join("")}</ul><span>Toque no item para ir até o campo.</span>`}
   saveDraft(m.vals);
 }
-function fiGo(id){const el=id==="cor"?$("#x_cor"):($("#x_"+id)||document.querySelector(`input[name="x_${CSS.escape(id)}"]`)||$("#phIn"));if(!el)return;const fl=el.closest(".field")||el;fl.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>{try{el.focus({preventScroll:true})}catch(_){}},250)}
+function fiGo(id){if(id.startsWith("slot_")){const sl=$(`#fiForm .dslot[data-slot="${CSS.escape(id.slice(5))}"]`);if(sl)sl.scrollIntoView({behavior:"smooth",block:"center"});return}
+  const el=id==="cor"?$("#x_cor"):($("#x_"+id)||document.querySelector(`input[name="x_${CSS.escape(id)}"]`)||$("#phIn"));if(!el)return;const fl=el.closest(".field")||el;fl.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>{try{el.focus({preventScroll:true})}catch(_){}},250)}
 function fiShowForm(){$("#fiWrap").classList.remove("result");$("#view-ficha").classList.remove("done");$("#fiSide").hidden=true}
 function fiRender(){DOC_HDR=CUR.hdr;$("#fiSheet").innerHTML=toHTML(fiBlocks(fiLast,PROTO))}
 $("#fiForm").addEventListener("click",e=>{if(!e.target.closest("#fiGerar"))return;
@@ -1212,7 +1283,7 @@ $("#fiForm").addEventListener("click",e=>{if(!e.target.closest("#fiGerar"))retur
   try{
     document.body.dataset.fiTried="1";fiUpdate();
     if(fiLast.missing.length){$("#fiMissing").scrollIntoView({behavior:"smooth",block:"center"});return}
-    PROTO=newProto(); fiRender();
+    PROTO=newProto(); fiRender(); $("#fiPdfLbl").textContent=fiLast.pdfs.length?`Baixar ficha e ${fiLast.pdfs.length} PDF${fiLast.pdfs.length>1?"s":""}`:"Baixar PDF";
     $("#fiWrap").classList.add("result");$("#view-ficha").classList.add("done");$("#fiSide").hidden=false;window.scrollTo({top:0});
   }catch(err){eb.hidden=false;eb.textContent="Não consegui gerar a ficha por um erro na página. Mande um print desta mensagem para a gerência: "+(err&&err.message?err.message:err)}
 });
@@ -1227,21 +1298,25 @@ function msgEnvio(m){
   if(CUR.msg)return CUR.msg(m);
   const d=DEST[CUR.para];
   const ref=[m.pessoa?`de ${m.pessoa}`:"",m.end?`(imóvel na ${m.end})`:""].filter(Boolean).join(" ");
-  return `${d.saud} Tudo bem?\n\nSegue em PDF a ficha de ${CUR.titulo.toLowerCase()}${ref?" "+ref:""}, protocolo ${PROTO}.${m.urg?"\n\nÉ urgente, se puder dar prioridade eu agradeço.":""}${PHOTOS.length?"\n\nAs fotos dos documentos estão nas últimas folhas do arquivo.":""}\n\nQualquer dúvida, me chama.\n${m.cor}`;
+  return `${d.saud} Tudo bem?\n\nSegue em PDF a ficha de ${CUR.titulo.toLowerCase()}${ref?" "+ref:""}, protocolo ${PROTO}.${m.urg?"\n\nÉ urgente, se puder dar prioridade eu agradeço.":""}${m.imgs.length?"\n\nAs fotos dos documentos estão nas últimas folhas da ficha.":""}${m.pdfs.length?`\n\nSeguem junto ${m.pdfs.length===1?"1 documento":m.pdfs.length+" documentos"} em PDF.`:""}\n\nQualquer dúvida, me chama.\n${m.cor}`;
 }
+function allFiles(m,blob){const name=m.fileBase+".pdf",cnt={};
+  return [new File([blob],name,{type:"application/pdf"}),...m.pdfs.map(p=>{cnt[p.slot]=(cnt[p.slot]||0)+1;const nm=`${PROTO} - ${p.slot}${cnt[p.slot]>1?" "+cnt[p.slot]:""}.pdf`.replace(/[\\/:*?"<>|]/g,"");return new File([p.file],nm,{type:"application/pdf"})})]}
+async function saveAll(files){for(const f of files){nativeSave(f.name,f);await new Promise(r=>setTimeout(r,500))}}
 $("#fiShare").addEventListener("click",async()=>{
   if(!window.jspdf){toast("O gerador de PDF não carregou. Recarregue a página.");return}
   const b=$("#fiShare");b.disabled=true;
   try{
-    const texto=msgEnvio(fiLast),name=fiLast.fileBase+".pdf",blob=fiPdfBlob(),file=new File([blob],name,{type:"application/pdf"});
+    const texto=msgEnvio(fiLast),files=allFiles(fiLast,fiPdfBlob());
     try{navigator.clipboard&&navigator.clipboard.writeText(texto).catch(()=>{})}catch(_){}
-    try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:texto,title:CUR.titulo});toast("Enviado. Se a mensagem não foi junto, cole no WhatsApp: ela já está copiada.");return}}catch(err){if(err&&err.name==="AbortError")return}
-    nativeSave(name,blob);window.open("https://wa.me/?text="+encodeURIComponent(texto),"_blank","noopener");toast("PDF baixado. Anexe o arquivo na conversa do WhatsApp.");
+    try{if(navigator.canShare&&navigator.canShare({files})){await navigator.share({files,text:texto,title:CUR.titulo});toast(files.length>1?`Enviados ${files.length} arquivos. Se a mensagem não foi junto, cole: ela já está copiada.`:"Enviado. Se a mensagem não foi junto, cole no WhatsApp: ela já está copiada.");return}}catch(err){if(err&&err.name==="AbortError")return}
+    await saveAll(files);window.open("https://wa.me/?text="+encodeURIComponent(texto),"_blank","noopener");
+    toast(files.length>1?`Baixamos ${files.length} arquivos. Anexe todos na conversa do WhatsApp.`:"PDF baixado. Anexe o arquivo na conversa do WhatsApp.");
   }finally{b.disabled=false}
 });
-$("#fiPdf").addEventListener("click",()=>{if(!window.jspdf){toast("O gerador de PDF não carregou. Recarregue a página.");return}nativeSave(fiLast.fileBase+".pdf",fiPdfBlob());toast("PDF pronto.")});
+$("#fiPdf").addEventListener("click",async()=>{if(!window.jspdf){toast("O gerador de PDF não carregou. Recarregue a página.");return}const files=allFiles(fiLast,fiPdfBlob());await saveAll(files);toast(files.length>1?`${files.length} arquivos baixados: a ficha e os documentos em PDF.`:"PDF pronto.")});
 $("#fiTxt").addEventListener("click",()=>{DOC_HDR=CUR.hdr;copyText(toText(fiBlocks(fiLast,PROTO)),"Texto copiado.")});
-function clearFicha(){LS.del("utu.loc.f."+CUR.id);PHOTOS=[];renderFicha(CUR);window.scrollTo({top:0})}
+function clearFicha(){LS.del("utu.loc.f."+CUR.id);ANEX={};renderFicha(CUR);window.scrollTo({top:0})}
 $("#fiNew").addEventListener("click",e=>{const b=e.currentTarget;
   if(b.dataset.armed!=="1"){b.dataset.armed="1";b.textContent="Confirmar: apagar e começar outra";b.classList.add("danger");setTimeout(()=>{b.dataset.armed="";b.textContent="Nova ficha";b.classList.remove("danger")},4000);return}
   b.dataset.armed="";b.textContent="Nova ficha";b.classList.remove("danger");clearFicha();toast("Ficha apagada. Seu nome foi mantido.")});
@@ -1478,8 +1553,9 @@ $("#apOut").addEventListener("click",async e=>{const b=e.target.closest("[data-s
 function renderHome(){
   $("#home").innerHTML=`<button class="blk lead" type="button" data-open="fichas">
       <span class="minisheet" aria-hidden="true"><i class="h"></i><i></i><i></i><i class="g"></i><i></i><i></i><i></i><i class="g"></i><i></i></span>
-      <span class="txt"><span class="k">Ferramenta · ${FICHAS.length} fichas</span><h2>Fichas</h2><p>Análise de crédito, contrato, vistoria, chaves, caução e tudo da locação. Preencha, gere o PDF e envie.</p></span>
+      <span class="txt"><span class="k">Ferramenta · ${FICHAS.length} fichas</span><h2>Fichas</h2><p>Todas as fichas da locação: análise, contrato, vistoria, chaves, caução e mais. Preencha, anexe os documentos, gere o PDF e envie.</p></span>
       <span class="go">Ver fichas${ARROW}</span></button>
+    ${["analise","contrato"].map(id=>{const f=FICHAS.find(x=>x.id===id);return `<button class="blk" type="button" data-open="ficha:${id}"><span class="txt"><span class="k">Mais usada · vai para o administrativo</span><h2>${esc(f.titulo)}</h2><p>${esc(f.desc)}</p></span><span class="go">Preencher${ARROW}</span></button>`}).join("")}
     <button class="blk msg" type="button" data-open="mensagens">
       <span class="txt"><span class="k">${MENSAGENS.length} modelos</span><h2>Modelos de mensagem</h2><p>Textos prontos para atendimento, documentação, contrato, proprietário e saída. É só copiar e mandar no WhatsApp.</p></span>
       <span class="go">Ver mensagens${ARROW}</span></button>
@@ -1487,7 +1563,7 @@ function renderHome(){
       <span class="txt"><span class="k">${ARQUIVOS.length} ${ARQUIVOS.length===1?"arquivo":"arquivos"}</span><h2>Aprendizado</h2><p>Manuais e materiais para o dia a dia da equipe.</p></span>
       <span class="go">Ver materiais${ARROW}</span></button>`;
 }
-$("#home").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(b)show(b.dataset.open)});
+$("#home").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(!b)return;const o=b.dataset.open;if(o.startsWith("ficha:"))show("ficha",o.slice(6));else show(o)});
 let curView="inicio";
 function show(view,param){
   ["inicio","fichas","ficha","mensagens","aprendizado"].forEach(v=>$("#view-"+v).hidden=v!==view);
