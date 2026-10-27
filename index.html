@@ -151,6 +151,8 @@ h1 em,h2 em{font-style:italic;color:var(--gold)}
 .mf-prev{margin:0;font-size:12.5px;color:var(--muted)}
 .mf-prev b{color:var(--fg);font-weight:500}
 .chip-ia{border-style:dashed}
+.msg-card.imp{border:1.5px solid var(--gold)}
+.msg-card.imp .cat::after{content:"  ·  importante";color:var(--warn)}
 .ia-box{background:var(--surface);border:1.5px dashed var(--gold);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;margin-top:16px}
 .ia-box .msg-act .btn{min-width:0;white-space:normal;text-align:center}
 @media (max-width:620px){.mf-row{grid-template-columns:minmax(0,1fr)}}
@@ -712,7 +714,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 26/10/2026 21h40</p>
+<p class="ver">Portal de Vendas · versão 26/10/2026 21h50</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -803,7 +805,7 @@ Se gostar, organizo uma visita ao plantão e monto uma simulação no plano de p
 Tenho uma boa notícia: recebemos uma proposta formal de compra para {i:o seu|a sua} [imóvel].
 
 Envio em anexo a proposta completa, com o valor e as condições de pagamento. Analise com calma e, qualquer dúvida, estou à disposição.`},
- {id:"aceita-comprador",cat:"Proposta",titulo:"Proposta aceita: pedir dados ao comprador",quando:"O vendedor aceitou e vamos preparar o contrato de compra e venda.",
+ {id:"aceita-comprador",cat:"Contratos",titulo:"Proposta aceita: pedir dados ao comprador",quando:"O vendedor aceitou e vamos preparar o contrato de compra e venda.",
   texto:`Olá, [cliente]! Trago ótimas notícias: a sua proposta para {i:o|a} [imóvel] foi aceita pelo proprietário! Parabéns!
 
 Para darmos os próximos passos e prepararmos o contrato de compra e venda, preciso que você me envie por aqui:
@@ -822,7 +824,7 @@ Pagamento
 • confirmação da forma de pagamento combinada e, se houver financiamento, o banco escolhido
 
 Assim que eu receber, encaminho para a equipe preparar o contrato e te aviso sobre a data de assinatura. Qualquer dúvida, estou à disposição!`},
- {id:"aceita-vendedor",cat:"Proposta",titulo:"Proposta aceita: pedir dados ao vendedor",quando:"Logo após o aceite, para o proprietário providenciar documentos.",
+ {id:"aceita-vendedor",cat:"Contratos",titulo:"Proposta aceita: pedir dados ao vendedor",quando:"Logo após o aceite, para o proprietário providenciar documentos.",
   texto:`Olá, [cliente]! {c:Obrigado|Obrigada} pelo aceite da proposta d{i:o|a} [imóvel]. Agora vamos preparar o contrato de compra e venda com toda a segurança.
 
 Para isso, preciso que você me envie por aqui:
@@ -892,7 +894,8 @@ Muito {c:obrigado|obrigada} pela confiança na Utu-Guaçu. Se conhecer alguém p
 Conte comigo para o que precisar!`}
 ];
 
-const MSG_CATS=["Todas",...[...new Set(MENSAGENS.map(m=>m.cat))]];
+const MSG_ORDEM=["Captação","Atendimento","Proposta","Contratos","Proprietário","Pós-venda"];
+const MSG_CATS=["Todas",...MSG_ORDEM.filter(c=>MENSAGENS.some(m=>m.cat===c)),...[...new Set(MENSAGENS.map(m=>m.cat))].filter(c=>!MSG_ORDEM.includes(c))];
 let msgCat="Todas";
 const radioV=n=>(document.querySelector(`input[name="${n}"]:checked`)||{}).value;
 function msgCtx(){
@@ -915,7 +918,7 @@ function renderMsgs(){
   $("#msgChips").innerHTML=[...MSG_CATS,"Outra situação"].map(c=>`<button class="chip${c==="Outra situação"?" chip-ia":""}" type="button" aria-pressed="${c===msgCat}" data-mc="${esc(c)}">${esc(c)}</button>`).join("");
   $("#iaBox").hidden=!(msgCat==="Todas"||msgCat==="Outra situação");
   const list=msgCat==="Outra situação"?[]:MENSAGENS.filter(m=>msgCat==="Todas"||m.cat===msgCat);
-  $("#msgsOut").innerHTML=list.map(m=>{const t=fillMsg(m.texto);return `<article class="msg-card">
+  $("#msgsOut").innerHTML=list.map(m=>{const t=fillMsg(m.texto);return `<article class="msg-card${m.cat==="Contratos"?" imp":""}">
     <div class="msg-top"><span class="cat">${esc(m.cat)}</span><h3>${esc(m.titulo)}</h3><p class="desc">${esc(m.quando)}</p></div>
     <div class="msg-text">${msgHTML(t)}</div>
     <div class="msg-act"><button class="btn primary" type="button" data-copy="${esc(m.id)}">Copiar mensagem</button><a class="btn" href="https://wa.me/?text=${encodeURIComponent(t)}" target="_blank" rel="noopener">Enviar no WhatsApp</a></div>
