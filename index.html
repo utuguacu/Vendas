@@ -546,7 +546,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     <div class="mf-row">
       <div class="field"><label for="mTipo">Tipo de imóvel</label>
         <select id="mTipo"><option value="">Escolha</option><option value="casa|f">Casa</option><option value="apartamento|m">Apartamento</option><option value="terreno|m">Terreno</option><option value="lote|m">Lote</option><option value="chácara|f">Chácara</option><option value="sítio|m">Sítio</option><option value="fazenda|f">Fazenda</option><option value="área|f">Área</option><option value="sala comercial|f">Sala comercial</option><option value="galpão|m">Galpão</option><option value="imóvel comercial|m">Imóvel comercial</option><option value="imóvel|m">Outro imóvel</option></select></div>
-      <div class="field"><label for="mLocal">Onde fica <span class="opt">(opcional)</span></label><input id="mLocal" placeholder="Ex.: no Terras de São José" list="locList"><datalist id="locList"><option value="no Terras de São José"><option value="no Altavista Reserva"><option value="no Centro de Itu"><option value="em Itu"><option value="em Boituva"></datalist></div>
+      <div class="field"><label for="mLocal">Onde fica <span class="opt">(opcional)</span></label><input id="mLocal" placeholder="Ex.: no Terras de São José" list="locList"><datalist id="locList"><option value="no Terras de São José"><option value="no Altavista Reserva"><option value="no Centro de Itu"><option value="em Itu"><option value="em Boituva"><option value="no Villa Anna"></datalist></div>
     </div>
     <p class="mf-prev" id="mfPrev"></p>
   </div>
@@ -714,7 +714,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 26/10/2026 21h50</p>
+<p class="ver">Portal de Vendas · versão 27/10/2026 00h00</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -1179,6 +1179,7 @@ const ARQUIVOS=[
  {id:"altavista",titulo:"Altavista Itu & Reserva",categoria:"Dossiês",empreendimento:"Altavista",descricao:"Loteamento aberto e residencial fechado em Itu, 632 lotes a partir de R$ 178 mil.",tipo:"arquivo",assetId:"237382785e47592fdb8f577d876ece18",_capa:"32f91069216c042b967407152e66dac1",tamanho:2666124,paginas:9,nomeArquivo:"Altavista-Utu-Guacu.pdf",capa:"capa-Altavista-Utu-Guacu-1.jpg",ordem:1},
  {id:"gran-reserva-boituva",titulo:"Gran Reserva Boituva",categoria:"Dossiês",empreendimento:"Gran Reserva Boituva",descricao:"Horizon, Skyline e Ventura, lotes a partir de R$ 288 mil à vista.",tipo:"arquivo",assetId:"46c9e4d34ce2f78c275621398798d1b6",_capa:"e2fd332a15acb1bfc393dcc9c6d667b0",tamanho:2689720,paginas:8,nomeArquivo:"Dossie-Gran-Reserva-Boituva.pdf",capa:"capa-Dossie-Gran-Reserva-Boituva-1.jpg",ordem:2},
  {id:"praia-do-terras",titulo:"Praia do Terras",categoria:"Dossiês",empreendimento:"Praia do Terras",descricao:"Clube com praia e onda Endless Surf no Terras de São José, títulos a partir de R$ 500 mil.",tipo:"arquivo",assetId:"1dd3558b3f399340977e8880a4240aef",_capa:"52d18fedabc8c2e523f434f8d162ab0d",tamanho:4780758,paginas:6,nomeArquivo:"Praia-do-Terras-Utu-Guacu.pdf",capa:"capa-Praia-do-Terras-Utu-Guacu-1.jpg",ordem:3},
+ {id:"villa-anna",titulo:"Villa Anna Residencial",categoria:"Dossiês",empreendimento:"Villa Anna",descricao:"Lançamento de casas térreas em condomínio fechado em Cardeal, Elias Fausto, a 10 minutos de Indaiatuba. Casas a partir de R$ 775 mil.",tipo:"arquivo",tamanho:4227220,paginas:10,nomeArquivo:"Dossie-Villa-Anna-Utu-Guacu.pdf",capa:"capa-Dossie-Villa-Anna-Utu-Guacu-1.jpg",ordem:4},
  {id:"manual-corretor",titulo:"Manual do Corretor",categoria:"Aprendizado",empreendimento:"Kenlo",descricao:"Como usar o Kenlo: esteira de leads, passo a passo do atendimento, boas práticas e prompts de IA para registros.",tipo:"arquivo",tamanho:1304400,paginas:19,nomeArquivo:"Manual-do-Corretor.pdf",capa:"capa-Manual-do-Corretor-1.jpg",ordem:1}
 ];
 S.files=ARQUIVOS; S.ready=true; S.editor=false;
