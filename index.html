@@ -154,6 +154,13 @@ h1 em,h2 em{font-style:italic;color:var(--gold)}
 .ia-box{background:var(--surface);border:1.5px dashed var(--gold);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;margin-top:16px}
 .ia-box .msg-act .btn{min-width:0;white-space:normal;text-align:center}
 @media (max-width:620px){.mf-row{grid-template-columns:minmax(0,1fr)}}
+.av-wrap{max-width:720px;margin:0 auto}
+.av-wrap .form{display:flex}
+.av-wrap.result .form{display:none}
+.av-wrap.result .av-side{display:flex!important;position:static}
+#view-avaliacao.done #avHead{display:none}
+.four{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+@media (max-width:480px){.four{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 .card-admin{display:flex;gap:4px;border-top:1px solid var(--line);padding:6px 8px}
 .card-admin .btn{padding:6px 8px;font-size:12px}
 .note{border:1px dashed var(--line-strong);border-radius:var(--r);padding:28px 22px;text-align:center;color:var(--muted);background:var(--surface)}
@@ -257,6 +264,9 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
 .sheet .sig{margin:30px 0 14px}
 .sheet .sig .line{border-top:1px solid var(--sheet-fg);width:min(320px,80%);margin-top:34px;padding-top:4px;font-size:12px}
 .sheet .sig .lab{font-weight:700}
+.sheet .sigR{margin:44px 0 10px auto;width:min(300px,70%);text-align:center}
+.sheet .sigR .line{border-top:1px solid var(--sheet-fg);padding-top:5px;font-weight:700}
+.sheet .sigR .sub{font-size:12px}
 .sheet .ph{background:#F4E6C9;color:#7A5A20;border-radius:3px;padding:0 3px;font-style:italic}
 .sheet hr{border:0;border-top:1px dashed #CFC6B5;margin:22px 0}
 
@@ -422,6 +432,91 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </div>
   </div>
   <div class="docs" id="docsOut"></div>
+</section>
+
+<!-- ================= AVALIAÇÃO ================= -->
+<section id="view-avaliacao" hidden>
+  <div class="prop-head" id="avHead">
+    <div>
+      <div class="eyebrow">Gerar documento</div>
+      <h1>Avaliação <em>de imóvel</em></h1>
+      <p class="lede">Preencha a ficha e toque em Gerar avaliação. Os campos com * são obrigatórios.</p>
+    </div>
+  </div>
+  <div class="av-wrap" id="avWrap">
+    <form class="form" id="avForm" novalidate autocomplete="off">
+      <fieldset>
+        <legend><small>1</small>Corretor</legend>
+        <div class="two">
+          <div class="field" data-req><label for="avCor">Nome</label><input id="avCor" list="corList" placeholder="Nome completo"></div>
+          <div class="field" data-req><label for="avCreci">CRECI</label><input id="avCreci" inputmode="numeric" placeholder="Ex.: 14.471"></div>
+        </div>
+        <div class="seg"><label><input type="radio" name="avCorG" id="avCorM" value="m" checked><span>Corretor</span></label><label><input type="radio" name="avCorG" id="avCorF" value="f"><span>Corretora</span></label></div>
+      </fieldset>
+      <fieldset>
+        <legend><small>2</small>Solicitante</legend>
+        <div class="two">
+          <div class="field"><label for="avTrat">Tratamento</label><select id="avTrat"><option value="Sr.">Sr.</option><option value="Sra.">Sra.</option><option value="">Sem tratamento (empresa)</option></select></div>
+          <div class="field" data-req><label for="avSol">Nome do solicitante</label><input id="avSol"></div>
+        </div>
+        <div class="two">
+          <div class="field"><label for="avForma">Como pediu</label><select id="avForma"><option value="por solicitação verbal">Verbalmente</option><option value="por solicitação via WhatsApp">WhatsApp</option><option value="por solicitação via e-mail">E-mail</option><option value="por solicitação por escrito">Por escrito</option></select></div>
+          <div class="field"><label for="avRecebeu">Pedido feito a <span class="opt">(opcional)</span></label><input id="avRecebeu" list="corList" placeholder="Ex.: João Pires"></div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend><small>3</small>Imóvel</legend>
+        <div class="two">
+          <div class="field" data-req><label for="avTipo">Tipo</label><select id="avTipo"><option value="">Selecione</option><option value="Casa|f">Casa</option><option value="Casa em condomínio|f">Casa em condomínio</option><option value="Apartamento|m">Apartamento</option><option value="Terreno|m">Terreno</option><option value="Lote|m">Lote</option><option value="Chácara|f">Chácara</option><option value="Sítio|m">Sítio</option><option value="Fazenda|f">Fazenda</option><option value="Área|f">Área</option><option value="Sala comercial|f">Sala comercial</option><option value="Galpão|m">Galpão</option><option value="Prédio comercial|m">Prédio comercial</option><option value="Imóvel|m">Outro</option></select></div>
+          <div class="field" data-req><label for="avFin">Valor a informar</label><select id="avFin"><option value="venda">Valor de venda</option><option value="locacao">Valor de locação (aluguel mensal)</option></select></div>
+        </div>
+        <div class="field" data-req><label for="avEnd">Endereço</label><input id="avEnd" placeholder="Ex.: Rua Marechal Deodoro, nº 505"></div>
+        <div class="two">
+          <div class="field"><label for="avLocal">Edifício, condomínio ou bairro <span class="opt">(opc.)</span></label><input id="avLocal" placeholder="Ex.: Edifício Itapuã"></div>
+          <div class="field" data-req><label for="avCidade">Cidade/UF</label><input id="avCidade" value="Itu/SP"></div>
+        </div>
+        <div class="two">
+          <div class="field"><label for="avAndar">Andar <span class="opt">(opc.)</span></label><input id="avAndar" inputmode="numeric" placeholder="Ex.: 4"></div>
+          <div class="field"><label for="avUnid">Unidade / lote nº <span class="opt">(opc.)</span></label><input id="avUnid" placeholder="Ex.: 41"></div>
+        </div>
+        <div class="three">
+          <div class="field"><label for="avArea">Área total <span class="opt">(opc.)</span></label><input id="avArea" inputmode="decimal" placeholder="Ex.: 170"></div>
+          <div class="field"><label for="avUnArea">Unidade</label><select id="avUnArea"><option value="m²">m²</option><option value="hectares">hectares</option><option value="alqueires">alqueires</option></select></div>
+          <div class="field"><label for="avAreaC">Área construída m² <span class="opt">(opc.)</span></label><input id="avAreaC" inputmode="decimal"></div>
+        </div>
+        <div class="three four">
+          <div class="field"><label for="avDorm">Dormitórios</label><input id="avDorm" inputmode="numeric"></div>
+          <div class="field"><label for="avSuite">Suítes</label><input id="avSuite" inputmode="numeric"></div>
+          <div class="field"><label for="avBanh">Banheiros</label><input id="avBanh" inputmode="numeric"></div>
+          <div class="field"><label for="avVagas">Vagas</label><input id="avVagas" inputmode="numeric"></div>
+        </div>
+        <div class="field"><label for="avCarac">Características e estado de conservação <span class="opt">(opc.)</span></label><textarea id="avCarac" rows="3" placeholder="Ex.: Conta com piso de ardósia e portaria virtual. Atualmente não possui armários e necessita de reforma."></textarea></div>
+      </fieldset>
+      <fieldset>
+        <legend><small>4</small>Valor</legend>
+        <div class="two">
+          <div class="field" data-req><label for="avValor" id="avValorLbl">Valor sugerido (R$)</label><input id="avValor" inputmode="decimal" placeholder="0,00" data-money><span class="hint" id="avValorHint"></span></div>
+          <div class="field"><label for="avData">Data</label><input id="avData" type="date"></div>
+        </div>
+      </fieldset>
+      <div class="gen">
+        <button class="btn gold big" id="avGerar" type="button">Gerar avaliação<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button>
+        <div class="gen-missing" id="avMissing" hidden></div>
+        <div class="errbox" id="avErr" hidden></div>
+      </div>
+    </form>
+    <div class="side av-side" id="avSide" hidden>
+      <button class="btn ghost back" id="avBack" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>Voltar e editar a ficha</button>
+      <div class="actions">
+        <button class="btn gold share-prop" id="avShare" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Enviar ao solicitante (WhatsApp)</button>
+        <button class="btn primary" id="avPdf" type="button">Baixar PDF</button>
+        <button class="btn" id="avDocx" type="button">Baixar Word</button>
+        <button class="btn" id="avTxt" type="button">Copiar texto</button>
+      </div>
+      <div class="sheet-scroll"><div class="sheets" id="avSheet"></div></div>
+    </div>
+  </div>
+  <datalist id="corList"><option value="Lucas Calicchio"><option value="Ricardo"><option value="Rose"><option value="Marisa"><option value="Nicole"><option value="Plinio Bernardi"><option value="João Pires"></datalist>
 </section>
 
 <!-- ================= MENSAGENS ================= -->
@@ -613,7 +708,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 26/10/2026 21h15</p>
+<p class="ver">Portal de Vendas · versão 26/10/2026 21h30</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -631,7 +726,8 @@ const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.par
 let toastT; function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,3600)}
 /* Documentos que o portal gera. Para incluir um novo, a gerência envia o modelo ao Claude. */
 const DOCS=[
- {id:"proposta",titulo:"Proposta de compra",desc:"Proposta formal com os dados do comprador, do imóvel, valor, forma de pagamento e comissão. Sai em duas folhas: proposta e aceite do vendedor.",abre:"proposta"}
+ {id:"proposta",titulo:"Proposta de compra",desc:"Proposta formal com os dados do comprador, do imóvel, valor, forma de pagamento e comissão. Sai em duas folhas: proposta e aceite do vendedor.",abre:"proposta"},
+ {id:"avaliacao",titulo:"Avaliação de imóvel",desc:"Carta de avaliação com o valor sugerido de venda ou locação, a descrição do imóvel e a assinatura do corretor. Uma folha só.",abre:"avaliacao"}
 ];
 /* Modelos de mensagem: mantidos pela gerência via Claude.
    [cliente], [imóvel] e [corretor] vêm dos campos do topo; o resto entre colchetes o corretor completa.
@@ -863,17 +959,17 @@ $("#msgsOut").addEventListener("click",e=>{const b=e.target.closest("[data-copy]
 const slug=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 let pendingHash=location.hash.replace("#","");
 function show(view,cat){
-  $("#view-inicio").hidden=view!=="inicio"; $("#view-arquivos").hidden=view!=="arquivos"; $("#view-proposta").hidden=view!=="proposta"; $("#view-mensagens").hidden=view!=="mensagens"; $("#view-documentos").hidden=view!=="documentos";
+  $("#view-inicio").hidden=view!=="inicio"; $("#view-arquivos").hidden=view!=="arquivos"; $("#view-proposta").hidden=view!=="proposta"; $("#view-mensagens").hidden=view!=="mensagens"; $("#view-documentos").hidden=view!=="documentos"; $("#view-avaliacao").hidden=view!=="avaliacao"; if(view==="avaliacao")avUpdate();
   if(view==="mensagens")renderMsgs();
   $("#crumb").hidden=view==="inicio";
-  curView=view; $("#crumbLbl").textContent=view==="proposta"?"Documentos":"Início";
+  curView=view; $("#crumbLbl").textContent=(view==="proposta"||view==="avaliacao")?"Documentos":"Início";
   if(view==="arquivos"){S.filter=cat;S.q="";$("#q").value="";renderFiles()}
   const h=view==="arquivos"?slug(cat):view;
   try{history.replaceState(null,"",h==="inicio"?location.pathname+location.search:"#"+h)}catch(e){}
   window.scrollTo({top:0});
 }
 let curView="inicio";
-$("#crumb").addEventListener("click",()=>show(curView==="proposta"?"documentos":"inicio"));
+$("#crumb").addEventListener("click",()=>show(curView==="proposta"||curView==="avaliacao"?"documentos":"inicio"));
 $("#brandHome").addEventListener("click",()=>show("inicio"));
 $("#home").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(!b)return;const t=b.dataset.open;if(t==="__proposta")show("proposta");else if(t==="__documentos")show("documentos");else if(t==="__mensagens")show("mensagens");else show("arquivos",t)});
 
@@ -1287,6 +1383,8 @@ function blocks(m){
 }
 
 function runsHTML(runs){return runs.map(r=>r.ph?`<span class="ph">[${esc(r.t)}]</span>`:r.b?`<b>${esc(r.t)}</b>`:esc(r.t)).join("")}
+const HDR_PROP=["PROPOSTA ","DE COMPRA"], HDR_AVAL=["AVALIAÇÃO ","DE IMÓVEL"];
+let DOC_HDR=HDR_PROP;
 const DOC_FOOT="Utu-Guaçu Imóveis · R. Paula Souza, 483 — Centro, Itu/SP · (11) 4013-9090 · WhatsApp (11) 98594-3067 · utuguacu.com.br · CRECI 3395-J";
 function pagesOf(B){const P=[[]];B.forEach(b=>{if(b.t==="page")P.push([]);else P[P.length-1].push(b)});return P}
 function toHTML(B){
@@ -1294,16 +1392,17 @@ function toHTML(B){
     if(b.t==="title")return `<h4>${esc(b.text)}</h4>`;
     if(b.t==="gap")return `<div class="gap"></div>`;
     if(b.t==="li")return `<p class="li">${runsHTML(b.runs)}</p>`;
+    if(b.t==="sigR")return `<div class="sigR"><div class="line">${runsHTML([b.name])}</div><div class="sub">${runsHTML([b.sub])}</div></div>`;
     if(b.t==="sig")return `<div class="sig"><div class="lab">${esc(b.label)}:</div><div class="line">${runsHTML([b.name])}${b.sub?"<br>"+esc(b.sub):""}</div></div>`;
     const cls=b.small?"c":b.align==="right"?"r":b.align==="justify"?"j":"";
     return `<p class="${cls}"${b.before?' style="margin-top:12px"':""}>${runsHTML(b.runs)}</p>`;
   };
   const P=pagesOf(B);
-  return P.map((pg,i)=>`<article class="sheet"><div class="doc-h"><img src="data:image/png;base64,${LOGO_DOC}" alt="Utu-Guaçu"><span>PROPOSTA <b>DE COMPRA</b></span></div><div class="doc-b">${pg.map(one).join("")}</div><div class="doc-f">${esc(DOC_FOOT)}<span>Folha ${i+1} de ${P.length}</span></div></article>`).join("");
+  return P.map((pg,i)=>`<article class="sheet"><div class="doc-h"><img src="data:image/png;base64,${LOGO_DOC}" alt="Utu-Guaçu"><span>${esc(DOC_HDR[0])}<b>${esc(DOC_HDR[1])}</b></span></div><div class="doc-b">${pg.map(one).join("")}</div><div class="doc-f">${esc(DOC_FOOT)}<span>Folha ${i+1} de ${P.length}</span></div></article>`).join("");
 }
 function toText(B){
   const rt=runs=>runs.map(r=>r.ph?"______":r.t).join("");
-  return B.map(b=>b.t==="title"?b.text.toUpperCase():b.t==="gap"?"":b.t==="page"?"\n— — —\n":b.t==="li"?"  "+rt(b.runs):b.t==="sig"?`\n${b.label}:\n\n_______________________________\n${rt([b.name])}${b.sub?"\n"+b.sub:""}`:rt(b.runs)).join("\n");
+  return B.map(b=>b.t==="title"?b.text.toUpperCase():b.t==="gap"?"":b.t==="page"?"\n— — —\n":b.t==="li"?"  "+rt(b.runs):b.t==="sigR"?`\n\n_______________________________\n${rt([b.name])}\n${rt([b.sub])}`:b.t==="sig"?`\n${b.label}:\n\n_______________________________\n${rt([b.name])}${b.sub?"\n"+b.sub:""}`:rt(b.runs)).join("\n");
 }
 
 /* PDF (jsPDF) com Poppins, cabeçalho com logo e rodapé em todas as folhas */
@@ -1336,6 +1435,7 @@ function toPDF(B){
     if(b.t==="title"){doc.setFont(F,"bold");doc.setFontSize(15);ensure(10);doc.text(b.text,105,y+6,{align:"center"});y+=10;return}
     if(b.t==="gap"){y+=4;return}
     if(b.t==="li"){para(b.runs,10,"left",5);y+=0.4;return}
+    if(b.t==="sigR"){ensure(30);y+=16;doc.setDrawColor(26,23,20);doc.setLineWidth(0.3);const lw=80,x0=M+W-lw;doc.line(x0,y,M+W,y);y+=5;doc.setFont(F,"bold");doc.setFontSize(10.5);doc.text(b.name.ph?"______":b.name.t,x0+lw/2,y,{align:"center"});y+=5;doc.setFont(F,"normal");doc.setFontSize(9.5);doc.text(b.sub.ph?"CRECI n.º ______":b.sub.t,x0+lw/2,y,{align:"center"});y+=6;return}
     if(b.t==="sig"){ensure(28);y+=4;doc.setFont(F,"bold");doc.setFontSize(10);doc.text(b.label+":",M,y+4);y+=17;doc.setDrawColor(26,23,20);doc.setLineWidth(0.3);doc.line(M,y,M+95,y);y+=1.5;para([b.name.ph?{t:"______"}:{t:b.name.t}],9.5,"left");if(b.sub)para([{t:b.sub}],9,"left");y+=3;return}
     if(b.before)y+=2;
     doc.setTextColor(b.small?81:26,b.small?72:23,b.small?65:20);
@@ -1347,7 +1447,7 @@ function toPDF(B){
     doc.setPage(i);
     try{doc.addImage("data:image/png;base64,"+LOGO_DOC,"PNG",M,10,34.6,7.4)}catch(e){}
     doc.setFontSize(8.5);doc.setFont(F,"normal");
-    const a="PROPOSTA ",bb="DE COMPRA",wa=doc.getTextWidth(a),wb=doc.getTextWidth(bb),xr=210-M;
+    const a=DOC_HDR[0],bb=DOC_HDR[1],wa=doc.getTextWidth(a),wb=doc.getTextWidth(bb),xr=210-M;
     doc.setTextColor(81,72,65);doc.text(a,xr-wa-wb,16.6);doc.setTextColor(154,115,49);doc.text(bb,xr-wb,16.6);
     doc.setDrawColor(17,17,17);doc.setLineWidth(0.45);doc.line(M,19.6,210-M,19.6);
     doc.setFontSize(7.2);doc.setTextColor(81,72,65);doc.text(DOC_FOOT,105,297-11,{align:"center",maxWidth:W});
@@ -1368,12 +1468,13 @@ async function toDOCX(B){
     if(b.t==="title")return wp([{t:b.text,b:true}],{jc:"center",size:30,after:60});
     if(b.t==="gap")return wp([{t:""}],{after:60});
     if(b.t==="li")return wp(b.runs,{ind:360,after:40});
+    if(b.t==="sigR")return wp([{t:""}],{after:560})+wp([{t:"______________________________________"}],{jc:"right",after:0})+wp([{t:b.name.ph?"______":b.name.t,b:true}],{jc:"right",after:0})+wp([b.sub],{jc:"right",after:200,size:19});
     if(b.t==="sig")return wp([{t:b.label+":",b:true}],{before:240,after:520})+wp([{t:"_________________________________________"}],{after:0})+wp([b.name],{after:b.sub?0:200,size:19})+(b.sub?wp([{t:b.sub}],{size:18,after:200}):"");
     const jc=b.small?"center":b.align==="right"?"right":b.align==="justify"?"both":"left";
     return wp(b.runs,{jc,size:b.small?18:20,after:b.small?20:140,before:b.before?120:0,color:b.small?"514841":undefined});
   }).join("");
   const CX=1246822,CY=265989;
-  const hdr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${NS}><w:p><w:pPr><w:pBdr><w:bottom w:val="single" w:sz="12" w:space="4" w:color="111111"/></w:pBdr><w:tabs><w:tab w:val="right" w:pos="10148"/></w:tabs><w:spacing w:after="0"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${CX}" cy="${CY}"/><wp:docPr id="1" name="Logo Utu-Guaçu"/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="1" name="logo.png"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rIdLogo"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${CX}" cy="${CY}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r><w:r><w:tab/></w:r><w:r><w:rPr>${RF}<w:color w:val="514841"/><w:spacing w:val="30"/><w:sz w:val="17"/></w:rPr><w:t xml:space="preserve">PROPOSTA </w:t></w:r><w:r><w:rPr>${RF}<w:color w:val="9A7331"/><w:spacing w:val="30"/><w:sz w:val="17"/></w:rPr><w:t>DE COMPRA</w:t></w:r></w:p></w:hdr>`;
+  const hdr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${NS}><w:p><w:pPr><w:pBdr><w:bottom w:val="single" w:sz="12" w:space="4" w:color="111111"/></w:pBdr><w:tabs><w:tab w:val="right" w:pos="10148"/></w:tabs><w:spacing w:after="0"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${CX}" cy="${CY}"/><wp:docPr id="1" name="Logo Utu-Guaçu"/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="1" name="logo.png"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rIdLogo"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${CX}" cy="${CY}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r><w:r><w:tab/></w:r><w:r><w:rPr>${RF}<w:color w:val="514841"/><w:spacing w:val="30"/><w:sz w:val="17"/></w:rPr><w:t xml:space="preserve">${x(DOC_HDR[0])}</w:t></w:r><w:r><w:rPr>${RF}<w:color w:val="9A7331"/><w:spacing w:val="30"/><w:sz w:val="17"/></w:rPr><w:t>${x(DOC_HDR[1])}</w:t></w:r></w:p></w:hdr>`;
   const ftr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr ${NS}><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:rPr>${RF}<w:color w:val="514841"/><w:sz w:val="15"/></w:rPr><w:t>${x(DOC_FOOT)}</w:t></w:r></w:p></w:ftr>`;
   const doc=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${NS}><w:body>${body}<w:sectPr><w:headerReference w:type="default" r:id="rIdH"/><w:footerReference w:type="default" r:id="rIdF"/><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1300" w:right="879" w:bottom="1100" w:left="879" w:header="420" w:footer="340" w:gutter="0"/></w:sectPr></w:body></w:document>`;
   const zip=new JSZip();
@@ -1411,7 +1512,7 @@ function update(){
     else{el.className="calc";el.textContent="Preencha entrada e parcelas para conferir a soma."}}
   if(c.forma==="financiamento"){const el=$("#calcFin");el.className="calc";el.textContent=c.valor>0&&c.finE>=0&&v("finEntrada")?`Saldo a financiar: ${brl(c.valor-c.finE)} (${Math.round((c.valor-c.finE)/c.valor*100)}% do valor).`:"Informe o valor e os recursos próprios para ver o saldo."}
   /* preview + status */
-  $("#sheet").innerHTML=toHTML(blocks(m));
+  $("#sheet").innerHTML=(DOC_HDR=HDR_PROP,toHTML(blocks(m)));
   const n=m.missing.length, done=n===0;
   $("#pill").className="pill "+(done?"ok":"warn"); $("#pill").textContent=done?"Ficha completa":`Faltam ${n} ${n===1?"item":"itens"}`;
   $("#missing").innerHTML=done?"Confira a folha e baixe a proposta.":m.missing.slice(0,6).map(x=>`<a data-go="${x.id}">${esc(x.label)}</a>`).join(", ")+(n>6?` e mais ${n-6}`:"");
@@ -1466,7 +1567,7 @@ $("#shareProp").addEventListener("click",async()=>{
   if(!window.jspdf){toast("O gerador de PDF não carregou. Recarregue a página.");return}
   const texto=msgProposta(last), name=last.fileBase+".pdf";
   try{navigator.clipboard&&navigator.clipboard.writeText(texto).catch(()=>{})}catch(_){}
-  const blob=toPDF(blocks(last)), file=new File([blob],name,{type:"application/pdf"});
+  const blob=(DOC_HDR=HDR_PROP,toPDF(blocks(last))), file=new File([blob],name,{type:"application/pdf"});
   try{
     if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:texto,title:"Proposta de compra"});toast("Se a mensagem não aparecer junto do PDF, cole no WhatsApp: ela já está copiada.");return}
   }catch(err){if(err&&err.name==="AbortError")return}
@@ -1474,8 +1575,8 @@ $("#shareProp").addEventListener("click",async()=>{
   window.open("https://wa.me/?text="+encodeURIComponent(texto),"_blank","noopener");
   toast("PDF baixado. Anexe o arquivo na conversa do WhatsApp.");
 });
-$("#dlPdf").addEventListener("click",async()=>{if(!ready())return;if(!window.jspdf){toast("O gerador de PDF não carregou. Recarregue a página.");return}offer(last.fileBase+".pdf",toPDF(blocks(last)),"PDF pronto.")});
-$("#dlDocx").addEventListener("click",async()=>{if(!ready())return;if(!window.JSZip){toast("O gerador de Word não carregou. Recarregue a página.");return}offer(last.fileBase+".docx",await toDOCX(blocks(last)),"Arquivo Word pronto.")});
+$("#dlPdf").addEventListener("click",async()=>{if(!ready())return;if(!window.jspdf){toast("O gerador de PDF não carregou. Recarregue a página.");return}offer(last.fileBase+".pdf",(DOC_HDR=HDR_PROP,toPDF(blocks(last))),"PDF pronto.")});
+$("#dlDocx").addEventListener("click",async()=>{if(!ready())return;if(!window.JSZip){toast("O gerador de Word não carregou. Recarregue a página.");return}offer(last.fileBase+".docx",await (DOC_HDR=HDR_PROP,toDOCX(blocks(last))),"Arquivo Word pronto.")});
 $("#cpTxt").addEventListener("click",()=>{
   const txt=toText(blocks(last));
   const fallback=()=>{const r=document.createRange();r.selectNodeContents($("#sheet"));const s=getSelection();s.removeAllRanges();s.addRange(r);toast("Texto selecionado. Use Copiar do aparelho.")};
@@ -1490,6 +1591,119 @@ $("#btnClear").addEventListener("click",e=>{
   $$("#pf [data-touched]").forEach(i=>delete i.dataset.touched);delete document.body.dataset.tried;update();toast("Ficha limpa. Corretor e CRECI mantidos.");
 });
 update();
+
+/* ===== AVALIAÇÃO DE IMÓVEL ===== */
+const AVF=["avCor","avCreci","avTrat","avSol","avForma","avRecebeu","avTipo","avFin","avEnd","avLocal","avCidade","avAndar","avUnid","avArea","avUnArea","avAreaC","avDorm","avSuite","avBanh","avVagas","avCarac","avValor","avData"];
+const av=id=>($("#"+id).value||"").trim();
+let avLast=null;
+(function(){const d=LS.get("utu.aval.rascunho",null);if(d){AVF.forEach(k=>{if(d[k]!=null)$("#"+k).value=d[k]});if(d.g==="f")$("#avCorF").checked=true}if(!av("avData"))$("#avData").value=today()})();
+function avSave(){const d={};AVF.forEach(k=>d[k]=$("#"+k).value);d.g=radio("avCorG");LS.set("utu.aval.rascunho",d)}
+function nInt(id){const n=parseInt(onlyDig(av(id)),10);return n>0?n:0}
+function plural(n,s,p){return n+" "+(n===1?s:p)}
+function avCollect(){
+  const m={missing:[],errs:{}};
+  const need=(id,label,ok=true)=>{if(!av(id)||!ok){m.missing.push({id,label});m.errs[id]=true}};
+  need("avCor","nome do corretor");need("avCreci","CRECI do corretor");need("avSol","nome do solicitante");need("avTipo","tipo do imóvel");need("avEnd","endereço do imóvel");need("avCidade","cidade");
+  const valor=parseMoney(av("avValor"));need("avValor",valor>=1e10?"valor sugerido (número muito alto, confira)":"valor sugerido",valor>0&&valor<1e10);
+  const f=radio("avCorG")==="f", [tipo,tg]=(av("avTipo")||"|m").split("|"), fem=tg==="f", loc=av("avFin")==="locacao";
+  const P=(v,ph)=>v?{t:v}:{t:ph,ph:true};
+  m.cor=P(av("avCor"),"nome do corretor"); m.creci=P(av("avCreci"),"CRECI");
+  m.intro=[{t:`${f?"Corretora":"Corretor"} de imóveis `},m.cor,{t:`, ${f?"inscrita":"inscrito"} no CRECI nº `},m.creci,{t:`, da “UTU-GUAÇU IMÓVEIS LTDA”, CRECI nº 3395-J, sediada na Rua Paula Souza, 483, Centro, em Itu/SP, a pedido da pessoa interessada, venho informar o valor de ${loc?"locação":"venda"} do imóvel abaixo descrito, considerando o mercado atual e as condições em que o imóvel se encontra, genericamente:`}];
+  const d=[];
+  if(!av("avTipo")||!av("avEnd")) d.push({t:"tipo e endereço do imóvel",ph:true});
+  else{
+    let t=`${tipo} ${fem?"localizada":"localizado"} na ${av("avEnd")}`.replace(/ na (Avenida|Av\.|Rodovia|Estrada|Alameda|Rua|Travessa|Praça)/i," na $1");
+    if(/^(rodovia|estrada|avenida|av\.|alameda|travessa|praça|rua)/i.test(av("avEnd"))===false)t=`${tipo} ${fem?"localizada":"localizado"} em ${av("avEnd")}`;
+    const lc=av("avLocal"); if(lc)t+=", "+(/^(no|na|nos|nas|em)\s/i.test(lc)?lc:"no "+lc);
+    t+=`, em ${av("avCidade")||"Itu/SP"}`;
+    const an=av("avAndar"),un=av("avUnid");
+    if(an)t+=`, ${fem?"situada":"situado"} no ${onlyDig(an)||an}º andar`;
+    if(un)t+=`, ${/lote|terreno/i.test(tipo)?"lote":"unidade"} ${un}`;
+    const ar=av("avArea"),ac=av("avAreaC");
+    if(ar){const a=parseMoney(ar);t+=`, com ${isNaN(a)?ar:a.toLocaleString("pt-BR",{maximumFractionDigits:2})} ${av("avUnArea")} de área total`}
+    if(ac){const a=parseMoney(ac);t+=`${ar?" e":", com"} ${isNaN(a)?ac:a.toLocaleString("pt-BR",{maximumFractionDigits:2})} m² de área construída`}
+    t+=".";
+    const dm=nInt("avDorm"),su=nInt("avSuite"),bn=nInt("avBanh"),vg=nInt("avVagas"),it=[];
+    if(dm)it.push(plural(dm,"dormitório","dormitórios")+(su?`, sendo ${plural(su,"suíte","suítes")}`:""));else if(su)it.push(plural(su,"suíte","suítes"));
+    if(bn)it.push(plural(bn,"banheiro","banheiros"));
+    if(vg)it.push(plural(vg,"vaga de garagem","vagas de garagem"));
+    if(it.length)t+=" O imóvel possui "+(it.length>1?it.slice(0,-1).join(", ")+" e "+it[it.length-1]:it[0])+".";
+    const c=av("avCarac"); if(c)t+=" "+c.replace(/\s+$/,"").replace(/([^.!?])$/,"$1.");
+    d.push({t});
+  }
+  m.desc=d;
+  const tr=av("avTrat"),sol=av("avSol"),rec=av("avRecebeu");
+  m.sol=sol?[{t:`${tr?tr+" ":""}${sol}, ${av("avForma")}${rec?` encaminhada a ${rec}`:""}.`}]:[{t:"nome do solicitante",ph:true}];
+  m.valor=valor>0&&valor<1e10?{t:money(valor)+(loc?" mensais":"")}:{t:"valor sugerido",ph:true};
+  m.loc=loc; m.vnum=valor;
+  m.data=dataExt(av("avData"))||dataExt(today());
+  m.sigName=av("avCor")?{t:av("avCor").toUpperCase()}:{t:"NOME DO CORRETOR",ph:true};
+  m.sigSub=av("avCreci")?{t:`CRECI n.º ${av("avCreci")}`}:{t:"CRECI",ph:true};
+  m.fileBase=["Avaliação",[tipo&&av("avTipo")?tipo:"",av("avLocal")||av("avEnd")].filter(Boolean).join(" "),sol].filter(Boolean).join(" - ").replace(/[\\/:*?"<>|]/g,"").slice(0,120);
+  return m;
+}
+function avBlocks(m){
+  const B=[]; const p=(runs,o={})=>B.push(Object.assign({t:"p",runs},o));
+  p([{t:`Itu, ${m.data}.`}],{align:"right"});
+  B.push({t:"gap"});
+  B.push({t:"title",text:"Avaliação"});
+  B.push({t:"gap"});
+  p(m.intro,{align:"justify"});
+  p([{t:"Imóvel: ",b:true},...m.desc],{align:"justify"});
+  p([{t:"Solicitante: ",b:true},...m.sol],{align:"justify"});
+  p([{t:`Conforme pesquisa realizada, sugiro o valor de ${m.loc?"locação mensal":"venda"} do imóvel de:`}],{align:"justify"});
+  p([{t:"Valor: ",b:true},Object.assign({b:true},m.valor)]);
+  B.push({t:"gap"});
+  p([{t:"Sem mais para o momento, coloco-me à disposição para eventuais dúvidas e esclarecimentos."}],{align:"justify"});
+  B.push({t:"gap"});
+  p([{t:"Atenciosamente,",b:true}],{align:"right"});
+  B.push({t:"sigR",name:m.sigName,sub:m.sigSub});
+  return B;
+}
+function avUpdate(){
+  const loc=av("avFin")==="locacao";
+  $("#avValorLbl").textContent=loc?"Aluguel mensal sugerido (R$)":"Valor de venda sugerido (R$)";
+  const m=avCollect(); avLast=m;
+  $$("#avForm .field").forEach(el=>el.classList.remove("err"));
+  if(document.body.dataset.avTried)Object.keys(m.errs).forEach(id=>{const fl=$("#"+id).closest(".field");if(fl)fl.classList.add("err")});
+  const vv=m.vnum;$("#avValorHint").textContent=vv>0?(vv<1e10?reaisExtenso(vv):"Número muito alto, confira."):"";
+  DOC_HDR=HDR_AVAL; $("#avSheet").innerHTML=toHTML(avBlocks(m)); DOC_HDR=HDR_PROP;
+  const gm=$("#avMissing");
+  if(!m.missing.length||!document.body.dataset.avTried)gm.hidden=true;
+  else{gm.hidden=false;gm.innerHTML=`<b>Para gerar a avaliação, falta preencher:</b><ul>${m.missing.map(x=>`<li><a data-avgo="${x.id}">${esc(x.label)}</a></li>`).join("")}</ul><span>Toque no item para ir até o campo.</span>`}
+  avSave();
+}
+$("#avForm").addEventListener("input",avUpdate);$("#avForm").addEventListener("change",avUpdate);
+$("#avForm").addEventListener("submit",e=>e.preventDefault());
+$("#avValor").addEventListener("blur",()=>{const n=parseMoney(av("avValor"));if(!isNaN(n)&&n<1e10)$("#avValor").value=fmtMoney(n);avUpdate()});
+$("#avMissing").addEventListener("click",e=>{const a=e.target.closest("[data-avgo]");if(!a)return;const i=$("#"+a.dataset.avgo);i.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>i.focus({preventScroll:true}),250)});
+function avShowForm(){$("#avWrap").classList.remove("result");$("#view-avaliacao").classList.remove("done");$("#avSide").hidden=true}
+$("#avGerar").addEventListener("click",()=>{
+  const eb=$("#avErr");eb.hidden=true;
+  try{
+    document.body.dataset.avTried="1";avUpdate();
+    if(avLast.missing.length){$("#avMissing").scrollIntoView({behavior:"smooth",block:"center"});return}
+    $("#avWrap").classList.add("result");$("#view-avaliacao").classList.add("done");$("#avSide").hidden=false;window.scrollTo({top:0});
+  }catch(err){eb.hidden=false;eb.textContent="Não consegui gerar a avaliação por um erro na página. Mande um print desta mensagem para a gerência: "+(err&&err.message?err.message:err)}
+});
+$("#avBack").addEventListener("click",()=>{avShowForm();window.scrollTo({top:0})});
+function avPdf(){DOC_HDR=HDR_AVAL;try{return toPDF(avBlocks(avLast))}finally{DOC_HDR=HDR_PROP}}
+async function avDocx(){DOC_HDR=HDR_AVAL;try{return await toDOCX(avBlocks(avLast))}finally{DOC_HDR=HDR_PROP}}
+$("#avPdf").addEventListener("click",()=>{if(!window.jspdf){toast("O gerador de PDF não carregou. Recarregue a página.");return}offer(avLast.fileBase+".pdf",avPdf(),"PDF pronto.")});
+$("#avDocx").addEventListener("click",async()=>{if(!window.JSZip){toast("O gerador de Word não carregou. Recarregue a página.");return}offer(avLast.fileBase+".docx",await avDocx(),"Arquivo Word pronto.")});
+$("#avTxt").addEventListener("click",()=>copyText(toText(avBlocks(avLast)),"Texto copiado."));
+$("#avShare").addEventListener("click",async()=>{
+  if(!window.jspdf){toast("O gerador de PDF não carregou. Recarregue a página.");return}
+  const m=avLast, tr=av("avTrat"), nome=(av("avSol")||"").split(" ")[0];
+  const [tipo,tg]=(av("avTipo")||"Imóvel|m").split("|"), fem=tg==="f";
+  const ref=`${fem?"da":"do"} ${tipo.toLowerCase()}${av("avLocal")?" "+(/^(no|na|nos|nas|em)\s/i.test(av("avLocal"))?av("avLocal"):"no "+av("avLocal")):""}`;
+  const texto=`Olá, ${nome||"tudo bem"}! Tudo bem? Aqui é ${av("avCor")||"[corretor]"}, da Utu-Guaçu Imóveis.\n\nConforme combinamos, envio em anexo a avaliação ${ref}, com o valor sugerido de ${m.loc?"locação":"venda"} de acordo com o mercado atual.\n\nAnalise com calma e, qualquer dúvida, estou à disposição.`;
+  const name=m.fileBase+".pdf", blob=avPdf(), file=new File([blob],name,{type:"application/pdf"});
+  try{navigator.clipboard&&navigator.clipboard.writeText(texto).catch(()=>{})}catch(_){}
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:texto,title:"Avaliação de imóvel"});toast("Se a mensagem não aparecer junto do PDF, cole no WhatsApp: ela já está copiada.");return}}catch(err){if(err&&err.name==="AbortError")return}
+  nativeSave(name,blob);window.open("https://wa.me/?text="+encodeURIComponent(texto),"_blank","noopener");toast("PDF baixado. Anexe o arquivo na conversa do WhatsApp.");
+});
+
 })();
 </script>
 
