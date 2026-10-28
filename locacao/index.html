@@ -1452,7 +1452,7 @@ Desejo muitas alegrias nessa nova fase!`},
   texto:`Olá, [cliente]! Tudo bem?
 Aqui é [corretor], da Utu-Guaçu Imóveis, de Itu.
 
-Vi que {i:o seu|a sua} [imóvel] está para alugar. Trabalhamos com locação e administração há mais de 45 anos e temos procura constante de inquilinos na região.
+Vi que {i:o seu|a sua} [imóvel] está para alugar. Trabalhamos com locação e administração há mais de 46 anos no mercado e temos procura constante de inquilinos na região.
 
 Cuidamos de tudo: anúncio, visitas, análise de crédito, contrato, vistoria e recebimento do aluguel. Posso te explicar como funciona, sem compromisso?`},
  {id:"pr-atualizacao",cat:"Proprietário",titulo:"Atualizar o proprietário",quando:"Retorno semanal sobre visitas e interessados.",
@@ -1532,7 +1532,7 @@ function renderMsgs(){
 }
 function iaPrompt(){
   const x=msgCtx(), sit=($("#iaSit").value||"").trim(), para=$("#iaPara").value;
-  return `Você vai me ajudar a escrever uma mensagem de WhatsApp. Eu sou ${x.cor||"[meu nome]"}, ${x.c?"corretora":"corretor"} de locação da Utu-Guaçu Imóveis, imobiliária de Itu-SP com mais de 45 anos, que cuida de locação e administração de imóveis.
+  return `Você vai me ajudar a escrever uma mensagem de WhatsApp. Eu sou ${x.cor||"[meu nome]"}, ${x.c?"corretora":"corretor"} de locação da Utu-Guaçu Imóveis, imobiliária de Itu-SP com mais de 46 anos no mercado (desde 1980), que cuida de locação e administração de imóveis.
 
 Quem vai receber: ${x.cli||"[nome]"} (${x.k?"mulher":"homem"}), que ${para}.
 ${x.im?`Imóvel: ${x.im}.\n`:""}

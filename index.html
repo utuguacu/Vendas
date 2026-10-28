@@ -714,7 +714,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 27/10/2026 00h00</p>
+<p class="ver">Portal de Vendas · versão 27/10/2026 22h40</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -745,7 +745,7 @@ Aqui é [corretor], da Utu-Guaçu Imóveis, de Itu.
 
 Vi o anúncio d{i:o|a} {i:seu|sua} [imóvel] e fiquei {c:interessado|interessada} em ajudar na venda. Hoje atendemos clientes buscando exatamente esse perfil na região.
 
-Há mais de 45 anos a Utu-Guaçu é especializada em imóveis de alto padrão e rurais. Cuidamos de tudo para você: fotos profissionais, divulgação no nosso site e nos principais portais, filtro dos interessados, visitas acompanhadas e toda a parte de documentação até a escritura.
+Há mais de 46 anos no mercado, desde 1980, a Utu-Guaçu é especializada em imóveis de alto padrão e rurais. Cuidamos de tudo para você: fotos profissionais, divulgação no nosso site e nos principais portais, filtro dos interessados, visitas acompanhadas e toda a parte de documentação até a escritura.
 
 Posso te ligar para conversarmos 10 minutinhos sobre como trabalharíamos {i:o|a} {i:seu|sua} [imóvel]?`},
  {id:"capt-ativa",cat:"Captação",titulo:"Abordar proprietário de imóvel que não está à venda",quando:"Você conhece um imóvel com o perfil que seus clientes procuram.",
@@ -886,7 +886,7 @@ Preparei um comparativo de mercado para te mostrar. Podemos conversar sobre um a
 • negociação para defender o seu valor;
 • análise de documentação e acompanhamento até a escritura, com segurança jurídica.
 
-São mais de 45 anos fazendo isso em Itu e região. Nosso compromisso é que a comissão volte para você em um negócio mais seguro e bem fechado.`},
+São mais de 46 anos no mercado fazendo isso em Itu e região. Nosso compromisso é que a comissão volte para você em um negócio mais seguro e bem fechado.`},
  {id:"pos-venda",cat:"Pós-venda",titulo:"Agradecer e pedir indicação",quando:"Depois da escritura ou da entrega das chaves.",
   texto:`[cliente], parabéns pela conquista d{i:o|a} [imóvel]! Foi um prazer fazer parte desse momento.
 
@@ -927,7 +927,7 @@ function renderMsgs(){
 }
 function iaPrompt(){
   const x=msgCtx(), sit=($("#iaSit").value||"").trim(), para=$("#iaPara").value;
-  return `Você vai me ajudar a escrever uma mensagem de WhatsApp. Eu sou ${x.cor||"[meu nome]"}, ${x.c?"corretora":"corretor"} da Utu-Guaçu Imóveis, imobiliária de Itu-SP com mais de 45 anos, especializada em imóveis de alto padrão e rurais.
+  return `Você vai me ajudar a escrever uma mensagem de WhatsApp. Eu sou ${x.cor||"[meu nome]"}, ${x.c?"corretora":"corretor"} da Utu-Guaçu Imóveis, imobiliária de Itu-SP com mais de 46 anos no mercado (desde 1980), especializada em imóveis de alto padrão e rurais.
 
 Quem vai receber: ${x.cli||"[nome]"} (${x.k?"mulher":"homem"}), que ${para}.
 ${x.im?`Imóvel: ${x.im}.\n`:""}
