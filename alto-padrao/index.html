@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B0B0A">
+<meta name="robots" content="noindex,nofollow">
+<style>body{margin:0}[hidden]{display:none!important}</style>
+<title>Guia do Alto Padrão</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,500&family=Poppins:wght@400;500;600&display=swap">
+<style>
+/* Layout: faixa preta + navegação fixa por seção; mapa em 4 colunas de padrão (1 no celular); ferramenta "cliente pediu" com resultado ao lado. */
+:root{
+  --bg:#F4F0E9; --surface:#FFFFFF; --fg:#1B1814; --muted:#6F675B; --line:#E2D9C9; --line-strong:#CDBFA6;
+  --gold:#8C6E3C; --gold-soft:#EFE5D2; --gold-bright:#B89A5E; --band:#0B0B0A; --band-fg:#F3EEE4; --band-muted:#A79E8E;
+  --ok:#2F6B45; --ok-soft:#E3EFE6; --warn:#9A5B12; --warn-soft:#F7EAD7;
+  --display:"Lora",Georgia,serif; --body:"Poppins",system-ui,-apple-system,"Segoe UI",sans-serif; --r:8px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F0E0C; --surface:#191714; --fg:#EEE8DC; --muted:#A49B8B; --line:#2D2924; --line-strong:#4A4338;
+  --gold:#CDAE70; --gold-soft:#2A2418; --gold-bright:#C9A96A; --band:#050505; --band-fg:#F3EEE4; --band-muted:#958C7D;
+  --ok:#7FC394; --ok-soft:#18271D; --warn:#E3A55A; --warn-soft:#2C2112; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F0E0C; --surface:#191714; --fg:#EEE8DC; --muted:#A49B8B; --line:#2D2924; --line-strong:#4A4338;
+  --gold:#CDAE70; --gold-soft:#2A2418; --gold-bright:#C9A96A; --band:#050505; --band-fg:#F3EEE4; --band-muted:#958C7D;
+  --ok:#7FC394; --ok-soft:#18271D; --warn:#E3A55A; --warn-soft:#2C2112; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:14.5px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--band)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.proto{background:var(--warn-soft);color:var(--warn);font-size:12.5px}.proto .wrap{padding-block:8px}
+.band{background:var(--band);color:var(--band-fg)}
+.band .wrap{display:flex;align-items:center;gap:14px;padding-block:14px}
+.logo{display:block;width:118px;height:26px;background:var(--band-fg);-webkit-mask:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWsAAABOCAYAAADmUDdJAAAMAUlEQVR42u2df4gU5xnHP97518WSFK4utLCEBKTxsIWieCmGplcJLW0EDWwLbaE5YkNLEEQqGg6agiSSIEIRixiOQtoiCyqplgQxGwRpTiqBepyI0DQs+MeGhRqQ/W+hf8w7uc26P2Zn3pl535nvB4T1dnbmnWfe9/s+7/PO+7wbgEfwiwcJfrsI1BFCCM+YkgmEEEJiLYQQQmIthBASayGEEBJrIYQQEmshhJBYCyGEkFgLIYSQWAshhMRaCCGExFoIISTWQgghJNZCCCHisVEmECkyCyyYz9vN/0PawE3zeQW4B3RlssRMAzuAKvBVYOeAY+4Cnzhs93H3ENadJnAL6JRFrKvAfMLzXO4x2Azwk4TnSyuN6Q8j3kM/Nu7Jto0uO1pJ54Fngf1AZcLfngYuGBGxSdGf3wywC3ilp3OMSgs4C1wC1nKsN0nuYRX4M/CORZvOG220pWNJdba5AXgRWE5YqK2mlwsLdTvh+TaN+O5BSpWl9x76sXFPtm00qrx5ifRJYJuFc4UC8pYlr6+oz28GOAAsWXqGoei9naG3PQ38zuI9HDPlbyc8zzJQs6hjtYQ6W1fMWiRlDvgIuGpJqDEe+ZIZrj8nEw8UuCPAZxZFDvP8Thi7VzO4h5q5ls17WAI+BV421ygMEmuRhJeBGxZFepBoXzAeyYzMDQRx/4uWBW6Q3W+nKHjT5h6WmTxUFpUT5hqzEmtRds9u2TSILKiZIfpsye0+ZzrHhYyul4bgzRpvOot7WDD2mpNYi7IK9UWSx/PieHuXija0nYB5IzyVjK+7YNHuVROiqGRcb26Q/CUKibXwjrMZenb9bDMdRdkEu0owJ0COdj9rwaP+MMd7uEr6cXiJtXCGIzl41IM8vZdKZPO8RS6kRhDDjjsaSzM+HZUPfe7oJdZikmH4kiNlOUF5JhxdELleu8eJ/+Y5GuulYmGEILEWznPSsfIcKEkHueBYmd6e8PiqA6Ox/hGCl/FrLTcvBlWLFXCFhxdr1Ejv9by4LGFv0YyLTDvYQWLqwTzRV5mectTxeFpiLfLywJYtnWuxT6yngTccve8d2F+a7govONhBhrwK7PF0ZBCnw3EChUFEFEGsOFq2fQW2+0GHy7ZAtDmDVx2+h5O+VQiJtfBZEH9bUJvPOuxVh+wa8/2Mo151r3ft1SIribXIShDrwG6C5DaPms8tS8JWNBY8KOPPxnz/LYvXqhOE5xYJMjO2LJ33OxJrURSqlhra46ahhTHCrvm8zULDqxTQ7r+wKHI7gc2mg9wKHLJ07qcyGJE1eupO3fw7DDxp/pZ2h+MUmmAUo7DxhslrDE9X2QGOkmxydI588zC76lnvA670/a0JnAHeI1ggkqSjGxemeSFh+VcZPYlZN/cTruxsAdeGHHsD+J/vlaJsYh320CIbGozP2Xw+oVhvL9gztbHC7tAAoe4X7Z+TfAl7dcTzTTri+WmEY1YYnfu+UCgMIkbxRMLfvx7hmK4R9bgULWb9DQseaZSFKyvmWBc7nDpubawhsfZQfMrGloS//1fE49oytTXeJfpCobReX0va4dzVY5RYb9Ejz5QfRDzuhjxra3w8wbH3Hb2HT/QYH8bHmHWL+PGwGsGGnEXbDXkFO7Pj4blseTh/YHTsNCTJ5M+CmvGXeGyCY+84eg+TzkMMe2vpm0Ps0btj+mFfRnY+ivU1kiWGOQAcL1gDbZJOjC+ph+Plsl7PcWHCNWldfGaCY+dJNlH6ii8P1scwSNJecIkCbqbpMFcJ8mBXZYpMhO4F/E8fu20Chyxp3N2bUfaUh17PTQvnCPeWm5eIjMRW3Vgi2ID173icotIy91I6b4Ug013ezkgj4e+XI7TNIyRblj+qjO/Ls87f8whZMF7fbeDBmJ68U2A7jLtGy+L5Fkwj/LW0euQbG0nDGDXges6OyD8snGPYDutzwJsk3wzjnz5VmCkHhWicONzKoUxlfrXsfAHuwbc6fs5SKOE28B/TQS6bz1kJ+HVL5zkBfA58ZO7hAcHbQzZy1lwa8d19x+pMe8pBIboWoeE1HGxgWbKa4bUuFECsfavj1y1eq2I87RrZ5lG5Y7nNTBLHnqSMcb7Lg5thGKThUKGivHP7l5J7mO9meK00V7plSd2jOt4pgM27uL3f4TFGh6LuOVbetVCsXdp6J4ooXs6hXC55mJcyvt7vCyDW5xwqy3sRjjlYAJv/0eGyjVuS3yVIx+oCrV6x/tihQkUZsnZMz5gltxyqaFkP0T7ArTBQHFyq41Emh4swouk4JHj9o6woOnPVkfKeh/W3QdqODBOPTthrtzKueMccsNG44VtaQ9rvey4cPtbxlwrgXR91sKM/7JmTcqpXrCHIO5y3xzFJXLhDtE07izSsaxHs6J0HTewtac8L3+r4Gv6nf+0Cv3GoPItEn3DuTti5pjUKaPaLdTPninE0hse4hr2dL3zwruPYyHbFOe2xcPhYx/fj1gsAcbjiyKi0EeP5n8/Zu/7CwZgaUDFaOYlA3EZ0JuMG+Bb5xBIbuOFlHXak4cXFtzreNd6g73MGx3PudFrA3pj2zysEuEjP/MaUAwVrmQaUtAFmVRG6wPMZN54Wbu0Xdxy7IZHtCW3jeuNLWsfbBFnifBfsveS3RmJnglFpHiHAhzr3qSEF2+2JEXsb4B6yC4m0CbZFytJGrq3CqxNswGqj8SXJSX0tZuPzrY6Hgu3zGyJdI9hZjswaxm5tC/X9WIZlfqhzH5YbZCWDytyyZMT+kEhWHsiKEauWZzaySdN0krsTisj3cii7j3W8DezC70nHbgojs1ECu9ei/Y9nINgNU+ZuVLHuFaPVlIy4LSURWjPnzqJCN1P0dhq4LdT9deVpYDPBrtr1IZ1Yy3zXn9GskmO5H/esjocx7N347WXXje3TaKctY59F7E/IHzd1PA0n7dAwoR4n1qEY7bIYXmiZG11MeVjfMdfYbMqepvfbNkK1aNFGi8Zj9S2BVIdg5n8ReJJg5+lHTaPcZP7Wv8N80m25blh4fj7W8bCD9Fm028ZOOy2J9qo53xbSTf18xbJDuGoc4zOjOpcoO8V0zUneIdhlZX8MT2iVIEn4ZbKNvXZM2c8Q5FDeZ8ShlsK16ub+fknwxkQlRiN/09i5SNuOdcd0OkkXfvzXUhl9reOhaFeBHwE/JvpWZ52EgmPrPteMyB4GPo0pdgfJNjd/6BC+RrDbTJwsgA3gdYKNpceOADYAj0x4gWlgB/As8F1TMbay/opJlSA1Y914PdfNw3CRal8vb7ORzQPfNl5DbYyN/k05t76aAT5LeI5eu9rC9zo+Y5ySrxDkfu4l685kUrt/HjN8cMYBm+8yI51njOe9qef7GvAGwYT4+0aoJxo5xxFrIWxxhOQJ5DfJjIVhjnhhrZ0OO4TWmFL9EDlRsyDUdZmxUDwf4zetMgi1xFrYpEqwx+I8o/f/m2Z955KknJPZC8NszM77bFkMpDCIsCnWt3u8nTA2dx94DHiC9fivLTZTrMnYMrPM5BP/LYI3P7plMNBG1RGRAr1bSaXFMQl1YZgh3sKoPWURalAYRPjL32SCwtBh8pXHhyhJrFpiLXzmixy/ojBMkqxqH/m/qpc5G4CnCCaFhJhUMHvpjVmnSYvgHdb+EMgcD79TLNxl2HvGswSv7w1blLSbwWsSZrE7H+KkWL+InZl5US425STW+wiW+/YyQ7CKraLH4g2jklwNEuw6wWrBQSOqaeBi0cVaYRDhmzd/ZcDfz0movaNiBHlQbpjekEiYN2OxzEINehtE+DVsHpTAv1aGhlpwwR7kYbcZHO7q98CXy/L85VkLX4R6UOrIsLGKYnrYo4S6an5Xmo56A/A1kqepFOWjOaDxpBGzHpqMnfWERcJ/OkyW2KhaNgNpBaOwRRpi3Z/7WojSojCIcJE6wVJyCbUQho0aSoqYpLEo5TRwasS5VVdFadF71iIug/JIzxEkYP8VwUx+FBpGoD9gdJ6H54A/oVf0RIk9ayFssWb+nenxgr/OlyeD7gN3JvDOZ4yY12ReIbEWwj4dI8ZN4m1ZFm6t9Vd500JoglG4x7Txou8CVyXUQqx71k006y7cYIYg/8MsweYFQgjD/wGE8bGaiDyeZAAAAABJRU5ErkJggg==") center/contain no-repeat;mask:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWsAAABOCAYAAADmUDdJAAAMAUlEQVR42u2df4gU5xnHP97518WSFK4utLCEBKTxsIWieCmGplcJLW0EDWwLbaE5YkNLEEQqGg6agiSSIEIRixiOQtoiCyqplgQxGwRpTiqBepyI0DQs+MeGhRqQ/W+hf8w7uc26P2Zn3pl535nvB4T1dnbmnWfe9/s+7/PO+7wbgEfwiwcJfrsI1BFCCM+YkgmEEEJiLYQQQmIthBASayGEEBJrIYQQEmshhJBYCyGEkFgLIYSQWAshhMRaCCGExFoIISTWQgghJNZCCCHisVEmECkyCyyYz9vN/0PawE3zeQW4B3RlssRMAzuAKvBVYOeAY+4Cnzhs93H3ENadJnAL6JRFrKvAfMLzXO4x2Azwk4TnSyuN6Q8j3kM/Nu7Jto0uO1pJ54Fngf1AZcLfngYuGBGxSdGf3wywC3ilp3OMSgs4C1wC1nKsN0nuYRX4M/CORZvOG220pWNJdba5AXgRWE5YqK2mlwsLdTvh+TaN+O5BSpWl9x76sXFPtm00qrx5ifRJYJuFc4UC8pYlr6+oz28GOAAsWXqGoei9naG3PQ38zuI9HDPlbyc8zzJQs6hjtYQ6W1fMWiRlDvgIuGpJqDEe+ZIZrj8nEw8UuCPAZxZFDvP8Thi7VzO4h5q5ls17WAI+BV421ygMEmuRhJeBGxZFepBoXzAeyYzMDQRx/4uWBW6Q3W+nKHjT5h6WmTxUFpUT5hqzEmtRds9u2TSILKiZIfpsye0+ZzrHhYyul4bgzRpvOot7WDD2mpNYi7IK9UWSx/PieHuXija0nYB5IzyVjK+7YNHuVROiqGRcb26Q/CUKibXwjrMZenb9bDMdRdkEu0owJ0COdj9rwaP+MMd7uEr6cXiJtXCGIzl41IM8vZdKZPO8RS6kRhDDjjsaSzM+HZUPfe7oJdZikmH4kiNlOUF5JhxdELleu8eJ/+Y5GuulYmGEILEWznPSsfIcKEkHueBYmd6e8PiqA6Ox/hGCl/FrLTcvBlWLFXCFhxdr1Ejv9by4LGFv0YyLTDvYQWLqwTzRV5mectTxeFpiLfLywJYtnWuxT6yngTccve8d2F+a7govONhBhrwK7PF0ZBCnw3EChUFEFEGsOFq2fQW2+0GHy7ZAtDmDVx2+h5O+VQiJtfBZEH9bUJvPOuxVh+wa8/2Mo151r3ft1SIribXIShDrwG6C5DaPms8tS8JWNBY8KOPPxnz/LYvXqhOE5xYJMjO2LJ33OxJrURSqlhra46ahhTHCrvm8zULDqxTQ7r+wKHI7gc2mg9wKHLJ07qcyGJE1eupO3fw7DDxp/pZ2h+MUmmAUo7DxhslrDE9X2QGOkmxydI588zC76lnvA670/a0JnAHeI1ggkqSjGxemeSFh+VcZPYlZN/cTruxsAdeGHHsD+J/vlaJsYh320CIbGozP2Xw+oVhvL9gztbHC7tAAoe4X7Z+TfAl7dcTzTTri+WmEY1YYnfu+UCgMIkbxRMLfvx7hmK4R9bgULWb9DQseaZSFKyvmWBc7nDpubawhsfZQfMrGloS//1fE49oytTXeJfpCobReX0va4dzVY5RYb9Ejz5QfRDzuhjxra3w8wbH3Hb2HT/QYH8bHmHWL+PGwGsGGnEXbDXkFO7Pj4blseTh/YHTsNCTJ5M+CmvGXeGyCY+84eg+TzkMMe2vpm0Ps0btj+mFfRnY+ivU1kiWGOQAcL1gDbZJOjC+ph+Plsl7PcWHCNWldfGaCY+dJNlH6ii8P1scwSNJecIkCbqbpMFcJ8mBXZYpMhO4F/E8fu20Chyxp3N2bUfaUh17PTQvnCPeWm5eIjMRW3Vgi2ID173icotIy91I6b4Ug013ezkgj4e+XI7TNIyRblj+qjO/Ls87f8whZMF7fbeDBmJ68U2A7jLtGy+L5Fkwj/LW0euQbG0nDGDXges6OyD8snGPYDutzwJsk3wzjnz5VmCkHhWicONzKoUxlfrXsfAHuwbc6fs5SKOE28B/TQS6bz1kJ+HVL5zkBfA58ZO7hAcHbQzZy1lwa8d19x+pMe8pBIboWoeE1HGxgWbKa4bUuFECsfavj1y1eq2I87RrZ5lG5Y7nNTBLHnqSMcb7Lg5thGKThUKGivHP7l5J7mO9meK00V7plSd2jOt4pgM27uL3f4TFGh6LuOVbetVCsXdp6J4ooXs6hXC55mJcyvt7vCyDW5xwqy3sRjjlYAJv/0eGyjVuS3yVIx+oCrV6x/tihQkUZsnZMz5gltxyqaFkP0T7ArTBQHFyq41Emh4swouk4JHj9o6woOnPVkfKeh/W3QdqODBOPTthrtzKueMccsNG44VtaQ9rvey4cPtbxlwrgXR91sKM/7JmTcqpXrCHIO5y3xzFJXLhDtE07izSsaxHs6J0HTewtac8L3+r4Gv6nf+0Cv3GoPItEn3DuTti5pjUKaPaLdTPninE0hse4hr2dL3zwruPYyHbFOe2xcPhYx/fj1gsAcbjiyKi0EeP5n8/Zu/7CwZgaUDFaOYlA3EZ0JuMG+Bb5xBIbuOFlHXak4cXFtzreNd6g73MGx3PudFrA3pj2zysEuEjP/MaUAwVrmQaUtAFmVRG6wPMZN54Wbu0Xdxy7IZHtCW3jeuNLWsfbBFnifBfsveS3RmJnglFpHiHAhzr3qSEF2+2JEXsb4B6yC4m0CbZFytJGrq3CqxNswGqj8SXJSX0tZuPzrY6Hgu3zGyJdI9hZjswaxm5tC/X9WIZlfqhzH5YbZCWDytyyZMT+kEhWHsiKEauWZzaySdN0krsTisj3cii7j3W8DezC70nHbgojs1ECu9ei/Y9nINgNU+ZuVLHuFaPVlIy4LSURWjPnzqJCN1P0dhq4LdT9deVpYDPBrtr1IZ1Yy3zXn9GskmO5H/esjocx7N347WXXje3TaKctY59F7E/IHzd1PA0n7dAwoR4n1qEY7bIYXmiZG11MeVjfMdfYbMqepvfbNkK1aNFGi8Zj9S2BVIdg5n8ReJJg5+lHTaPcZP7Wv8N80m25blh4fj7W8bCD9Fm028ZOOy2J9qo53xbSTf18xbJDuGoc4zOjOpcoO8V0zUneIdhlZX8MT2iVIEn4ZbKNvXZM2c8Q5FDeZ8ShlsK16ub+fknwxkQlRiN/09i5SNuOdcd0OkkXfvzXUhl9reOhaFeBHwE/JvpWZ52EgmPrPteMyB4GPo0pdgfJNjd/6BC+RrDbTJwsgA3gdYKNpceOADYAj0x4gWlgB/As8F1TMbay/opJlSA1Y914PdfNw3CRal8vb7ORzQPfNl5DbYyN/k05t76aAT5LeI5eu9rC9zo+Y5ySrxDkfu4l685kUrt/HjN8cMYBm+8yI51njOe9qef7GvAGwYT4+0aoJxo5xxFrIWxxhOQJ5DfJjIVhjnhhrZ0OO4TWmFL9EDlRsyDUdZmxUDwf4zetMgi1xFrYpEqwx+I8o/f/m2Z955KknJPZC8NszM77bFkMpDCIsCnWt3u8nTA2dx94DHiC9fivLTZTrMnYMrPM5BP/LYI3P7plMNBG1RGRAr1bSaXFMQl1YZgh3sKoPWURalAYRPjL32SCwtBh8pXHhyhJrFpiLXzmixy/ojBMkqxqH/m/qpc5G4CnCCaFhJhUMHvpjVmnSYvgHdb+EMgcD79TLNxl2HvGswSv7w1blLSbwWsSZrE7H+KkWL+InZl5US425STW+wiW+/YyQ7CKraLH4g2jklwNEuw6wWrBQSOqaeBi0cVaYRDhmzd/ZcDfz0movaNiBHlQbpjekEiYN2OxzEINehtE+DVsHpTAv1aGhlpwwR7kYbcZHO7q98CXy/L85VkLX4R6UOrIsLGKYnrYo4S6an5Xmo56A/A1kqepFOWjOaDxpBGzHpqMnfWERcJ/OkyW2KhaNgNpBaOwRRpi3Z/7WojSojCIcJE6wVJyCbUQho0aSoqYpLEo5TRwasS5VVdFadF71iIug/JIzxEkYP8VwUx+FBpGoD9gdJ6H54A/oVf0RIk9ayFssWb+nenxgr/OlyeD7gN3JvDOZ4yY12ReIbEWwj4dI8ZN4m1ZFm6t9Vd500JoglG4x7Txou8CVyXUQqx71k006y7cYIYg/8MsweYFQgjD/wGE8bGaiDyeZAAAAABJRU5ErkJggg==") center/contain no-repeat;flex:none}
+.band .t{border-left:1px solid #3a352d;padding-left:14px;line-height:1.2}
+.band .t b{font-family:var(--display);font-weight:500;font-size:17px;display:block}
+.band .t span{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--band-muted)}
+.crumb{margin-left:auto;color:var(--band-fg);text-decoration:none;border:1px solid #3a352d;border-radius:999px;padding:6px 14px;font-size:12.5px;white-space:nowrap}
+.nav{background:var(--band);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.nav .wrap{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.nav a{color:var(--band-muted);text-decoration:none;padding:10px 12px 12px;font-size:13px;font-weight:500;white-space:nowrap;border-bottom:2px solid transparent}
+.nav a.on{color:var(--band-fg);border-bottom-color:var(--gold-bright)}
+main{padding-block:24px 64px;display:flex;flex-direction:column;gap:48px}
+section{scroll-margin-top:60px}
+.eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:600}
+h1,h2,h3{font-family:var(--display);font-weight:500;margin:0;text-wrap:balance}
+h1{font-size:clamp(28px,5.5vw,40px);line-height:1.12;margin-top:4px}
+h1 em,h2 em{color:var(--gold)}
+h2{font-size:clamp(22px,4vw,28px);line-height:1.2;margin:4px 0 6px}
+h3{font-size:19px;line-height:1.25}
+p{margin:0}
+.lede{color:var(--muted);max-width:66ch;margin-top:8px}
+.note{font-size:12px;color:var(--muted)}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}
+.how div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.how b{display:block;font-size:13.5px;margin-bottom:2px}
+.how span{font-size:13px;color:var(--muted)}
+/* mapa */
+.tiers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}
+.tier{display:flex;flex-direction:column;gap:8px;min-width:0}
+.tier-h{border-top:4px solid var(--c);padding-top:10px}
+.tier-h b{font-family:var(--display);font-size:18px;font-weight:500;display:block}
+.tier-h span{font-size:12.5px;color:var(--muted)}
+.cc{appearance:none;text-align:left;width:100%;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--c);border-radius:var(--r);padding:10px 12px;cursor:pointer;color:var(--fg);display:flex;flex-direction:column;gap:2px}
+.cc:hover{border-color:var(--c)}
+.cc b{font-size:14px;font-weight:600}
+.cc span{font-size:12px;color:var(--muted)}
+/* ferramenta */
+.tool{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:20px;margin-top:16px;align-items:start}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label,.legend{font-size:12.5px;font-weight:500}
+.field select{width:100%;padding:10px 12px;border:1px solid var(--line-strong);border-radius:var(--r);background:var(--surface);font-size:16px}
+.seg{display:flex;border:1px solid var(--line-strong);border-radius:var(--r);overflow:hidden}
+.seg label{flex:1;position:relative;text-align:center}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:block;padding:9px 6px;font-size:13px;cursor:pointer;color:var(--muted)}
+.seg input:checked+span{background:var(--fg);color:var(--bg)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{appearance:none;border:1px solid var(--line-strong);background:var(--surface);border-radius:999px;padding:6px 11px;font-size:12.5px;cursor:pointer;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.res{display:flex;flex-direction:column;gap:10px;min-width:0}
+.pick{background:var(--gold-soft);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.pick .lv{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.alt{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--c);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.alt .top{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.alt .why{display:flex;flex-wrap:wrap;gap:6px}
+.alt .why i{font-style:normal;font-size:11.5px;background:var(--bg);border-radius:999px;padding:3px 9px;color:var(--fg)}
+.alt p{font-size:13px;color:var(--muted)}
+.lnk{appearance:none;background:none;border:0;padding:0;color:var(--gold);font-size:12.5px;font-weight:500;cursor:pointer;text-decoration:underline;text-underline-offset:3px;align-self:flex-start}
+/* fichas */
+.fichas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+details.fc{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--c);border-radius:var(--r);padding:0;min-width:0}
+details.fc summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+details.fc summary::-webkit-details-marker{display:none}
+details.fc summary .lv{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--c)}
+details.fc summary span.s{font-size:12.5px;color:var(--muted)}
+details.fc[open]{box-shadow:0 12px 30px -24px rgba(0,0,0,.5)}
+.fcb{padding:0 16px 16px;display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px 12px;font-size:13.5px}
+.fcb dt{color:var(--muted);font-size:12.5px}
+.fcb dd{margin:0;min-width:0}
+.tbc{font-size:11px;color:var(--warn);background:var(--warn-soft);border-radius:4px;padding:1px 6px;margin-left:4px;white-space:nowrap}
+.fala{grid-column:1/-1;background:var(--gold-soft);border-radius:var(--r);padding:10px 12px;font-size:13.5px}
+.fala b{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:2px}
+.filt{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+/* atendimento */
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:8px}
+.step .n{font-family:var(--display);font-size:28px;color:var(--gold);line-height:1}
+.step ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:13.5px}
+.msgs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.msg{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:8px}
+.msg pre{white-space:pre-wrap;font-family:inherit;font-size:13px;margin:0;background:var(--bg);border-radius:6px;padding:10px 12px;flex:1}
+.btn{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:var(--r);padding:10px 14px;font-size:13.5px;font-weight:500;cursor:pointer;border:1px solid var(--line-strong);background:var(--surface);color:var(--fg)}
+.btn.dark{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+/* quiz */
+.quiz{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-top:16px;display:flex;flex-direction:column;gap:12px;max-width:720px}
+.qopts{display:flex;flex-direction:column;gap:8px}
+.qo{appearance:none;text-align:left;border:1px solid var(--line-strong);background:var(--surface);border-radius:var(--r);padding:11px 14px;cursor:pointer;color:var(--fg);font-size:14px}
+.qo.ok{border-color:var(--ok);background:var(--ok-soft)}
+.qo.no{border-color:#A3322A;background:#F6E1DE;color:#7A241E}
+.qx{font-size:13.5px;background:var(--bg);border-radius:var(--r);padding:10px 12px}
+.apo{display:grid;grid-template-columns:180px 1fr;gap:24px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.apo-cover{aspect-ratio:210/297;background:#0B0B0A;color:#F3EEE4;border-radius:4px;padding:16px 14px;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;box-shadow:0 10px 24px -12px rgba(0,0,0,.45);position:relative}
+.apo-cover .logo{position:absolute;top:14px;left:14px;width:70px;height:16px;background:#F3EEE4}
+.apo-cover .k{font-size:7px;letter-spacing:.2em;text-transform:uppercase;color:#C9A96A}
+.apo-cover b{font-family:var(--display);font-weight:500;font-size:19px;line-height:1.15}
+.apo-cover em{color:#C9A96A}
+.apo-txt p{margin:0 0 10px}
+.apo-btns{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 10px}
+.apo-btns a{text-decoration:none}
+@media (max-width:620px){.apo{grid-template-columns:1fr}.apo-cover{width:150px;margin:0 auto}.apo-btns .btn{flex:1 1 100%}}
+.src{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+.src a{color:var(--muted)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:var(--r);font-size:13px;z-index:20;max-width:calc(100% - 32px)}
+@media (max-width:900px){.tiers{grid-template-columns:repeat(2,minmax(0,1fr))}.tool{grid-template-columns:minmax(0,1fr)}.msgs{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:620px){.tiers,.fichas,.steps,.how{grid-template-columns:minmax(0,1fr)}.band .t span{display:none}.fcb{grid-template-columns:minmax(0,1fr)}.fcb dt{margin-top:4px}}
+</style>
+</head>
+<body>
+
+<div class="proto"><div class="wrap">Os valores marcados como <b>a confirmar</b> estão sendo validados pela gerência. Antes de passar números ao cliente, confira no Kenlo.</div></div>
+<header class="band"><div class="wrap"><span class="logo" role="img" aria-label="Utu-Guaçu"></span><span class="t"><b>Guia do Alto Padrão</b><span>Itu · treinamento</span></span><a class="crumb" href="../">‹ Portal</a></div></header>
+<nav class="nav" aria-label="Seções do guia"><div class="wrap"><a href="#mapa" class="on">Mapa</a><a href="#pediu">Cliente pediu</a><a href="#fichas">Fichas</a><a href="#atender">Como atender</a><a href="#teste">Teste</a><a href="#apostila">Apostila</a></div></nav>
+<main class="wrap">
+  <div>
+    <div class="eyebrow">Aprendizado · Itu</div>
+    <h1>Os condomínios de Itu, <em>do jeito que o cliente pensa</em></h1>
+    <p class="lede">Um mapa para você saber em segundos onde cada condomínio se encaixa, quais são parecidos entre si e o que oferecer quando o cliente pede um nome que você não tem disponível.</p>
+    <div class="how"><div><b>1. Veja o mapa</b><span>Os condomínios separados em 4 padrões, pelo tamanho do lote e pela faixa de preço.</span></div><div><b>2. Use o "Cliente pediu"</b><span>Escolha o condomínio que o cliente pediu e veja quais oferecer junto e por quê.</span></div><div><b>3. Treine</b><span>Leia as fichas e o jeito de atender, e faça o teste no final.</span></div></div>
+  </div>
+
+  <section id="mapa">
+    <div class="eyebrow">Mapa dos padrões</div>
+    <h2>Quatro padrões, <em>quatro clientes diferentes</em></h2>
+    <p class="lede">Toque num condomínio para ver as alternativas para ele.</p>
+    <div class="tiers" id="tiers"></div>
+  </section>
+
+  <section id="pediu">
+    <div class="eyebrow">Cliente pediu</div>
+    <h2>O cliente pediu um condomínio. <em>O que mais oferecer?</em></h2>
+    <p class="lede">Ofereça sempre o que ele pediu e mais 2 ou 3 parecidos. Assim ele compara, sente que você conhece a cidade e você não perde o cliente quando não tem imóvel no condomínio que ele citou.</p>
+    <div class="tool">
+      <div class="box">
+        <div class="field"><span class="legend">Como você quer buscar</span><div class="seg"><label><input type="radio" name="modo" value="cond" checked><span>Pelo condomínio</span></label><label><input type="radio" name="modo" value="perfil"><span>Pelo perfil</span></label></div></div>
+        <div class="field" id="wCond"><label for="selCond">Condomínio que o cliente pediu</label><select id="selCond"></select></div>
+        <div class="field" id="wPerfil" hidden><span class="legend">O que o cliente valoriza</span><div class="chips" id="valChips"></div>
+          <label for="selNivel" class="legend" style="margin-top:8px">Faixa que ele busca</label><select id="selNivel"><option value="">Qualquer faixa</option></select></div>
+      </div>
+      <div class="res" id="res"></div>
+    </div>
+  </section>
+
+  <section id="fichas">
+    <div class="eyebrow">Fichas</div>
+    <h2>Tudo o que você precisa saber <em>de cada condomínio</em></h2>
+    <div class="filt" id="filt"></div>
+    <div class="fichas" id="fichasBox"></div>
+  </section>
+
+  <section id="atender">
+    <div class="eyebrow">Como atender</div>
+    <h2>O cliente de alto padrão <em>compra confiança</em></h2>
+    <p class="lede">Ele não quer ver muitos imóveis. Quer um corretor que entenda o que ele precisa, filtre bem e leve poucas opções certeiras.</p>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><h3>Entenda o momento antes de mostrar imóvel</h3><ul><li>É para morar ou para segunda casa (fim de semana)?</li><li>De onde ele vem? Muitos vêm de São Paulo e querem trocar o apartamento por casa.</li><li>Quem vai morar: filhos pequenos, adolescentes, pais idosos, animais?</li><li>Rotina: trabalha de casa, vai a São Paulo, precisa de escola por perto?</li><li>O que não abre mão e o que é só desejável.</li></ul></div>
+      <div class="step"><span class="n">2</span><h3>Qualifique o orçamento com naturalidade</h3><ul><li>"Qual faixa de investimento você tem em mente para ficar confortável?"</li><li>"Vai usar recurso próprio, financiamento ou depende de vender outro imóvel?"</li><li>"Para quando você gostaria de estar morando?"</li><li>Se depende de vender outro imóvel, ofereça avaliar esse imóvel também. É captação.</li></ul></div>
+      <div class="step"><span class="n">3</span><h3>Filtre curiosos e outros corretores</h3><ul><li>Antes de agendar visita, peça nome completo e confirme como ele chegou até você.</li><li>Se ele se apresentar como corretor, peça o CRECI e proponha parceria formal, com termo assinado.</li><li>Em visitas de alto valor, combine o roteiro antes: poucos imóveis, já filtrados.</li><li>Quem não responde às perguntas básicas ainda não está pronto para visitar. Mantenha o contato com conteúdo, sem gastar a sua tarde.</li></ul></div>
+      <div class="step"><span class="n">4</span><h3>Apresente estilos de vida, não só metragem</h3><ul><li>Leve no máximo 3 opções: a que ele pediu e 2 parecidas (use o "Cliente pediu").</li><li>Fale do dia a dia: o caminho até a escola, o clube, a vista, o silêncio.</li><li>Conheça as regras de entrada de cada portaria e avise o cliente antes.</li><li>Nunca fale mal de outro condomínio. Compare com respeito.</li><li>Pontualidade, discrição e retorno rápido valem mais do que muito material.</li></ul></div>
+    </div>
+    <h3 style="margin-top:22px">Mensagens prontas</h3>
+    <div class="msgs" id="msgsAp"></div>
+  </section>
+
+  <section id="teste">
+    <div class="eyebrow">Teste</div>
+    <h2>Você já sabe <em>indicar o condomínio certo?</em></h2>
+    <div class="quiz" id="quiz"></div>
+  </section>
+
+  <section id="apostila">
+    <div class="eyebrow">Apostila</div>
+    <h2>Leve o guia <em>com você</em></h2>
+    <div class="apo">
+      <div class="apo-cover" aria-hidden="true"><span class="logo"></span><span class="k">Apostila do corretor</span><b>Guia do <em>Alto Padrão</em> de Itu</b></div>
+      <div class="apo-txt">
+        <p>Todo o conteúdo deste guia em PDF, pronto para imprimir ou guardar no celular: os quatro padrões, a tabela <b>Cliente pediu, ofereça também</b>, as fichas dos 18 condomínios, como atender, as mensagens prontas e o teste com gabarito. No fim tem uma página para anotações.</p>
+        <p class="note">PDF em A4, 21 páginas.</p>
+        <div class="apo-btns">
+          <a class="btn dark" href="../arquivos/Apostila-Alto-Padrao-Itu.pdf" download="Apostila-Alto-Padrao-Itu.pdf">Baixar PDF</a>
+          <a class="btn" href="../arquivos/Apostila-Alto-Padrao-Itu.pdf" target="_blank" rel="noopener">Abrir para ler ou imprimir</a>
+          <button class="btn" type="button" id="apoShare">Mandar no WhatsApp</button>
+        </div>
+        <p class="note">Para imprimir, abra o PDF e use a opção Imprimir do celular ou do computador.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="src">Informações reunidas de sites de imobiliárias e portais em outubro de 2026 (lazer, tamanhos e faixas de preço de anúncios). Valores mudam: confirme sempre com a administração do condomínio e com os imóveis da Utu-Guaçu no Kenlo.</p>
+</main>
+<div class="toast" id="toast" hidden></div>
+<script>
+/* Condomínios de Itu. Fontes: sites de imobiliárias e portais (out/2026). ok:true = valor com fonte; ok:false = a confirmar pela gerência. */
+const NIVEIS=[
+ {id:"top",nome:"Altíssimo padrão",resumo:"Lotes de 2.000 a 3.000 m² ou mais, estrutura de clube, casas a partir de cerca de R$ 3 milhões.",cor:"#8C6E3C"},
+ {id:"alto",nome:"Alto padrão",resumo:"Lotes de 800 a 1.500 m², lazer completo, casas na faixa de R$ 2 a 6 milhões.",cor:"#4D6B57"},
+ {id:"compacto",nome:"Alto padrão compacto",resumo:"Lotes de 360 a 600 m², casas prontas e modernas, pouca manutenção.",cor:"#5D5A8A"},
+ {id:"medio",nome:"Médio padrão",resumo:"Lotes de 250 a 360 m², bom custo-benefício, perto do centro e do comércio.",cor:"#8A5A44"}
+];
+const CONDS=[
+ {id:"tsj",nome:"Terras de São José",nivel:"top",lote:"cerca de 2.000 m² (média)",loteMin:2000,
+  casas:"de cerca de R$ 3 mi a mais de R$ 12 mi",casasOk:false,casasNota:"Anúncios citam casas acima de R$ 7 mi, algumas até R$ 12 mi.",
+  onde:"Acesso pela Rod. Waldomiro Corrêa de Camargo (ligação Itu e São Paulo)",
+  lazer:"Campo de golfe de 18 buracos, centro hípico com 50 baias, 20 quadras de tênis de saibro, campos de futebol, beach tennis, trilhas, heliponto, capela, restaurante",
+  historia:"De 1975, conhecido como o primeiro condomínio fechado do país. Mais de 4 milhões de m².",
+  perfil:"Quem vive o esporte e a vida de clube: golfe, tênis e hípica.",
+  valoriza:["esporte","golfe","cavalos","lotes grandes","tradição"],
+  fala:"O mais tradicional de Itu, com estrutura esportiva que nenhum outro tem.",
+  cuidado:"Condomínio grande: confirme com o cliente se ele quer ficar perto da sede e do clube ou numa parte mais reservada.",
+  similares:["tsj2","vilareal","city"]},
+ {id:"tsj2",nome:"Terras de São José II",nivel:"top",lote:"a partir de 2.300 m²",loteMin:2300,
+  casas:"faixa próxima ao Terras I",casasOk:false,
+  onde:"Ao lado do Terras de São José I",
+  lazer:"20 quadras de tênis, campos de futebol, beach tennis, academia, lagos, espaço gourmet, capela, heliponto; golfe e hípica do Terras I (pagos por uso), Jack Nicklaus Academy of Golf",
+  historia:"Fase mais nova, com foco em sustentabilidade: reúso de água, fiação subterrânea, fibra óptica e portaria blindada. Cerca de 5 milhões de m².",
+  perfil:"Quem quer a estrutura do Terras com infraestrutura mais moderna e lotes maiores.",
+  valoriza:["esporte","golfe","lotes grandes","sustentabilidade","modernidade"],
+  fala:"A estrutura esportiva do Terras, com infraestrutura nova e fiação subterrânea.",
+  cuidado:"O uso do golfe e da hípica é pago à parte. Deixe isso claro na apresentação.",
+  similares:["tsj","vilareal","city"]},
+ {id:"vilareal",nome:"Fazenda Vila Real de Itu",nivel:"top",lote:"mínimo de 3.000 m² (940 lotes)",loteMin:3000,
+  casas:"a partir de cerca de R$ 3 mi",casasOk:true,
+  onde:"Rod. Marechal Rondon, km 113,5, a cerca de 8 minutos do centro, com acesso à Castello Branco",
+  lazer:"8 lagos, 8 km de trilhas, 1,3 milhão de m² de mata, piscinas, tênis, squash, beach tennis, stand up paddle, tirolesa, cinema, biblioteca, restaurante, pizzaria e empório",
+  historia:"De 1976, na antiga Fazenda Nossa Senhora da Conceição. 4,6 milhões de m², com duas portarias.",
+  perfil:"Famílias que buscam natureza, privacidade e espaço.",
+  valoriza:["natureza","privacidade","lotes grandes","família","tradição"],
+  fala:"O maior contato com a natureza entre os condomínios de Itu, com lotes de pelo menos 3.000 m².",
+  cuidado:"Lote grande significa casa e manutenção maiores. Confirme se o cliente quer esse tamanho de propriedade.",
+  similares:["tsj","city","village"]},
+ {id:"city",nome:"City Castello",nivel:"top",lote:"a partir de 3.000 m²",loteMin:3000,
+  casas:"de cerca de R$ 1,5 mi a R$ 10 mi ou mais (anúncios com média perto de R$ 4 mi)",casasOk:true,lotes:"lotes de 3.000 m² entre R$ 850 mil e R$ 1,5 mi",
+  onde:"Ao lado do Village Castelo, junto à Castello Branco, cercado por área de preservação",
+  lazer:"Piscinas, sauna, academia, tênis, futebol, lago, bosque para caminhada, salão de festas e restaurante, centro comercial interno",
+  historia:"Conhecido por ter moradores famosos e muita discrição.",
+  perfil:"Quem quer privacidade, discrição e lote grande, perto da rodovia.",
+  valoriza:["privacidade","lotes grandes","discrição","natureza","acesso à rodovia"],
+  fala:"Lotes grandes, muita privacidade e saída rápida para a Castello Branco.",
+  cuidado:"A faixa de preço é muito ampla. Qualifique bem o orçamento antes de separar opções.",
+  similares:["vilareal","tsj","village"]},
+ {id:"xapada",nome:"Xapada Parque Ytu",nivel:"alto",lote:"1.000 m²",loteMin:1000,
+  casas:"a partir de cerca de R$ 2 mi",casasOk:true,lotes:"lote de 1.000 m² anunciado por cerca de R$ 760 mil",
+  onde:"Estrada Municipal Augusto Zanoni, em região alta de Itu, junto à Rod. Santos Dumont",
+  lazer:"200 mil m² de área verde, 4 quadras de tênis de saibro, piscina com raia de 25 m, beach tennis, vôlei de areia, futebol, pista de caminhada, capela",
+  historia:"Quase 1 milhão de m². Portaria blindada e patrulha 24h.",
+  perfil:"Famílias que querem vista, lazer esportivo e lote de 1.000 m².",
+  valoriza:["vista","família","esporte","segurança"],
+  fala:"Vista bonita da região alta de Itu e um lazer esportivo muito completo.",
+  cuidado:"Fica mais afastado do centro do que o Plaza Athénée e o Campos. Pergunte sobre a rotina de escola e trabalho.",
+  similares:["kurumin","plaza","campos"]},
+ {id:"kurumin",nome:"Fazenda Kurumin",nivel:"alto",lote:"a partir de 1.000 m²",loteMin:1000,
+  casas:"de cerca de R$ 2,7 mi a R$ 6 mi (média perto de R$ 3,7 mi)",casasOk:true,
+  onde:"Antigo haras, com área de reflorestamento, lagos e nascentes",
+  lazer:"Centro equestre com baias e trilhas de cavalgada, piscina de borda infinita, squash, tênis, futebol, sauna, academia, clube com lareira",
+  historia:"Projeto de Adolpho Lindenberg, com paisagismo de Benedito Abud.",
+  perfil:"Quem gosta de cavalos e de natureza, mas prefere lote de 1.000 m².",
+  valoriza:["cavalos","natureza","arquitetura","privacidade"],
+  fala:"O charme de um antigo haras, com centro equestre e projeto assinado.",
+  cuidado:"Para quem quer golfe e grande estrutura de clube, o Terras atende melhor.",
+  similares:["xapada","plaza","village"]},
+ {id:"plaza",nome:"Jardim Plaza Athénée",nivel:"alto",lote:"1.000 m²",loteMin:1000,
+  casas:"a confirmar",casasOk:false,
+  onde:"Av. Wolko Orni Yedlin, perto do centro, do comércio e das rodovias",
+  lazer:"Saunas seca e a vapor, piscinas quente e fria, lago, academia, quadras de tênis de saibro, poliesportiva, salão de festas",
+  historia:"Portaria blindada e cerca elétrica em todo o perímetro.",
+  perfil:"Famílias que querem lote de 1.000 m² perto do centro.",
+  valoriza:["perto do centro","família","segurança","praticidade"],
+  fala:"Alto padrão com lote de 1.000 m² e o centro de Itu a poucos minutos.",
+  cuidado:"Lazer menor que o do Xapada e do Kurumin. Valorize a localização.",
+  similares:["campos","xapada","kurumin"]},
+ {id:"campos",nome:"Campos de Santo Antônio I e II",nivel:"alto",lote:"a partir de 800 m²",loteMin:800,
+  casas:"de cerca de R$ 2 mi a R$ 4 mi",casasOk:false,casasNota:"Anúncios encontrados: R$ 2,12 mi (3 dorm.) e R$ 4 mi (318 m²).",
+  onde:"5 minutos do Plaza Shopping Itu e 10 do centro, com vista para a Serra do Japi",
+  lazer:"Lagos, tênis, beach tennis até 22h, futebol, piscinas (a do II com raia de 25 m), salão de festas, quiosque, capela no I, pista de caminhada",
+  historia:"Nasceu da antiga Fazenda Santo Antônio. O II fica praticamente em frente ao I, com 172 mil m² de mata.",
+  perfil:"Famílias que querem alto padrão com ticket de entrada menor e tudo perto.",
+  valoriza:["perto do centro","família","custo-benefício","vista"],
+  fala:"Alto padrão com ticket menor que os grandes condomínios e o centro a 10 minutos.",
+  cuidado:"Lotes menores que os do Xapada e do Plaza Athénée. Confirme se 800 m² atende o projeto do cliente.",
+  similares:["plaza","xapada","golfe"]},
+ {id:"village",nome:"Village Castelo",nivel:"alto",lote:"1.500 m² (327 lotes)",loteMin:1500,
+  casas:"a confirmar",casasOk:false,
+  onde:"Rod. Castello Branco, km 80, na região turística de Itu",
+  lazer:"Lago de pesca, ginásio, futebol, tênis, quadra de areia, academia ao ar livre, pista de 900 m, quiosques",
+  historia:"942 mil m², com 242 mil m² de mata preservada e acesso biométrico.",
+  perfil:"Quem quer privacidade e natureza com lote de 1.500 m², sem o ticket do City Castello.",
+  valoriza:["privacidade","natureza","acesso à rodovia","custo-benefício"],
+  fala:"Lote de 1.500 m² cercado de mata, com saída direta para a Castello Branco.",
+  cuidado:"Lazer mais simples do que o dos vizinhos de alto padrão.",
+  similares:["city","kurumin","xapada"]},
+ {id:"golfe",nome:"Villas do Golfe",nivel:"compacto",lote:"a partir de 500 m²",loteMin:500,
+  casas:"a confirmar",casasOk:false,
+  onde:"Ao lado do Novotel Itu Golf e do Terras de São José, com vista para o campo de golfe",
+  lazer:"Lago, tênis de saibro, futebol, piscina com raia de 25 m, poliesportiva, pista de caminhada, salão de festas, espaço gourmet, capela",
+  historia:"Lançamento mais recente do Grupo Senpar (mesmo grupo do Terras), com fiação subterrânea.",
+  perfil:"Quem quer o endereço do golfe com casa moderna e pouca manutenção.",
+  valoriza:["casa pronta","pouca manutenção","golfe","modernidade"],
+  fala:"O padrão Senpar do Terras de São José, em lote menor e com vista para o golfe.",
+  cuidado:"Lote de 500 m²: não é para quem quer muito terreno.",
+  similares:["saintpaul","theodora","campos"]},
+ {id:"saintpaul",nome:"Reserva Saint Paul",nivel:"compacto",lote:"360 m² (casas de cerca de 250 m²)",loteMin:360,
+  casas:"a confirmar",casasOk:false,
+  onde:"Ao lado do Plaza Shopping Itu e do Colégio Divino Salvador",
+  lazer:"Piscina com raia de 25 m, tênis, academia, espaço gourmet, salão de jogos, futebol, poliesportiva, circuito de 1,5 km",
+  historia:"Casas prontas com arquitetura moderna.",
+  perfil:"Casais e famílias jovens que querem praticidade, escola e shopping ao lado.",
+  valoriza:["casa pronta","pouca manutenção","perto do centro","escola perto"],
+  fala:"Casa pronta, moderna, com o shopping e o colégio Divino Salvador ao lado.",
+  cuidado:"Público mais jovem e terreno compacto.",
+  similares:["golfe","theodora","manacas"]},
+ {id:"theodora",nome:"Jardim Theodora",nivel:"compacto",lote:"600 m²",loteMin:600,
+  casas:"acima de R$ 1,8 mi na parte de alto padrão",casasOk:true,
+  onde:"5 minutos do centro, perto de mercados, padarias e farmácias",
+  lazer:"Tênis, poliesportiva, piscinas, futebol com vestiários, playground, salão de festas, churrasqueira gourmet",
+  historia:"Ruas asfaltadas e arborizadas.",
+  perfil:"Famílias que querem praticidade no dia a dia, com tudo perto.",
+  valoriza:["perto do centro","praticidade","família","custo-benefício"],
+  fala:"A 5 minutos do centro, com comércio do lado e lazer completo.",
+  cuidado:"Tem uma parte de médio padrão e outra de alto padrão. Confira a localização da casa.",
+  similares:["saintpaul","golfe","plaza"]},
+ {id:"portal",nome:"Portal de Itu I e II",nivel:"medio",lote:"290 a 360 m²",loteMin:290,
+  casas:"a confirmar",casasOk:false,
+  onde:"Do outro lado da Via Expressa Itu-Salto",
+  lazer:"No I: restaurante, salão de jogos, quadras, academia e piscina. O II usa o clube do I sem custo.",
+  historia:"Ruas arborizadas e pouco movimento.",
+  perfil:"Famílias no primeiro imóvel em condomínio.",
+  valoriza:["custo-benefício","família"],
+  fala:"Condomínio com clube completo e lote de bom tamanho por um valor acessível.",
+  cuidado:"Fica perto da Via Expressa: mostre o trajeto até o centro.",
+  similares:["manacas","una","altavista"]},
+ {id:"manacas",nome:"Vila dos Manacás",nivel:"medio",lote:"360 m², quase todos planos",loteMin:360,
+  casas:"a confirmar",casasOk:false,
+  onde:"A poucos minutos do centro e do shopping",
+  lazer:"Piscina, tênis, salão de festas, churrasqueira gourmet, poliesportiva",
+  historia:"Lotes planos, que facilitam a construção.",
+  perfil:"Quem quer construir sem gastar com terraplanagem, perto do centro.",
+  valoriza:["perto do centro","custo-benefício","lote plano"],
+  fala:"Lotes planos perto do centro e do shopping.",
+  cuidado:"Lazer mais simples.",
+  similares:["portal","una","saintpaul"]},
+ {id:"una",nome:"Condomínio Una",nivel:"medio",lote:"a partir de 360 m²",loteMin:360,
+  casas:"a confirmar",casasOk:false,
+  onde:"378 mil m², com 88 mil m² de reserva ambiental",
+  lazer:"Academia, parede de escalada, 2 piscinas, vôlei de praia, espaço pet, fogo de chão, salão para mais de 50 pessoas, pista de corrida",
+  historia:"Conhecido pelo bom custo-benefício.",
+  perfil:"Famílias jovens que querem lazer moderno com orçamento controlado.",
+  valoriza:["custo-benefício","família","lazer moderno"],
+  fala:"Lazer moderno e reserva ambiental com ótimo custo-benefício.",
+  cuidado:"Confirme a localização e o trajeto até a escola e o trabalho.",
+  similares:["portal","gardenville","altavista"]},
+ {id:"gardenville",nome:"Gardenville",nivel:"medio",lote:"cerca de 250 m²",loteMin:250,
+  casas:"a confirmar",casasOk:false,
+  onde:"Perto da principal avenida comercial de Itu, com acesso à Santos Dumont e à SP-79",
+  lazer:"Piscina, academia ao ar livre, salão de festas, espaço pet, quiosque gourmet, poliesportiva",
+  historia:"Loteamento com grande área de preservação.",
+  perfil:"Primeiro imóvel, quem quer tudo perto.",
+  valoriza:["custo-benefício","praticidade","perto do centro"],
+  fala:"Perto de tudo, com lazer essencial e área verde.",
+  cuidado:"Lote compacto.",
+  similares:["altavista","una","montblanc"]},
+ {id:"montblanc",nome:"Mont Blanc",nivel:"medio",lote:"250 m²",loteMin:250,
+  casas:"a confirmar",casasOk:false,
+  onde:"Em frente ao Parque Geológico do Varvito, com acesso ao anel viário para Sorocaba e Salto",
+  lazer:"a confirmar",
+  historia:"Proposta mais funcional e prática.",
+  perfil:"Quem quer praticidade e acesso rápido a Sorocaba e Salto.",
+  valoriza:["custo-benefício","praticidade","acesso à rodovia"],
+  fala:"Prático e bem localizado, com saída para Sorocaba e Salto.",
+  cuidado:"Lazer a confirmar.",
+  similares:["gardenville","altavista","portal"]},
+ {id:"altavista",nome:"Altavista Reserva (lançamento Utu-Guaçu)",nivel:"medio",lote:"a partir de 250 m² (543 lotes)",loteMin:250,
+  casas:"lotes a partir de R$ 216.626 à vista",casasOk:true,
+  onde:"Entre o Gardenville e o Mont Blanc, a 5 minutos do centro",
+  lazer:"Residencial fechado com portaria 24h e lazer completo (ver o dossiê)",
+  historia:"Lançamento exclusivo da Utu-Guaçu. Ao lado fica o Altavista Itu, loteamento aberto de uso misto (lotes a partir de R$ 178 mil).",
+  perfil:"Quem quer construir do zero num condomínio novo, com entrada acessível.",
+  valoriza:["custo-benefício","lançamento","perto do centro"],
+  fala:"Lançamento nosso, perto do centro, com lote a partir de R$ 216 mil à vista.",
+  cuidado:"Use o dossiê do Altavista, que está na seção Dossiês do portal.",
+  similares:["gardenville","una","portal"]}
+];
+const VALORES=["esporte","golfe","cavalos","natureza","privacidade","lotes grandes","vista","perto do centro","escola perto","casa pronta","pouca manutenção","custo-benefício","acesso à rodovia","família","lançamento"];
+
+(function(){
+"use strict";
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const C=Object.fromEntries(CONDS.map(c=>[c.id,c])), N=Object.fromEntries(NIVEIS.map(n=>[n.id,n]));
+const ORD=NIVEIS.map(n=>n.id);
+const PDF="../arquivos/Apostila-Alto-Padrao-Itu.pdf";
+let tT;function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(tT);tT=setTimeout(()=>t.hidden=true,2600)}
+function copy(t,ok){const fb=()=>{const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy")}catch(_){}ta.remove();toast(ok)};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>toast(ok),fb);else fb()}
+const tbc=c=>c.casasOk?"":`<span class="tbc">a confirmar</span>`;
+
+/* Mapa */
+$("#tiers").innerHTML=NIVEIS.map(n=>`<div class="tier" style="--c:${n.cor}"><div class="tier-h"><b>${esc(n.nome)}</b><span>${esc(n.resumo)}</span></div>
+  ${CONDS.filter(c=>c.nivel===n.id).map(c=>`<button class="cc" type="button" data-c="${c.id}"><b>${esc(c.nome)}</b><span>Lote ${esc(c.lote)}</span></button>`).join("")}</div>`).join("");
+$("#tiers").addEventListener("click",e=>{const b=e.target.closest("[data-c]");if(!b)return;setModo("cond");$("#selCond").value=b.dataset.c;renderRes();$("#pediu").scrollIntoView({behavior:"smooth"})});
+
+/* Cliente pediu */
+$("#selCond").innerHTML=NIVEIS.map(n=>`<optgroup label="${esc(n.nome)}">${CONDS.filter(c=>c.nivel===n.id).map(c=>`<option value="${c.id}">${esc(c.nome)}</option>`).join("")}</optgroup>`).join("");
+$("#selNivel").innerHTML+=NIVEIS.map(n=>`<option value="${n.id}">${esc(n.nome)}</option>`).join("");
+let VSEL=new Set();
+$("#valChips").innerHTML=VALORES.map(v=>`<button type="button" class="chip" data-v="${esc(v)}" aria-pressed="false">${esc(v)}</button>`).join("");
+$("#valChips").addEventListener("click",e=>{const b=e.target.closest("[data-v]");if(!b)return;const v=b.dataset.v;VSEL.has(v)?VSEL.delete(v):VSEL.add(v);b.setAttribute("aria-pressed",VSEL.has(v));renderRes()});
+function setModo(m){(document.querySelector(`input[name="modo"][value="${m}"]`)||{}).checked=true;$("#wCond").hidden=m!=="cond";$("#wPerfil").hidden=m!=="perfil"}
+$$('input[name="modo"]').forEach(r=>r.addEventListener("change",()=>{setModo(r.value);renderRes()}));
+$("#selCond").addEventListener("change",renderRes);$("#selNivel").addEventListener("change",renderRes);
+function motivos(a,b){const m=[];if(a.nivel===b.nivel)m.push("mesma faixa de padrão");else m.push(ORD.indexOf(b.nivel)<ORD.indexOf(a.nivel)?"um degrau acima":"um degrau abaixo");
+  const r=b.loteMin/a.loteMin;if(r>.66&&r<1.5)m.push("lote de tamanho parecido");else if(r>=1.5)m.push("lote maior");else m.push("lote menor");
+  const comum=a.valoriza.filter(v=>b.valoriza.includes(v));comum.slice(0,3).forEach(v=>m.push(v));return m}
+function altCard(c,why,extra=""){const n=N[c.nivel];return `<div class="alt" style="--c:${n.cor}"><div class="top"><h3>${esc(c.nome)}</h3><span class="note">${esc(n.nome)} · lote ${esc(c.lote)}</span></div>
+  ${why&&why.length?`<div class="why">${why.map(w=>`<i>${esc(w)}</i>`).join("")}</div>`:""}<p>${esc(c.fala)}</p>${extra}<button class="lnk" type="button" data-ficha="${c.id}">Ver ficha completa</button></div>`}
+function renderRes(){const modo=(document.querySelector('input[name="modo"]:checked')||{}).value;const r=$("#res");
+  if(modo==="cond"){const c=C[$("#selCond").value],n=N[c.nivel];
+    r.innerHTML=`<div class="pick"><span class="lv" style="color:${n.cor}">${esc(n.nome)}</span><h3>${esc(c.nome)}</h3><p style="font-size:13.5px"><b>Para quem é:</b> ${esc(c.perfil)}</p><p style="font-size:13.5px"><b>Casas:</b> ${esc(c.casas)} ${tbc(c)}</p><p class="note"><b>Atenção:</b> ${esc(c.cuidado)}</p></div>
+      <span class="eyebrow" style="margin-top:6px">Ofereça também</span>${c.similares.map(id=>altCard(C[id],motivos(c,C[id]))).join("")}`}
+  else{const nv=$("#selNivel").value;let list=CONDS.filter(c=>!nv||c.nivel===nv).map(c=>({c,s:c.valoriza.filter(v=>VSEL.has(v)).length})).filter(x=>!VSEL.size||x.s>0).sort((a,b)=>b.s-a.s||ORD.indexOf(a.c.nivel)-ORD.indexOf(b.c.nivel)).slice(0,4);
+    r.innerHTML=!VSEL.size&&!nv?`<div class="pick"><p>Toque no que o cliente valoriza e, se quiser, escolha a faixa. Os condomínios que mais combinam aparecem aqui.</p></div>`
+      :list.length?`<span class="eyebrow">Combinam com o perfil</span>`+list.map(x=>altCard(x.c,x.c.valoriza.filter(v=>VSEL.has(v)))).join(""):`<div class="pick"><p>Nenhum condomínio dessa faixa combina com tudo o que foi marcado. Tente tirar um item ou trocar a faixa.</p></div>`}}
+$("#res").addEventListener("click",e=>{const b=e.target.closest("[data-ficha]");if(b)abrirFicha(b.dataset.ficha)});
+
+/* Fichas */
+let FN="";
+function renderFichas(){$("#filt").innerHTML=[["","Todos"],...NIVEIS.map(n=>[n.id,n.nome])].map(([id,t])=>`<button class="chip" type="button" data-n="${id}" aria-pressed="${FN===id}">${esc(t)}</button>`).join("");
+  $("#fichasBox").innerHTML=CONDS.filter(c=>!FN||c.nivel===FN).map(c=>{const n=N[c.nivel];return `<details class="fc" id="f-${c.id}" style="--c:${n.cor}"><summary><span class="lv">${esc(n.nome)}</span><h3>${esc(c.nome)}</h3><span class="s">Lote ${esc(c.lote)}</span></summary>
+    <dl class="fcb"><dt>Para quem é</dt><dd>${esc(c.perfil)}</dd><dt>Casas</dt><dd>${esc(c.casas)} ${tbc(c)}${c.casasNota?`<br><span class="note">${esc(c.casasNota)}</span>`:""}</dd>${c.lotes?`<dt>Lotes</dt><dd>${esc(c.lotes)}</dd>`:""}
+    <dt>Onde fica</dt><dd>${esc(c.onde)}</dd><dt>Lazer</dt><dd>${esc(c.lazer)}</dd><dt>Bom saber</dt><dd>${esc(c.historia)}</dd><dt>Atenção</dt><dd>${esc(c.cuidado)}</dd>
+    <dt>Parecidos</dt><dd>${c.similares.map(id=>esc(C[id].nome)).join(", ")}</dd><div class="fala"><b>Como apresentar em uma frase</b>${esc(c.fala)}</div></dl></details>`}).join("")}
+$("#filt").addEventListener("click",e=>{const b=e.target.closest("[data-n]");if(!b)return;FN=b.dataset.n;renderFichas()});
+function abrirFicha(id){FN="";renderFichas();const d=$("#f-"+id);d.open=true;d.scrollIntoView({behavior:"smooth",block:"start"})}
+
+/* Mensagens */
+const MSG=[
+ {t:"Primeiro contato",x:`Olá, [nome]! Tudo bem? Aqui é [seu nome], da Utu-Guaçu Imóveis.
+
+Vi que você tem interesse em imóveis em condomínio aqui em Itu. Para eu separar só o que faz sentido para você, me conta um pouco: é para morar ou para os fins de semana? E o que não pode faltar na casa?
+
+Assim eu já te mostro as melhores opções, sem perder o seu tempo.`},
+ {t:"Antes de agendar a visita",x:`[nome], separei algumas opções que combinam com o que você me contou.
+
+Para eu organizar a visita e deixar a sua entrada liberada na portaria, preciso do seu nome completo e de quem vai junto. E me conta: a compra seria com recurso próprio, financiamento ou depende da venda de outro imóvel?
+
+Assim eu monto um roteiro certeiro para o seu dia.`},
+ {t:"Confirmar a visita",x:`Olá, [nome]! Confirmando a nossa visita amanhã, [dia], às [horário], no [condomínio].
+
+Já deixei o seu nome na portaria. Vamos ver [número] casas que eu selecionei com base no que você me pediu. Te encontro na entrada do condomínio.
+
+Qualquer imprevisto, me avise por aqui. Até amanhã!`}];
+$("#msgsAp").innerHTML=MSG.map((m,i)=>`<div class="msg"><h3>${esc(m.t)}</h3><pre>${esc(m.x)}</pre><button class="btn" type="button" data-m="${i}">Copiar mensagem</button></div>`).join("");
+$("#msgsAp").addEventListener("click",e=>{const b=e.target.closest("[data-m]");if(b)copy(MSG[+b.dataset.m].x,"Mensagem copiada.")});
+
+/* Teste */
+const Q=[
+ {q:"O cliente pediu o Terras de São José, mas o que ele mais valoriza é natureza e privacidade, não o golfe. Qual condomínio vale apresentar junto?",o:["Fazenda Vila Real de Itu","Portal de Itu","Reserva Saint Paul"],a:0,x:"A Fazenda Vila Real é do mesmo padrão, com lotes de pelo menos 3.000 m², 8 lagos e muita mata."},
+ {q:"Uma família quer alto padrão com lote de cerca de 1.000 m², perto do centro. Qual é a melhor indicação?",o:["City Castello","Jardim Plaza Athénée","Gardenville"],a:1,x:"O Plaza Athénée tem lotes de 1.000 m² e fica perto do centro e do comércio."},
+ {q:"O cliente gosta de cavalos, mas não precisa de um lote de 2.000 m². O que oferecer?",o:["Fazenda Kurumin","Vila dos Manacás","Mont Blanc"],a:0,x:"A Fazenda Kurumin é um antigo haras com centro equestre e lotes a partir de 1.000 m²."},
+ {q:"Casal sem filhos quer casa pronta, moderna e com pouca manutenção, perto do golfe. Qual condomínio?",o:["Villas do Golfe","Fazenda Vila Real de Itu","Village Castelo"],a:0,x:"O Villas do Golfe é do mesmo grupo do Terras, com lotes a partir de 500 m² e vista para o golfe."},
+ {q:"Qual é a primeira coisa a fazer com um cliente de alto padrão antes de mostrar imóveis?",o:["Mandar o máximo de opções possível","Entender o momento, a rotina e o orçamento dele","Marcar a visita no mesmo dia"],a:1,x:"Ele compra confiança. Entender o que ele precisa permite levar poucas opções certeiras."}];
+let qi=0,acertos=0;
+function renderQ(){const z=$("#quiz");if(qi>=Q.length){z.innerHTML=`<h3>Você acertou ${acertos} de ${Q.length}</h3><p>${acertos===Q.length?"Excelente! Você já sabe navegar pelos condomínios de Itu.":"Releia as fichas dos condomínios que você errou e tente de novo."}</p><button class="btn dark" type="button" id="qr">Fazer de novo</button>`;$("#qr").onclick=()=>{qi=0;acertos=0;renderQ()};return}
+  const q=Q[qi];z.innerHTML=`<span class="note">Pergunta ${qi+1} de ${Q.length}</span><h3>${esc(q.q)}</h3><div class="qopts">${q.o.map((o,i)=>`<button class="qo" type="button" data-o="${i}">${esc(o)}</button>`).join("")}</div><div id="qx"></div>`;
+  z.querySelector(".qopts").addEventListener("click",e=>{const b=e.target.closest("[data-o]");if(!b||z.dataset.done==="1")return;z.dataset.done="1";const i=+b.dataset.o;
+    z.querySelectorAll(".qo").forEach((x,k)=>{if(k===q.a)x.classList.add("ok");else if(k===i)x.classList.add("no")});if(i===q.a)acertos++;
+    $("#qx").innerHTML=`<p class="qx">${i===q.a?"<b>Isso!</b> ":"<b>Quase.</b> "}${esc(q.x)}</p><button class="btn dark" type="button" id="qn" style="margin-top:10px">${qi<Q.length-1?"Próxima pergunta":"Ver resultado"}</button>`;
+    $("#qn").onclick=()=>{qi++;z.dataset.done="";renderQ()}})}
+
+
+/* Apostila */
+$("#apoShare").addEventListener("click",async e=>{const btn=e.currentTarget,url=new URL(PDF,location.href).href,txt="Apostila do Alto Padrão de Itu (Utu-Guaçu Imóveis)";
+  const old=btn.textContent;btn.disabled=true;btn.textContent="Preparando…";
+  try{if(navigator.share){try{const blob=await(await fetch(url)).blob();const file=new File([blob],"Apostila-Alto-Padrao-Itu.pdf",{type:"application/pdf"});
+      if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:txt,text:txt});return}}catch(err){if(err&&err.name==="AbortError")return}
+    try{await navigator.share({title:txt,text:txt,url});return}catch(err){if(err&&err.name==="AbortError")return}}
+    window.open("https://wa.me/?text="+encodeURIComponent(txt+"\n"+url),"_blank","noopener")}finally{btn.disabled=false;btn.textContent=old}});
+
+/* Navegação ativa */
+const secs=["mapa","pediu","fichas","atender","teste","apostila"].map(id=>document.getElementById(id));
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){$$(".nav a").forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+e.target.id))}})},{rootMargin:"-40% 0px -55% 0px"});
+secs.forEach(s=>io.observe(s));
+
+$("#selCond").value="tsj";renderRes();renderFichas();renderQ();
+})();
+
+</script>
+</body>
+</html>

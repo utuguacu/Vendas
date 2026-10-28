@@ -772,7 +772,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 27/10/2026 23h45</p>
+<p class="ver">Portal de Vendas · versão 28/10/2026 00h15</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -1245,7 +1245,9 @@ const ARQUIVOS=[
  {id:"gran-reserva-boituva",titulo:"Gran Reserva Boituva",categoria:"Dossiês",empreendimento:"Gran Reserva Boituva",descricao:"Horizon, Skyline e Ventura, lotes a partir de R$ 288 mil à vista.",tipo:"arquivo",assetId:"46c9e4d34ce2f78c275621398798d1b6",_capa:"e2fd332a15acb1bfc393dcc9c6d667b0",tamanho:2689720,paginas:8,nomeArquivo:"Dossie-Gran-Reserva-Boituva.pdf",capa:"capa-Dossie-Gran-Reserva-Boituva-1.jpg",ordem:2},
  {id:"praia-do-terras",titulo:"Praia do Terras",categoria:"Dossiês",empreendimento:"Praia do Terras",descricao:"Clube com praia e onda Endless Surf no Terras de São José, títulos a partir de R$ 500 mil.",tipo:"arquivo",assetId:"1dd3558b3f399340977e8880a4240aef",_capa:"52d18fedabc8c2e523f434f8d162ab0d",tamanho:4780758,paginas:6,nomeArquivo:"Praia-do-Terras-Utu-Guacu.pdf",capa:"capa-Praia-do-Terras-Utu-Guacu-1.jpg",ordem:3},
  {id:"villa-anna",titulo:"Villa Anna Residencial",categoria:"Dossiês",empreendimento:"Villa Anna",descricao:"Lançamento de casas térreas em condomínio fechado em Cardeal, Elias Fausto, a 10 minutos de Indaiatuba. Casas a partir de R$ 775 mil.",tipo:"arquivo",tamanho:4227220,paginas:10,nomeArquivo:"Dossie-Villa-Anna-Utu-Guacu.pdf",capa:"capa-Dossie-Villa-Anna-Utu-Guacu-1.jpg",ordem:4},
- {id:"manual-corretor",titulo:"Manual do Corretor",categoria:"Aprendizado",empreendimento:"Kenlo",descricao:"Como usar o Kenlo: esteira de leads, passo a passo do atendimento, boas práticas e prompts de IA para registros.",tipo:"arquivo",tamanho:1304400,paginas:19,nomeArquivo:"Manual-do-Corretor.pdf",capa:"capa-Manual-do-Corretor-1.jpg",ordem:1}
+ {id:"manual-corretor",titulo:"Manual do Corretor",categoria:"Aprendizado",empreendimento:"Kenlo",descricao:"Como usar o Kenlo: esteira de leads, passo a passo do atendimento, boas práticas e prompts de IA para registros.",tipo:"arquivo",tamanho:1304400,paginas:19,nomeArquivo:"Manual-do-Corretor.pdf",capa:"capa-Manual-do-Corretor-1.jpg",ordem:1},
+ {id:"guia-alto-padrao",titulo:"Guia do Alto Padrão de Itu",categoria:"Aprendizado",empreendimento:"Alto padrão",descricao:"Os condomínios de Itu por padrão, o que oferecer quando o cliente pede um deles, fichas completas, como atender, mensagens prontas e teste.",tipo:"link",url:"alto-padrao/",capa:"capa-Guia-Alto-Padrao-1.jpg",ordem:2},
+ {id:"apostila-alto-padrao",titulo:"Apostila do Alto Padrão",categoria:"Aprendizado",empreendimento:"Alto padrão",descricao:"Versão em PDF do Guia do Alto Padrão de Itu, para imprimir ou guardar no celular. Inclui teste com gabarito e página de anotações.",tipo:"arquivo",tamanho:322571,paginas:21,nomeArquivo:"Apostila-Alto-Padrao-Itu.pdf",capa:"capa-Apostila-Alto-Padrao-Itu-1.jpg",ordem:3}
 ];
 S.files=ARQUIVOS; S.ready=true; S.editor=false;
 renderDocs(); renderFiles(); refreshEmpList();
@@ -1281,6 +1283,7 @@ finUpd();
 /* ===== Busca geral do início ===== */
 const nrm=x=>String(x||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
 const SECOES=[
+ {tit:"Guia do Alto Padrão",sub:"Condomínios de Itu: o que oferecer, fichas e como atender",chaves:"alto padrao condominio condominios itu terras sao jose vila real city castello luxo apostila guia fichas",abre:()=>{location.href="alto-padrao/"}},
  {tit:"Análise do perfil",sub:"Nota do seu Instagram, o que melhorar e cronograma do mês",chaves:"analise perfil instagram cronograma calendario frequencia bio seguidores engajamento melhorar",abre:()=>{location.href="marketing/#analise"}},
  {tit:"Marketing",sub:"Ateliê de artes: story, post e carrossel com legenda",chaves:"marketing instagram story post feed carrossel legenda redes sociais conteudo arte divulgacao",abre:()=>{location.href="marketing/"}},
  {tit:"Guia do financiamento",sub:"Enviar ao cliente o passo a passo do financiamento",chaves:"financiamento financiado credito banco caixa simulacao cresac parceiro fgts guia",abre:()=>show("financiamento")},
