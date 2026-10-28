@@ -163,6 +163,23 @@ h1 em,h2 em{font-style:italic;color:var(--gold)}
 #view-avaliacao.done #avHead{display:none}
 .four{grid-template-columns:repeat(4,minmax(0,1fr))!important}
 @media (max-width:480px){.four{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+.gsearch{position:relative;margin-top:22px}
+.gsearch svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:19px;height:19px;color:var(--gold)}
+.gsearch input{width:100%;padding:15px 44px 15px 44px;border:1.5px solid var(--line-strong);border-radius:999px;background:var(--surface);font-size:16px;box-shadow:0 6px 18px -14px rgba(0,0,0,.4)}
+.gsearch input:focus{border-color:var(--gold);outline:none}
+.gsearch input::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
+.gsearch button{position:absolute;right:8px;top:50%;transform:translateY(-50%);appearance:none;border:0;background:var(--gold-soft);color:var(--fg);width:30px;height:30px;border-radius:50%;font-size:18px;line-height:1;cursor:pointer}
+.gres{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.gres .gr{appearance:none;text-align:left;display:flex;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;cursor:pointer;color:var(--fg);min-width:0}
+.gres .gr:hover{border-color:var(--gold)}
+.gres .gr .tg{flex:none;font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--gold);background:var(--gold-soft);border-radius:999px;padding:4px 8px;min-width:86px;text-align:center}
+.gres .gr .tx{display:flex;flex-direction:column;min-width:0}
+.gres .gr b{font-weight:500;font-size:15px}
+.gres .gr span.s{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gres .gcount{font-size:12.5px;color:var(--muted)}
+.gres .gnone{background:var(--surface);border:1px dashed var(--line-strong);border-radius:var(--r);padding:18px;text-align:center;color:var(--muted)}
+.msg-card.flash{outline:2px solid var(--gold);outline-offset:3px}
+@media (max-width:480px){.gres .gr .tg{min-width:0}}
 .card-admin{display:flex;gap:4px;border-top:1px solid var(--line);padding:6px 8px}
 .card-admin .btn{padding:6px 8px;font-size:12px}
 .note{border:1px dashed var(--line-strong);border-radius:var(--r);padding:28px 22px;text-align:center;color:var(--muted);background:var(--surface)}
@@ -372,6 +389,12 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </div>
     <button class="btn" id="btnAddHome" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Adicionar arquivo</button>
   </div>
+  <div class="gsearch">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="gq" type="search" placeholder="O que você procura? Ex.: proposta, captação, Villa Anna" aria-label="Buscar no portal" autocomplete="off">
+    <button type="button" id="gqClear" aria-label="Limpar busca" hidden>×</button>
+  </div>
+  <div class="gres" id="gres" hidden></div>
   <div class="home" id="home"></div>
 </section>
 
@@ -714,7 +737,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 27/10/2026 22h40</p>
+<p class="ver">Portal de Vendas · versão 27/10/2026 22h50</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -919,7 +942,7 @@ function renderMsgs(){
   $("#msgChips").innerHTML=[...MSG_CATS,"Outra situação"].map(c=>`<button class="chip${c==="Outra situação"?" chip-ia":""}" type="button" aria-pressed="${c===msgCat}" data-mc="${esc(c)}">${esc(c)}</button>`).join("");
   $("#iaBox").hidden=!(msgCat==="Todas"||msgCat==="Outra situação");
   const list=msgCat==="Outra situação"?[]:MENSAGENS.filter(m=>msgCat==="Todas"||m.cat===msgCat);
-  $("#msgsOut").innerHTML=list.map(m=>{const t=fillMsg(m.texto);return `<article class="msg-card${m.cat==="Contratos"?" imp":""}">
+  $("#msgsOut").innerHTML=list.map(m=>{const t=fillMsg(m.texto);return `<article class="msg-card${m.cat==="Contratos"?" imp":""}" data-mid="${esc(m.id)}">
     <div class="msg-top"><span class="cat">${esc(m.cat)}</span><h3>${esc(m.titulo)}</h3><p class="desc">${esc(m.quando)}</p></div>
     <div class="msg-text">${msgHTML(t)}</div>
     <div class="msg-act"><button class="btn primary" type="button" data-copy="${esc(m.id)}">Copiar mensagem</button><a class="btn" href="https://wa.me/?text=${encodeURIComponent(t)}" target="_blank" rel="noopener">Enviar no WhatsApp</a></div>
@@ -1185,6 +1208,41 @@ const ARQUIVOS=[
 ];
 S.files=ARQUIVOS; S.ready=true; S.editor=false;
 renderDocs(); renderFiles(); refreshEmpList();
+
+/* ===== Busca geral do início ===== */
+const nrm=x=>String(x||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+const SECOES=[
+ {tit:"Gerar documentos",sub:"Proposta de compra, avaliação de imóvel e outros documentos prontos",chaves:"gerar documento documentos ficha pdf word",abre:()=>show("documentos")},
+ {tit:"Modelos de mensagem",sub:"Textos prontos para WhatsApp",chaves:"mensagem mensagens whatsapp texto modelo abordagem cliente",abre:()=>show("mensagens")},
+ {tit:"Outra situação",sub:"Monte uma mensagem sob medida com o ChatGPT",chaves:"outra situacao ajuda chatgpt gemini ia inteligencia artificial personalizada",abre:()=>{show("mensagens");msgCat="Outra situação";renderMsgs()}}
+];
+function buscar(q){
+  const t=nrm(q).trim(); if(!t)return [];
+  const words=t.split(/\s+/).filter(Boolean);
+  const hit=(...f)=>{const h=nrm(f.join(" "));return words.every(w=>h.includes(w))};
+  const score=(title)=>nrm(title).includes(t)?0:1;
+  const R=[];
+  DOCS.forEach(d=>{if(hit(d.titulo,d.desc,"documento gerar"))R.push({tg:"Documento",tit:d.titulo,sub:d.desc,sc:score(d.titulo),abre:()=>show(d.abre)})});
+  S.files.forEach(f=>{if(hit(f.titulo,f.descricao,f.empreendimento,f.categoria))R.push({tg:f.categoria==="Dossiês"?"Dossiê":f.categoria,tit:f.titulo,sub:f.descricao||f.categoria,sc:score(f.titulo),abre:()=>{show("arquivos",f.categoria||"Outros");S.q=f.titulo;$("#q").value=f.titulo;renderFiles()}})});
+  catsInUse().forEach(({c,n})=>{if(hit(c,CAT_INFO[c]||""))R.push({tg:"Seção",tit:c,sub:`${n} ${n===1?"arquivo":"arquivos"}`,sc:score(c),abre:()=>show("arquivos",c)})});
+  SECOES.forEach(x=>{if(hit(x.tit,x.sub,x.chaves))R.push({tg:"Seção",tit:x.tit,sub:x.sub,sc:score(x.tit),abre:x.abre})});
+  MSG_ORDEM.forEach(c=>{if(hit(c,"mensagens"))R.push({tg:"Seção",tit:`Mensagens de ${c}`,sub:`${MENSAGENS.filter(m=>m.cat===c).length} modelos prontos`,sc:score(c),abre:()=>{show("mensagens");msgCat=c;renderMsgs()}})});
+  MENSAGENS.forEach(m=>{const inTitle=hit(m.titulo,m.quando,m.cat);if(inTitle||hit(m.texto.replace(/\{[cki]:([^|{}]*)\|[^{}]*\}/g,"$1")))R.push({tg:"Mensagem",tit:m.titulo,sub:`${m.cat} · ${m.quando}`,sc:inTitle?score(m.titulo):2,abre:()=>{show("mensagens");msgCat=m.cat;renderMsgs();setTimeout(()=>{const el=document.querySelector(`[data-mid="${m.id}"]`);if(el){el.scrollIntoView({behavior:"smooth",block:"start"});el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),2200)}},60)}})});
+  return R.sort((a,b)=>a.sc-b.sc);
+}
+let GR=[];
+function renderBusca(){
+  const q=$("#gq").value, box=$("#gres"), has=!!q.trim();
+  $("#gqClear").hidden=!q; box.hidden=!has; $("#home").hidden=has;
+  if(!has)return;
+  GR=buscar(q);
+  box.innerHTML=GR.length?`<span class="gcount">${GR.length} ${GR.length===1?"resultado":"resultados"} para “${esc(q.trim())}”</span>`+GR.map((r,i)=>`<button class="gr" type="button" data-gi="${i}"><span class="tg">${esc(r.tg)}</span><span class="tx"><b>${esc(r.tit)}</b><span class="s">${esc(r.sub||"")}</span></span></button>`).join("")
+    :`<div class="gnone"><b style="display:block;color:var(--fg);margin-bottom:4px">Nada encontrado para “${esc(q.trim())}”</b>Tente outra palavra, como proposta, dossiê, captação ou o nome do empreendimento.</div>`;
+}
+$("#gq").addEventListener("input",renderBusca);
+$("#gqClear").addEventListener("click",()=>{$("#gq").value="";renderBusca();$("#gq").focus()});
+$("#gres").addEventListener("click",e=>{const b=e.target.closest("[data-gi]");if(b)GR[+b.dataset.gi].abre()});
+
 if(pendingHash&&pendingHash!=="proposta"){const c=catsInUse().find(x=>slug(x.c)===pendingHash);if(c)show("arquivos",c.c)}
 if(window.claude&&typeof window.claude.use==="function"){window.claude.use("downloads").then(d=>{S.downloads=d;S.dlChecked=true;renderFiles()}).catch(()=>{S.dlChecked=true;renderFiles()})}else{S.dlChecked=true;renderFiles()}
 
