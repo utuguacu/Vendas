@@ -647,6 +647,16 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
           <div class="field" data-req><label for="creci">CRECI</label><input id="creci" inputmode="numeric" placeholder="000000-F"></div>
         </div>
         <div class="field" id="fCorretorOutro" hidden data-req><label for="corretorOutro">Nome completo do corretor</label><input id="corretorOutro"></div>
+        <div class="field"><label>A venda é</label>
+          <div class="seg">
+            <label><input type="radio" name="parTipo" id="parNao" value="nao" checked><span>Só Utu-Guaçu</span></label>
+            <label><input type="radio" name="parTipo" id="parSim" value="sim"><span>Em parceria</span></label>
+          </div>
+        </div>
+        <div id="boxPar" class="form" style="gap:12px" hidden>
+          <div class="field" data-req><label for="parNome">Nome do corretor parceiro</label><input id="parNome"></div>
+          <div class="field"><label for="parImob">Imobiliária do parceiro <span class="opt">(se fizer parte de uma)</span></label><input id="parImob" placeholder="Deixe em branco se for corretor autônomo"></div>
+        </div>
       </fieldset>
 
       <fieldset>
@@ -774,7 +784,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 28/10/2026 11h00</p>
+<p class="ver">Portal de Vendas · versão 28/10/2026 11h10</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -1380,8 +1390,8 @@ const maskTel=s=>{s=onlyDig(s).slice(0,11);if(s.length<=10)return s.replace(/^(\
 const MESES=["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
 const dataExt=iso=>{const [y,m,d]=(iso||"").split("-").map(Number);if(!y)return null;return `${d} de ${MESES[m-1]} de ${y}`};
 
-const FIELDS=["corretor","corretorOutro","creci","nome","cpf","rg","estadoCivil","nacionalidade","profissao","conjNome","conjCpf","razao","cnpj","repNome","repCpf","endereco","telefone","email","imTipo","imEmp","imIdent","imQuadra","imArea","imEndereco","imCidade","imMatricula","imCartorio","imObs","valor","forma","entrada","nParc","vParc","periodo","indice","primeira","finEntrada","condicoes","validade","vendNome","comPct","dataEm"];
-const RADIOS=["propTipo","vendTipo"];
+const FIELDS=["corretor","corretorOutro","creci","parNome","parImob","nome","cpf","rg","estadoCivil","nacionalidade","profissao","conjNome","conjCpf","razao","cnpj","repNome","repCpf","endereco","telefone","email","imTipo","imEmp","imIdent","imQuadra","imArea","imEndereco","imCidade","imMatricula","imCartorio","imObs","valor","forma","entrada","nParc","vParc","periodo","indice","primeira","finEntrada","condicoes","validade","vendNome","comPct","dataEm"];
+const RADIOS=["propTipo","vendTipo","parTipo"];
 const v=id=>($("#"+id).value||"").trim();
 const radio=n=>(document.querySelector(`input[name="${n}"]:checked`)||{}).value;
 function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
@@ -1408,6 +1418,7 @@ function collect(){
   const corretor=v("corretor")==="__outro"?v("corretorOutro"):v("corretor");
   need(v("corretor")==="__outro"?"corretorOutro":"corretor","corretor"); need("creci","CRECI");
   const pt=radio("propTipo"), vt=radio("vendTipo");
+  const par=radio("parTipo")==="sim"; if(par) need("parNome","nome do corretor parceiro");
   if(pt==="PF"){
     if(v("cpf")&&!cpfOk(v("cpf"))){m.missing.push({id:"cpf",label:"CPF (número inválido, confira ou apague)"});m.errs.cpf=true}
     if(v("conjCpf")&&!cpfOk(v("conjCpf"))){m.missing.push({id:"conjCpf",label:"CPF do cônjuge válido"});m.errs.conjCpf=true}
@@ -1430,6 +1441,7 @@ function collect(){
   /* text pieces: null = missing (placeholder) */
   const P=(val,ph)=>val?{t:val}:{t:ph,ph:true};
   m.corretor=P(corretor,"nome do corretor"); m.creci=P(v("creci"),"CRECI");
+  m.par=par?{nome:P(v("parNome"),"nome do corretor parceiro"),imob:v("parImob")}:null;
   let q=[];
   if(pt==="PF"){
     const ec=v("estadoCivil"), casado=/casado|união/.test(ec)&&v("conjNome");
@@ -1500,6 +1512,7 @@ function blocks(m){
   p([{t:"Rua Paula Souza, 483 - Centro - Itu/SP"}],{align:"center",small:true});
   B.push({t:"gap"});
   p([{t:"Corretor: ",b:true},m.corretor,{t:"     CRECI: ",b:true},m.creci]);
+  if(m.par) p([{t:"Corretor parceiro: ",b:true},m.par.nome].concat(m.par.imob?[{t:"     Imobiliária: ",b:true},{t:m.par.imob}]:[]));
   p([{t:"Autorizo a Utu-Guaçu Imóveis, registrada sob o CRECI 3395-J a levar a proposta de compra conforme descrição abaixo:"}],{align:"justify"});
   B.push({t:"lbl",label:"Proponente",runs:m.qualif});
   B.push({t:"lbl",label:"Descrição do imóvel",runs:m.imovel});
@@ -1639,6 +1652,7 @@ let last=null;
 function update(){
   const pt=radio("propTipo"); $("#boxPF").hidden=pt!=="PF"; $("#boxPJ").hidden=pt!=="PJ";
   $("#fCorretorOutro").hidden=v("corretor")!=="__outro";
+  $("#boxPar").hidden=radio("parTipo")!=="sim";
   $("#boxConj").hidden=!/casado|união/.test(v("estadoCivil"));
   const f=v("forma"); $("#boxParc").hidden=f!=="parcelado"; $("#boxFin").hidden=f!=="financiamento";
   $("#condOpt").textContent=f==="livre"?"(obrigatório: descreva como será pago)":"(opcional)";
