@@ -772,7 +772,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 27/10/2026 23h30</p>
+<p class="ver">Portal de Vendas · versão 27/10/2026 23h45</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -1073,8 +1073,8 @@ function renderHome(){
       <span class="txt"><span class="k">Ferramenta</span><h2>Guia do financiamento</h2><p>Envie ao cliente que vai comprar financiado o passo a passo para ver em que etapa ele está, com a parceira de crédito.</p></span>
       <span class="go">Enviar o guia${ARROW}</span></button>`;
   const mktTile=`<a class="blk mkt" href="marketing/">
-      <span class="txt"><span class="k">Ferramenta</span><h2>Marketing</h2><p>Crie story, post ou carrossel com legenda para as suas redes, com as suas cores e o seu estilo.</p></span>
-      <span class="go">Abrir o estúdio${ARROW}</span></a>`;
+      <span class="txt"><span class="k">Ferramenta</span><h2>Marketing</h2><p>Ateliê de artes para criar story, post e carrossel com a sua cara, e análise do seu perfil com cronograma do mês.</p></span>
+      <span class="go">Abrir o marketing${ARROW}</span></a>`;
   const msgTile=`<button class="blk msg" type="button" data-open="__mensagens">
       <span class="txt"><span class="k">${MENSAGENS.length} modelos</span><h2>Modelos de mensagem</h2><p>Textos prontos para captação, follow-up, proposta e pós-venda. É só copiar e mandar no WhatsApp.</p></span>
       <span class="go">Ver mensagens${ARROW}</span></button>`;
@@ -1281,7 +1281,8 @@ finUpd();
 /* ===== Busca geral do início ===== */
 const nrm=x=>String(x||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
 const SECOES=[
- {tit:"Marketing",sub:"Estúdio para criar story, post e carrossel com legenda",chaves:"marketing instagram story post feed carrossel legenda redes sociais conteudo arte divulgacao",abre:()=>{location.href="marketing/"}},
+ {tit:"Análise do perfil",sub:"Nota do seu Instagram, o que melhorar e cronograma do mês",chaves:"analise perfil instagram cronograma calendario frequencia bio seguidores engajamento melhorar",abre:()=>{location.href="marketing/#analise"}},
+ {tit:"Marketing",sub:"Ateliê de artes: story, post e carrossel com legenda",chaves:"marketing instagram story post feed carrossel legenda redes sociais conteudo arte divulgacao",abre:()=>{location.href="marketing/"}},
  {tit:"Guia do financiamento",sub:"Enviar ao cliente o passo a passo do financiamento",chaves:"financiamento financiado credito banco caixa simulacao cresac parceiro fgts guia",abre:()=>show("financiamento")},
  {tit:"Gerar documentos",sub:"Proposta de compra, avaliação de imóvel e outros documentos prontos",chaves:"gerar documento documentos ficha pdf word",abre:()=>show("documentos")},
  {tit:"Modelos de mensagem",sub:"Textos prontos para WhatsApp",chaves:"mensagem mensagens whatsapp texto modelo abordagem cliente",abre:()=>show("mensagens")},

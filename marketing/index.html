@@ -108,6 +108,41 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
 .howto{font-size:12.5px;background:var(--gold-soft);border-radius:var(--r);padding:10px 12px;line-height:1.5}
 .howto b{font-weight:600}
 .howto ol{margin:4px 0 0;padding-left:18px}
+.mtabs{background:var(--band);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.mtabs .wrap{display:flex;gap:4px}
+.mtabs button{appearance:none;background:none;border:0;border-bottom:2px solid transparent;color:var(--band-muted);padding:10px 14px 12px;font-size:13.5px;font-weight:500;cursor:pointer}
+.mtabs button[aria-selected="true"]{color:var(--band-fg);border-bottom-color:var(--gold-bright)}
+.checks{display:flex;flex-direction:column;gap:8px}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.4;cursor:pointer}
+.chk input{width:20px;height:20px;margin:0;flex:none;accent-color:var(--gold)}
+.score{display:flex;align-items:center;gap:14px}
+.score b{font-family:var(--display);font-size:64px;line-height:1;font-weight:500}
+.score span{font-size:13px;color:var(--muted)}
+.bars{display:flex;flex-direction:column;gap:8px}
+.bars div{display:grid;grid-template-columns:120px 1fr 32px;gap:10px;align-items:center;font-size:12.5px}
+.bars i{display:block;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.bars em{display:block;height:100%;border-radius:4px}
+.bars b{text-align:right;font-variant-numeric:tabular-nums}
+.todo{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:10px}
+.todo li span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.avisos{margin:0;font-size:13px;display:flex;flex-direction:column;gap:6px;background:var(--gold-soft);border-radius:var(--r);padding:10px 12px 10px 28px}
+.mix{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.mix div{background:var(--bg);border-radius:var(--r);padding:10px;text-align:center}
+.mix b{display:block;font-family:var(--display);font-size:24px;font-weight:500}
+.mix span{font-size:11.5px;color:var(--muted)}
+.cal-h,.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal-h span{font-size:10.5px;text-align:center;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.cd{min-height:74px;border-radius:6px;background:var(--bg);padding:5px;display:flex;flex-direction:column;gap:2px;min-width:0;overflow:hidden}
+.cd.empty{background:none}
+.cd b{font-size:11px;font-variant-numeric:tabular-nums}
+.cd .f{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#fff;border-radius:3px;padding:1px 4px;align-self:flex-start}
+.cd .tm{font-size:10px;line-height:1.25;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.cd .st{font-size:9.5px;color:var(--muted)}
+.c-imovel .f{background:var(--gold)}.c-edu .f{background:#4D7A5A}.c-bast .f{background:#6B5B8C}.c-prova .f{background:#A0563F}
+.c-imovel{box-shadow:inset 0 3px 0 var(--gold)}.c-edu{box-shadow:inset 0 3px 0 #4D7A5A}.c-bast{box-shadow:inset 0 3px 0 #6B5B8C}.c-prova{box-shadow:inset 0 3px 0 #A0563F}
+.leg{display:flex;flex-wrap:wrap;gap:10px;font-size:11.5px;color:var(--muted)}
+.leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+@media (max-width:480px){.cd{min-height:62px;padding:3px}.cd .tm{display:none}.cd .f{font-size:0;padding:1px 5px}.cd .f::after{content:attr(data-s);font-size:10px}.leg-fmt{display:block!important}.mix b{font-size:20px}.bars div{grid-template-columns:100px 1fr 28px}}
 .cap{white-space:pre-wrap;font-size:13.5px;background:var(--bg);border-radius:var(--r);padding:12px 14px;word-break:break-word;max-height:320px;overflow:auto}
 .note{font-size:12px;color:var(--muted)}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:var(--r);font-size:13px;z-index:20;max-width:calc(100% - 32px)}
@@ -118,8 +153,10 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
 </head>
 <body>
 <header class="band"><div class="wrap"><span class="logo" role="img" aria-label="Utu-Guaçu"></span><span class="t"><b>Estúdio de Marketing</b><span>Conteúdo para as suas redes</span></span><a class="crumb" href="../">‹ Portal</a></div></header>
+<nav class="mtabs" aria-label="Seções do marketing"><div class="wrap"><button type="button" data-tab="atelie" aria-selected="true">Ateliê de artes</button><button type="button" data-tab="analise" aria-selected="false">Análise do perfil</button></div></nav>
 <main class="wrap">
-  <div class="eyebrow">Marketing</div>
+<section id="tab-atelie">
+  <div class="eyebrow">Ateliê de artes</div>
   <h1>Crie o seu post <em>com a sua cara</em></h1>
   <p class="lede">Monte uma vez o seu kit de marca. Depois é só subir as fotos do imóvel, escolher o formato e o estilo, e baixar o story, o post ou o carrossel pronto, com a legenda.</p>
 
@@ -200,6 +237,48 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
       </div>
     </div>
   </div>
+</section>
+<section id="tab-analise" hidden>
+  <div class="eyebrow">Análise do perfil</div>
+  <h1>Como está o seu <em>Instagram</em>?</h1>
+  <p class="lede">Responda o checklist com o seu perfil aberto ao lado. Em 3 minutos você recebe uma nota, o que melhorar primeiro, o que postar agora, a frequência ideal e um cronograma para o mês.</p>
+  <div class="grid">
+    <div class="col">
+      <fieldset>
+        <legend><small>1</small>Seu perfil</legend>
+        <div class="field"><label for="aIg">Seu Instagram</label><input id="aIg" placeholder="@seuperfil ou instagram.com/seuperfil"></div>
+        <div class="field"><label for="aNicho">Seu foco principal</label><select id="aNicho"><option value="alto">Alto padrão</option><option value="rural">Rural (sítios, chácaras, fazendas)</option><option value="urbano">Casas e apartamentos em geral</option><option value="lanc">Lançamentos</option><option value="loc">Locação</option></select></div>
+        <div class="field"><label for="aObj">Seu objetivo agora</label><select id="aObj"><option value="compradores">Atrair compradores</option><option value="captar">Captar imóveis de proprietários</option><option value="marca">Ser referência na região</option></select></div>
+        <div class="field"><label for="aFreq">Quantas vezes por semana você consegue postar no feed?</label><select id="aFreq"><option value="2">2 vezes</option><option value="3" selected>3 vezes</option><option value="5">5 vezes</option><option value="7">Todo dia</option></select></div>
+      </fieldset>
+      <fieldset>
+        <legend><small>2</small>Checklist do perfil</legend>
+        <p class="hint" style="margin:-4px 0 2px">Marque o que você já tem hoje.</p>
+        <div class="checks" id="checks"></div>
+      </fieldset>
+      <fieldset>
+        <legend><small>3</small>Seus números <span class="opt" style="font-family:var(--body);font-size:12px">(opcional)</span></legend>
+        <p class="hint" style="margin:-4px 0 2px">Estão no painel profissional do Instagram. Se não souber, deixe em branco.</p>
+        <div class="two">
+          <div class="field"><label for="nSeg">Seguidores</label><input id="nSeg" inputmode="numeric"></div>
+          <div class="field"><label for="nPosts">Posts no último mês</label><input id="nPosts" inputmode="numeric"></div>
+        </div>
+        <div class="two">
+          <div class="field"><label for="nReels">Reels no último mês</label><input id="nReels" inputmode="numeric"></div>
+          <div class="field"><label for="nStories">Dias com stories por semana</label><input id="nStories" inputmode="numeric"></div>
+        </div>
+        <div class="two">
+          <div class="field"><label for="nAlc">Alcance médio por post</label><input id="nAlc" inputmode="numeric"></div>
+          <div class="field"><label for="nLocal">% de seguidores da região</label><input id="nLocal" inputmode="numeric" placeholder="Ex.: 40"></div>
+        </div>
+      </fieldset>
+      <button class="btn dark" id="aGo" type="button">Ver minha análise</button>
+    </div>
+    <div class="col side" id="aRes">
+      <div class="prev"><span class="eyebrow">Sua análise</span><p class="note" style="margin:0">Preencha ao lado e toque em <b>Ver minha análise</b>.</p></div>
+    </div>
+  </div>
+</section>
 </main>
 <div class="toast" id="toast" hidden></div>
 
@@ -414,6 +493,155 @@ $("#pArea").value="114";$("#pQ").value="3";$("#pS").value="1";$("#pV").value="2"
 Promise.all(SAMPLES.map(loadImg)).then(imgs=>{FOTOS=imgs.map(img=>({img,ex:true}));renderThumbs();draw()});
 })();
 
+</script>
+<script>
+/* ===== Análise do perfil (sem IA: checklist + regras) ===== */
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const kit=()=>LS.get("utu.mkt.kit",{})||{};
+
+const ITENS=[
+ {id:"foto",area:"Perfil e bio",p:8,t:"Foto de perfil com o seu rosto, bem iluminada e com fundo limpo",fix:"Troque a foto de perfil por uma do seu rosto, de frente, com luz natural e fundo neutro. Logo e paisagem passam menos confiança."},
+ {id:"nome",area:"Perfil e bio",p:8,t:"Nome do perfil com o que você faz e onde (ex.: Rose | Corretora em Itu)",fix:"No campo Nome, coloque seu nome e uma palavra-chave, por exemplo \"Rose | Corretora em Itu\". É esse campo que aparece na busca do Instagram."},
+ {id:"bio",area:"Perfil e bio",p:8,t:"Bio diz o que você faz, onde atua e para quem",fix:"Reescreva a bio em três linhas: o que você faz, onde atua e o tipo de imóvel. Use a sugestão de bio abaixo."},
+ {id:"creci",area:"Perfil e bio",p:5,t:"CRECI na bio",fix:"Coloque o seu CRECI na bio. Passa credibilidade e é exigência do Conselho para divulgar imóveis."},
+ {id:"link",area:"Perfil e bio",p:7,t:"Link na bio levando ao seu WhatsApp ou ao site da Utu-Guaçu",fix:"Adicione um link na bio para o seu WhatsApp com mensagem pronta (wa.me) ou para o site da Utu-Guaçu."},
+ {id:"prof",area:"Perfil e bio",p:5,t:"Conta profissional (mostra as estatísticas)",fix:"Mude para conta profissional em Configurações. Assim você vê alcance, seguidores da região e o melhor horário para postar."},
+ {id:"dest",area:"Identidade visual",p:7,t:"Destaques organizados (Imóveis, Sobre mim, Depoimentos, Região)",fix:"Crie pelo menos 4 destaques: Imóveis, Sobre mim, Depoimentos e a sua região. É a vitrine de quem chega no perfil pela primeira vez."},
+ {id:"capas",area:"Identidade visual",p:4,t:"Capas dos destaques no mesmo estilo",fix:"Padronize as capas dos destaques com as cores do seu kit de marca. Pode usar um fundo de cor sólida com uma palavra."},
+ {id:"ident",area:"Identidade visual",p:8,t:"Feed com cores e letras parecidas entre os posts",fix:"Use sempre o mesmo kit de marca no Ateliê de artes. Em poucas semanas o seu feed fica com cara própria e reconhecível."},
+ {id:"rosto",area:"Formatos",p:9,t:"Aparece em vídeo ou Reels mostrando o rosto",fix:"Grave pelo menos 1 Reels por semana aparecendo: um tour falando do imóvel, uma dica rápida ou um dia na rotina. Gente compra de gente."},
+ {id:"reels",area:"Formatos",p:7,t:"Posta Reels com frequência",fix:"Os Reels são o formato que mais leva o seu perfil para quem ainda não te segue. Inclua Reels toda semana no seu cronograma."},
+ {id:"stories",area:"Constância",p:7,t:"Faz stories quase todos os dias",fix:"Faça stories todos os dias úteis, nem que sejam 3: um bastidor, um imóvel e uma pergunta ou enquete. Stories mantêm você na lembrança de quem já te segue."},
+ {id:"const",area:"Constância",p:8,t:"Posta no feed toda semana, sem sumir",fix:"Siga o cronograma abaixo. Constância vale mais do que volume: melhor 3 posts toda semana do que 10 numa semana e nada no mês seguinte."},
+ {id:"resp",area:"Relacionamento",p:6,t:"Responde direct e comentários no mesmo dia",fix:"Responda direct e comentários no mesmo dia. Resposta rápida vira conversa, e conversa vira visita."},
+ {id:"local",area:"Relacionamento",p:5,t:"Usa a localização e hashtags da região nos posts",fix:"Marque a localização (Itu, bairro ou condomínio) e use hashtags da região em todo post de imóvel. É assim que o comprador local te encontra."},
+ {id:"prova",area:"Relacionamento",p:6,t:"Mostra depoimentos de clientes e negócios fechados",fix:"Peça depoimentos aos clientes depois da entrega das chaves e publique. Prova social é o que mais convence quem está decidindo com qual corretor ir."}
+];
+const AREAS=["Perfil e bio","Identidade visual","Formatos","Constância","Relacionamento"];
+
+const TEMAS={
+ alto:{imovel:["Tour do imóvel com os detalhes de acabamento","Os 5 detalhes que fazem esse imóvel ser único","Antes de visitar: o que observar num imóvel de alto padrão","Imóvel da semana em carrossel"],
+  edu:["O que valoriza um imóvel de alto padrão na região","Condomínios fechados de Itu: o que cada um oferece","Como funciona a negociação de imóveis de alto padrão","Documentos que você precisa conferir antes de comprar"],
+  bast:["Um dia acompanhando uma visita","Bastidores de uma sessão de fotos de imóvel","Por que eu escolhi trabalhar com alto padrão"],
+  prova:["Depoimento de cliente","Chaves entregues: história do negócio"]},
+ rural:{imovel:["Tour pela propriedade: casa, área e benfeitorias","Imóvel rural da semana em carrossel","Pôr do sol na propriedade","Água, energia e acesso: os pontos fortes da área"],
+  edu:["Sítio, chácara ou fazenda: qual é a diferença","Documentos de imóvel rural: CCIR, ITR e CAR","O que avaliar antes de comprar uma área rural","Alqueire, hectare e metro quadrado: como converter"],
+  bast:["Um dia de visita no campo","Como eu avalio uma propriedade rural","Os cuidados que tomo antes de levar um cliente"],
+  prova:["Depoimento de quem realizou o sonho do sítio","Negócio fechado: a história da propriedade"]},
+ urbano:{imovel:["Tour rápido do imóvel","Imóvel da semana em carrossel","Antes e depois: o potencial do imóvel","3 imóveis até um valor para quem quer comprar"],
+  edu:["Financiamento: por onde começar","Quanto custa comprar um imóvel além do valor dele","Bairros de Itu para cada perfil de família","Erros comuns de quem compra o primeiro imóvel"],
+  bast:["Um dia na rotina de corretor","Como eu preparo uma visita","Perguntas que eu faço antes de mostrar um imóvel"],
+  prova:["Depoimento de cliente","Família na casa nova"]},
+ lanc:{imovel:["Apresentação do lançamento","Tour pelo decorado ou pelas perspectivas","Plantas disponíveis em carrossel","Lazer do condomínio em vídeo"],
+  edu:["Como funciona a compra na planta","Tabela de pagamento: entrada, parcelas e chaves","Vantagens de comprar no lançamento","O que perguntar antes de comprar na planta"],
+  bast:["Visita ao plantão de vendas","Andamento da obra","Por que eu indico esse empreendimento"],
+  prova:["Depoimento de quem comprou na planta","Contagem regressiva para as chaves"]},
+ loc:{imovel:["Imóvel para alugar em carrossel","Tour rápido do imóvel para locação","3 imóveis para alugar até um valor","Novidades da semana para locação"],
+  edu:["Documentos para alugar um imóvel","Garantias de locação: fiador, caução e seguro","Como funciona a vistoria de entrada e saída","Proprietário: por que deixar seu imóvel com uma administradora"],
+  bast:["Um dia na rotina da locação","Como eu ajudo o inquilino a escolher","Entrega de chaves"],
+  prova:["Depoimento de inquilino","Depoimento de proprietário"]}
+};
+const MIX={compradores:{imovel:45,edu:25,bast:15,prova:15},captar:{imovel:30,edu:30,bast:15,prova:25},marca:{imovel:25,edu:35,bast:25,prova:15}};
+const ROT={imovel:"Imóvel",edu:"Dica",bast:"Bastidor",prova:"Depoimento"};
+
+function renderChecks(){const s=LS.get("utu.mkt.analise",{});$("#checks").innerHTML=ITENS.map(i=>`<label class="chk"><input type="checkbox" data-i="${i.id}" ${s.ok&&s.ok.includes(i.id)?"checked":""}><span>${esc(i.t)}</span></label>`).join("");
+  ["aIg","aNicho","aObj","aFreq","nSeg","nPosts","nReels","nStories","nAlc","nLocal"].forEach(k=>{if(s[k]!=null)$("#"+k).value=s[k]});if(!s.aIg&&kit().ig)$("#aIg").value=kit().ig}
+function collect(){const o={ok:[...document.querySelectorAll("#checks input:checked")].map(x=>x.dataset.i)};["aIg","aNicho","aObj","aFreq","nSeg","nPosts","nReels","nStories","nAlc","nLocal"].forEach(k=>o[k]=($("#"+k).value||"").trim());LS.set("utu.mkt.analise",o);return o}
+const num=v=>{const n=parseFloat(String(v).replace(/\./g,"").replace(",","."));return isNaN(n)?null:n};
+function handle(v){v=String(v||"").trim();const m=v.match(/instagram\.com\/([^/?#]+)/i);v=m?m[1]:v.replace(/^@/,"");return v?"@"+v:""}
+
+function analisar(){
+  const o=collect(),k=kit(),f=k.g==="f";
+  const notas={},ok=new Set(o.ok);AREAS.forEach(a=>{const it=ITENS.filter(i=>i.area===a),tot=it.reduce((s,i)=>s+i.p,0),got=it.filter(i=>ok.has(i.id)).reduce((s,i)=>s+i.p,0);notas[a]=Math.round(got/tot*100)});
+  /* números ajustam constância e formatos */
+  const posts=num(o.nPosts),reels=num(o.nReels),st=num(o.nStories),loc=num(o.nLocal),seg=num(o.nSeg),alc=num(o.nAlc);
+  const avisos=[];
+  if(posts!=null){const alvo=+o.aFreq*4;if(posts<alvo*.5){notas["Constância"]=Math.min(notas["Constância"],45);avisos.push(`Você postou ${posts} vezes no último mês. Para o seu ritmo de ${o.aFreq==="7"?"todo dia":o.aFreq+" vezes por semana"}, a meta é cerca de ${alvo}.`)}}
+  if(reels!=null&&reels<4){notas["Formatos"]=Math.min(notas["Formatos"],50);avisos.push(`Foram ${reels} Reels no último mês. A meta é pelo menos 1 por semana.`)}
+  if(st!=null&&st<4)avisos.push(`Stories em ${st} dias por semana. Tente chegar a 5 dias, nos dias úteis.`);
+  if(loc!=null&&loc<30)avisos.push(`Só ${loc}% dos seus seguidores são da região. Marque localização, use hashtags locais e interaja com perfis de Itu e região para atrair quem compra aqui.`);
+  if(seg&&alc){const tx=alc/seg*100;avisos.push(tx>=20?`O seu alcance médio é ${Math.round(tx)}% dos seguidores, um bom sinal: o conteúdo está sendo entregue.`:`O seu alcance médio é ${Math.round(tx)}% dos seguidores. Reels e posts com o seu rosto costumam aumentar esse número.`)}
+  const geral=Math.round(AREAS.reduce((s,a)=>s+notas[a],0)/AREAS.length);
+  const falta=ITENS.filter(i=>!ok.has(i.id)).sort((a,b)=>b.p-a.p);
+  const nicho=o.aNicho,obj=o.aObj,freq=+o.aFreq;
+  const nomeNicho={alto:"imóveis de alto padrão",rural:"imóveis rurais",urbano:"casas e apartamentos",lanc:"lançamentos",loc:"locação"}[nicho];
+  const bio=[`${f?"Corretora":"Corretor"} de imóveis em Itu e região`,`${nomeNicho.charAt(0).toUpperCase()+nomeNicho.slice(1)} com atendimento personalizado`,`Utu-Guaçu Imóveis${k.creci?" | CRECI "+k.creci:" | CRECI [seu número]"}`,`Fale comigo pelo link abaixo`].join("\n");
+  const mix=MIX[obj];
+  const reelsSem=freq>=5?2:1;
+  const freqTxt=`${freq===7?"1 post por dia":freq+" posts no feed por semana"}, sendo ${reelsSem} ${reelsSem===1?"Reels":"Reels"}; stories em pelo menos 5 dias da semana (3 a 5 por dia).`;
+  const melhorHora="Teste os horários de 7h às 9h, de 12h às 13h e de 19h às 21h, e depois confira no painel profissional qual trouxe mais alcance.";
+  const cal=cronograma(nicho,mix,freq);
+  const cor=n=>n>=75?"var(--ok)":n>=50?"var(--gold)":"var(--warn)";
+  $("#aRes").innerHTML=`<div class="prev">
+    <span class="eyebrow">Sua análise${handle(o.aIg)?" · "+esc(handle(o.aIg)):""}</span>
+    <div class="score"><b style="color:${cor(geral)}">${geral}</b><span>de 100<br>${geral>=75?"Perfil forte. Agora é constância.":geral>=50?"Bom começo. Alguns ajustes fazem muita diferença.":"Tem bastante espaço para crescer. Comece pelos itens abaixo."}</span></div>
+    <div class="bars">${AREAS.map(a=>`<div><span>${a}</span><i><em style="width:${notas[a]}%;background:${cor(notas[a])}"></em></i><b>${notas[a]}</b></div>`).join("")}</div>
+  </div>
+  <div class="prev"><span class="eyebrow">O que melhorar primeiro</span>${falta.length?`<ol class="todo">${falta.slice(0,5).map(i=>`<li><b>${esc(i.t)}</b><span>${esc(i.fix)}</span></li>`).join("")}</ol>`:`<p style="margin:0">Você marcou todos os itens. Mantenha a constância e acompanhe os números todo mês.</p>`}
+    ${avisos.length?`<ul class="avisos">${avisos.map(a=>`<li>${esc(a)}</li>`).join("")}</ul>`:""}</div>
+  <div class="prev"><span class="eyebrow">Sugestão de bio</span><div class="cap" id="bioTxt">${esc(bio)}</div><button class="btn small" type="button" id="copyBio">Copiar bio</button></div>
+  <div class="prev"><span class="eyebrow">O que postar agora</span>
+    <div class="mix">${Object.entries(mix).map(([k2,v])=>`<div><b>${v}%</b><span>${ROT[k2]}</span></div>`).join("")}</div>
+    <p style="margin:0;font-size:13.5px"><b>Imóvel:</b> tours, carrosséis e detalhes. <b>Dica:</b> conteúdo que ensina e tira dúvida. <b>Bastidor:</b> a sua rotina e o seu jeito de trabalhar. <b>Depoimento:</b> clientes e negócios fechados.</p>
+    <p style="margin:0;font-size:13.5px"><b>Frequência:</b> ${esc(freqTxt)}</p>
+    <p style="margin:0;font-size:13.5px"><b>Horário:</b> ${esc(melhorHora)}</p>
+  </div>
+  <div class="prev"><span class="eyebrow">Cronograma de ${cal.mes}</span>
+    <div class="cal-h">${["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].map(d=>`<span>${d}</span>`).join("")}</div>
+    <div class="cal">${cal.html}</div>
+    <div class="leg"><span class="leg-fmt" style="display:none;width:100%">R = Reels · C = Carrossel · P = Post. Toque em Copiar cronograma para ver os temas de cada dia.</span><span><i style="background:var(--gold)"></i>Imóvel</span><span><i style="background:#4D7A5A"></i>Dica</span><span><i style="background:#6B5B8C"></i>Bastidor</span><span><i style="background:#A0563F"></i>Depoimento</span></div>
+    <div class="acts"><button class="btn dark" type="button" id="copyCal">Copiar cronograma</button><a class="btn" href="#atelie" id="toAtelie">Criar a arte no Ateliê</a></div>
+  </div>
+  <div class="prev"><span class="eyebrow">Quer uma análise mais completa?</span><p style="margin:0;font-size:13.5px">Tire 3 prints (o topo do perfil, o feed e as estatísticas), toque no botão abaixo e anexe os prints no ChatGPT. Ele analisa as imagens com base nas suas respostas.</p><a class="btn" target="_blank" rel="noopener" id="gptA">Analisar meus prints no ChatGPT</a></div>`;
+  $("#copyBio").onclick=()=>copy(bio,"Bio copiada.");
+  $("#copyCal").onclick=()=>copy(cal.txt,"Cronograma copiado.");
+  $("#toAtelie").onclick=e=>{e.preventDefault();window.__tab&&window.__tab("atelie")};
+  const prompt=`Analise o meu perfil de Instagram de ${f?"corretora":"corretor"} de imóveis. Vou anexar 3 prints: o topo do perfil, o feed e as estatísticas.
+Perfil: ${handle(o.aIg)||"[meu @]"}. Trabalho na Utu-Guaçu Imóveis, em Itu-SP, com foco em ${nomeNicho}. Meu objetivo agora: ${{compradores:"atrair compradores",captar:"captar imóveis de proprietários",marca:"ser referência na região"}[obj]}. Consigo postar ${freq===7?"todo dia":freq+" vezes por semana"}.
+O que já tenho: ${ITENS.filter(i=>ok.has(i.id)).map(i=>i.t.toLowerCase()).join("; ")||"nada do checklist"}.
+O que falta: ${falta.map(i=>i.t.toLowerCase()).join("; ")||"nada"}.
+
+Me diga, de forma prática e direta: 1) os 5 ajustes mais importantes no perfil, olhando os prints; 2) o que está funcionando e o que não está no feed; 3) três ideias de post para esta semana com legenda. Escreva sem travessão e sem emoji.`;
+  $("#gptA").href="https://chatgpt.com/?q="+encodeURIComponent(prompt);
+  if(window.innerWidth<860)$("#aRes").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function cronograma(nicho,mix,freq){
+  const hoje=new Date(),ano=hoje.getMonth()===11?hoje.getFullYear()+1:hoje.getFullYear(),m=(hoje.getMonth()+1)%12;
+  const MESES=["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+  const dias=new Date(ano,m+1,0).getDate(),first=(new Date(ano,m,1).getDay()+6)%7;
+  const diasPost={2:[1,3],3:[0,2,4],5:[0,1,2,3,4],7:[0,1,2,3,4,5,6]}[freq];
+  /* sequência de categorias respeitando o mix */
+  const seq=[];const pool=Object.entries(mix).flatMap(([k,v])=>Array(Math.round(v/5)).fill(k));
+  const order=["imovel","edu","imovel","bast","imovel","prova","edu","imovel","bast","edu","prova","imovel"];
+  const T=TEMAS[nicho],idx={imovel:0,edu:0,bast:0,prova:0};let n=0,reelsWeek={};
+  let html="",txt=[`Cronograma de ${MESES[m]} de ${ano}`];
+  for(let i=0;i<first;i++)html+=`<div class="cd empty"></div>`;
+  for(let d=1;d<=dias;d++){const dow=(first+d-1)%7,week=Math.floor((first+d-1)/7);
+    if(diasPost.includes(dow)){let cat=order[n%order.length];if((mix[cat]||0)<20&&n%3===0)cat="imovel";n++;
+      const list=T[cat],tema=list[idx[cat]++%list.length];
+      const reel=!reelsWeek[week]||(freq>=5&&reelsWeek[week]<2&&dow===3)?(reelsWeek[week]=(reelsWeek[week]||0)+1,true):false;
+      const fmt=reel?"Reels":cat==="imovel"||cat==="edu"?"Carrossel":"Post";
+      html+=`<div class="cd c-${cat}"><b>${d}</b><span class="f" data-s="${fmt[0]}">${fmt}</span><span class="tm">${esc(tema)}</span></div>`;
+      txt.push(`${String(d).padStart(2,"0")}/${String(m+1).padStart(2,"0")} (${["seg","ter","qua","qui","sex","sáb","dom"][dow]}) · ${fmt} · ${ROT[cat]}: ${tema}`)}
+    else html+=`<div class="cd"><b>${d}</b>${dow<5?'<span class="st">Stories</span>':""}</div>`}
+  txt.push("","Stories: em pelo menos 5 dias da semana, 3 a 5 por dia (bastidor, imóvel e uma pergunta ou enquete).");
+  return {html,txt:txt.join("\n"),mes:MESES[m]}
+}
+function copy(t,ok){const fb=()=>{const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy")}catch(_){}ta.remove();toastA(ok)};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>toastA(ok),fb);else fb()}
+let tA;function toastA(m){const t=document.getElementById("toast");t.textContent=m;t.hidden=false;clearTimeout(tA);tA=setTimeout(()=>t.hidden=true,3000)}
+renderChecks();
+$("#aGo").onclick=analisar;
+if((LS.get("utu.mkt.analise",{}).ok||[]).length)analisar();
+})();
+
+(function(){const tabs=document.querySelectorAll(".mtabs button");
+function go(t){tabs.forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===t)));document.getElementById("tab-atelie").hidden=t!=="atelie";document.getElementById("tab-analise").hidden=t!=="analise";try{history.replaceState(null,"","#"+t)}catch(_){}window.scrollTo({top:0})}
+window.__tab=go;tabs.forEach(b=>b.addEventListener("click",()=>go(b.dataset.tab)));if(location.hash==="#analise")go("analise");})();
 </script>
 
 </body>
