@@ -651,18 +651,19 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
 
       <fieldset>
         <legend><small>2</small>Proponente (comprador)</legend>
+        <p class="hint" style="margin:-2px 0 0">Opcional. O que ficar em branco sai na proposta como espaço para preencher à mão.</p>
         <div class="seg">
           <label><input type="radio" name="propTipo" id="propPF" value="PF" checked><span>Pessoa física</span></label>
           <label><input type="radio" name="propTipo" id="propPJ" value="PJ"><span>Empresa</span></label>
         </div>
         <div id="boxPF" class="form" style="gap:12px">
-          <div class="field" data-req><label for="nome">Nome completo</label><input id="nome"></div>
+          <div class="field"><label for="nome">Nome completo</label><input id="nome"></div>
           <div class="two">
-            <div class="field" data-req><label for="cpf">CPF</label><input id="cpf" inputmode="numeric" placeholder="000.000.000-00"><span class="hint"></span></div>
+            <div class="field"><label for="cpf">CPF</label><input id="cpf" inputmode="numeric" placeholder="000.000.000-00"><span class="hint"></span></div>
             <div class="field"><label for="rg">RG <span class="opt">(opcional)</span></label><input id="rg"></div>
           </div>
           <div class="three">
-            <div class="field" data-req><label for="estadoCivil">Estado civil</label>
+            <div class="field"><label for="estadoCivil">Estado civil</label>
               <select id="estadoCivil"><option value="">Selecione</option><option>solteiro(a)</option><option>casado(a)</option><option>em união estável</option><option>divorciado(a)</option><option>separado(a) judicialmente</option><option>viúvo(a)</option></select></div>
             <div class="field"><label for="nacionalidade">Nacionalidade</label><input id="nacionalidade" value="brasileiro(a)"></div>
             <div class="field"><label for="profissao">Profissão <span class="opt">(opc.)</span></label><input id="profissao"></div>
@@ -673,16 +674,16 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
           </div>
         </div>
         <div id="boxPJ" class="form" style="gap:12px" hidden>
-          <div class="field" data-req><label for="razao">Razão social</label><input id="razao"></div>
-          <div class="field" data-req><label for="cnpj">CNPJ</label><input id="cnpj" inputmode="numeric" placeholder="00.000.000/0000-00"><span class="hint"></span></div>
+          <div class="field"><label for="razao">Razão social</label><input id="razao"></div>
+          <div class="field"><label for="cnpj">CNPJ</label><input id="cnpj" inputmode="numeric" placeholder="00.000.000/0000-00"><span class="hint"></span></div>
           <div class="two">
-            <div class="field" data-req><label for="repNome">Representante legal</label><input id="repNome"></div>
-            <div class="field" data-req><label for="repCpf">CPF do representante</label><input id="repCpf" inputmode="numeric" placeholder="000.000.000-00"><span class="hint"></span></div>
+            <div class="field"><label for="repNome">Representante legal</label><input id="repNome"></div>
+            <div class="field"><label for="repCpf">CPF do representante</label><input id="repCpf" inputmode="numeric" placeholder="000.000.000-00"><span class="hint"></span></div>
           </div>
         </div>
-        <div class="field" data-req><label for="endereco">Endereço completo</label><input id="endereco" placeholder="Rua, número, bairro, cidade/UF, CEP"></div>
+        <div class="field"><label for="endereco">Endereço completo</label><input id="endereco" placeholder="Rua, número, bairro, cidade/UF, CEP"></div>
         <div class="two">
-          <div class="field" data-req><label for="telefone">Telefone</label><input id="telefone" inputmode="tel" placeholder="(11) 90000-0000"></div>
+          <div class="field"><label for="telefone">Telefone</label><input id="telefone" inputmode="tel" placeholder="(11) 90000-0000"></div>
           <div class="field"><label for="email">E-mail <span class="opt">(opcional)</span></label><input id="email" type="email" inputmode="email"></div>
         </div>
       </fieldset>
@@ -739,11 +740,12 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
 
       <fieldset>
         <legend><small>5</small>Vendedor e comissão</legend>
+        <p class="hint" style="margin:-2px 0 0">Os dados do vendedor são opcionais. O que ficar em branco sai na proposta como espaço para preencher à mão.</p>
         <div class="seg">
           <label><input type="radio" name="vendTipo" id="vendPF" value="PF" checked><span>Pessoa física</span></label>
           <label><input type="radio" name="vendTipo" id="vendPJ" value="PJ"><span>Empresa</span></label>
         </div>
-        <div class="field" data-req><label for="vendNome">Nome do vendedor / proprietário</label><input id="vendNome" placeholder="Ex.: Moura Leite Loteamentos"></div>
+        <div class="field"><label for="vendNome">Nome do vendedor / proprietário</label><input id="vendNome" placeholder="Ex.: Moura Leite Loteamentos"></div>
         <div class="field" id="fComP" data-req><label for="comPct">Comissão (% sobre o valor ofertado)</label><input id="comPct" inputmode="decimal" placeholder="Ex.: 6"><span class="hint" id="comCalc"></span></div>
         <label class="check" for="comShow"><input type="checkbox" id="comShow" checked><span>Mostrar o valor da comissão em R$ na proposta</span></label>
         <div class="field" style="max-width:200px"><label for="dataEm">Data de emissão</label><input id="dataEm" type="date"></div>
@@ -772,7 +774,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 28/10/2026 00h15</p>
+<p class="ver">Portal de Vendas · versão 28/10/2026 11h00</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -1407,12 +1409,13 @@ function collect(){
   need(v("corretor")==="__outro"?"corretorOutro":"corretor","corretor"); need("creci","CRECI");
   const pt=radio("propTipo"), vt=radio("vendTipo");
   if(pt==="PF"){
-    need("nome","nome do proponente"); need("cpf",v("cpf")?"CPF (número inválido, confira)":"CPF",cpfOk(v("cpf"))); need("estadoCivil","estado civil");
+    if(v("cpf")&&!cpfOk(v("cpf"))){m.missing.push({id:"cpf",label:"CPF (número inválido, confira ou apague)"});m.errs.cpf=true}
     if(v("conjCpf")&&!cpfOk(v("conjCpf"))){m.missing.push({id:"conjCpf",label:"CPF do cônjuge válido"});m.errs.conjCpf=true}
   }else{
-    need("razao","razão social"); need("cnpj",v("cnpj")?"CNPJ (número inválido, confira)":"CNPJ",cnpjOk(v("cnpj"))); need("repNome","representante"); need("repCpf",v("repCpf")?"CPF do representante (inválido)":"CPF do representante",cpfOk(v("repCpf")));
+    if(v("cnpj")&&!cnpjOk(v("cnpj"))){m.missing.push({id:"cnpj",label:"CNPJ (número inválido, confira ou apague)"});m.errs.cnpj=true}
+    if(v("repCpf")&&!cpfOk(v("repCpf"))){m.missing.push({id:"repCpf",label:"CPF do representante (inválido, confira ou apague)"});m.errs.repCpf=true}
   }
-  need("endereco","endereço"); need("telefone",v("telefone")?"telefone com DDD":"telefone",onlyDig(v("telefone")).length>=10);
+  if(v("telefone")&&onlyDig(v("telefone")).length<10){m.missing.push({id:"telefone",label:"telefone com DDD (incompleto, confira ou apague)"});m.errs.telefone=true}
   need("imTipo","tipo do imóvel"); need("imCidade","cidade do imóvel");
   const valor=parseMoney(v("valor")); need("valor",valor>=1e10?"valor ofertado (número muito alto, confira)":"valor ofertado",valor>0&&valor<1e10);
   const forma=v("forma"); need("forma","forma de pagamento");
@@ -1420,7 +1423,6 @@ function collect(){
   if(forma==="parcelado"){need("entrada","entrada",entrada>=0);need("nParc","nº de parcelas",nParc>0);need("vParc","valor da parcela",vParc>0)}
   if(forma==="financiamento"){need("finEntrada","recursos próprios",finE>=0&&(!(valor>0)||finE<valor))}
   if(forma==="livre") need("condicoes","como será o pagamento (campo Condições)");
-  need("vendNome","vendedor");
   const pc=parseMoney(v("comPct")); need("comPct","comissão (%)",pc>0&&pc<100);
   const com=pc>0&&valor>0?Math.round(valor*pc)/100:NaN, show=$("#comShow").checked, ct="P";
   m.comInfo={pc,com,show};
@@ -1544,7 +1546,7 @@ function toHTML(B){
   return P.map((pg,i)=>`<article class="sheet"><div class="doc-h"><img src="data:image/png;base64,${LOGO_DOC}" alt="Utu-Guaçu"><span>${esc(DOC_HDR[0])}<b>${esc(DOC_HDR[1])}</b></span></div><div class="doc-b">${pg.map(one).join("")}</div><div class="doc-f">${esc(DOC_FOOT)}<span>Folha ${i+1} de ${P.length}</span></div></article>`).join("");
 }
 function toText(B){
-  const rt=runs=>runs.map(r=>r.ph?"______":r.t).join("");
+  const rt=runs=>runs.map(r=>r.ph?"______________":r.t).join("");
   return B.map(b=>b.t==="title"?b.text.toUpperCase():b.t==="gap"?"":b.t==="page"?"\n— — —\n":b.t==="li"?"  "+rt(b.runs):b.t==="lbl"?`${b.label}:\n${rt(b.runs)}\n`:b.t==="sigR"?`\n\n_______________________________\n${rt([b.name])}\n${rt([b.sub])}`:b.t==="sig"?`\n${b.label}:\n\n_______________________________\n${rt([b.name])}${b.sub?"\n"+b.sub:""}`:rt(b.runs)).join("\n");
 }
 
@@ -1558,7 +1560,7 @@ function toPDF(B){
   const ensure=h=>{if(y+h>BOT){doc.addPage();y=TOP}};
   const para=(runs,size,align,indent=0)=>{
     const lh=pt2mm(size)*1.5; doc.setFontSize(size);
-    const toks=[];runs.forEach(r=>{String(r.ph?"______":r.t).split(/(\s+)/).forEach(w=>{if(w)toks.push({w,b:!!r.b})})});
+    const toks=[];runs.forEach(r=>{String(r.ph?"______________":r.t).split(/(\s+)/).forEach(w=>{if(w)toks.push({w,b:!!r.b})})});
     const lines=[];let line=[],lw=0;const maxW=W-indent;
     const wOf=t=>{doc.setFont(F,t.b?"bold":"normal");return doc.getTextWidth(t.w)};
     toks.forEach(t=>{const ws=/^\s+$/.test(t.w);const tw=wOf(ws?{w:" ",b:t.b}:t);
@@ -1579,8 +1581,8 @@ function toPDF(B){
     if(b.t==="gap"){y+=5;return}
     if(b.t==="li"){para(b.runs,11,"left",5);y+=1;return}
     if(b.t==="lbl"){ensure(14);doc.setTextColor(26,23,20);para([{t:b.label,b:true}],11,"left");y+=0.6;para(b.runs,11,"justify");y+=5;return}
-    if(b.t==="sigR"){ensure(30);y+=16;doc.setDrawColor(26,23,20);doc.setLineWidth(0.3);const lw=80,x0=M+W-lw;doc.line(x0,y,M+W,y);y+=5;doc.setFont(F,"bold");doc.setFontSize(10.5);doc.text(b.name.ph?"______":b.name.t,x0+lw/2,y,{align:"center"});y+=5;doc.setFont(F,"normal");doc.setFontSize(9.5);doc.text(b.sub.ph?"CRECI n.º ______":b.sub.t,x0+lw/2,y,{align:"center"});y+=6;return}
-    if(b.t==="sig"){ensure(28);y+=4;doc.setFont(F,"bold");doc.setFontSize(11);doc.text(b.label+":",M,y+4);y+=17;doc.setDrawColor(26,23,20);doc.setLineWidth(0.3);doc.line(M,y,M+95,y);y+=1.5;para([b.name.ph?{t:"______"}:{t:b.name.t}],10.5,"left");if(b.sub)para([{t:b.sub}],9,"left");y+=3;return}
+    if(b.t==="sigR"){ensure(30);y+=16;doc.setDrawColor(26,23,20);doc.setLineWidth(0.3);const lw=80,x0=M+W-lw;doc.line(x0,y,M+W,y);y+=5;doc.setFont(F,"bold");doc.setFontSize(10.5);doc.text(b.name.ph?"______________":b.name.t,x0+lw/2,y,{align:"center"});y+=5;doc.setFont(F,"normal");doc.setFontSize(9.5);doc.text(b.sub.ph?"CRECI n.º ______":b.sub.t,x0+lw/2,y,{align:"center"});y+=6;return}
+    if(b.t==="sig"){ensure(28);y+=4;doc.setFont(F,"bold");doc.setFontSize(11);doc.text(b.label+":",M,y+4);y+=17;doc.setDrawColor(26,23,20);doc.setLineWidth(0.3);doc.line(M,y,M+95,y);y+=1.5;para([b.name.ph?{t:"______________"}:{t:b.name.t}],10.5,"left");if(b.sub)para([{t:b.sub}],9,"left");y+=3;return}
     if(b.before)y+=2;
     doc.setTextColor(b.small?81:26,b.small?72:23,b.small?65:20);
     para(b.runs,b.small?10:11,b.small?"center":b.align||"left");
@@ -1603,7 +1605,7 @@ function toPDF(B){
 /* DOCX (JSZip): cabeçalho com logo, rodapé e quebra de folha antes do aceite */
 function x(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
 const RF='<w:rFonts w:ascii="Poppins" w:hAnsi="Poppins" w:cs="Poppins" w:eastAsia="Poppins"/>';
-function wr(r,size=22,color){return `<w:r><w:rPr>${RF}${r.b?"<w:b/>":""}${color?`<w:color w:val="${color}"/>`:""}<w:sz w:val="${size}"/></w:rPr><w:t xml:space="preserve">${x(r.ph?"______":r.t)}</w:t></w:r>`}
+function wr(r,size=22,color){return `<w:r><w:rPr>${RF}${r.b?"<w:b/>":""}${color?`<w:color w:val="${color}"/>`:""}<w:sz w:val="${size}"/></w:rPr><w:t xml:space="preserve">${x(r.ph?"______________":r.t)}</w:t></w:r>`}
 function wp(runs,{jc="left",after=200,before=0,size=22,ind=0,color}={}){return `<w:p><w:pPr><w:spacing w:before="${before}" w:after="${after}" w:line="288" w:lineRule="auto"/>${ind?`<w:ind w:left="${ind}"/>`:""}<w:jc w:val="${jc}"/></w:pPr>${runs.map(r=>wr(r,size,color)).join("")}</w:p>`}
 const NS='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"';
 async function toDOCX(B){
@@ -1613,7 +1615,7 @@ async function toDOCX(B){
     if(b.t==="gap")return wp([{t:""}],{after:60});
     if(b.t==="li")return wp(b.runs,{ind:360,after:60});
     if(b.t==="lbl")return wp([{t:b.label,b:true}],{after:40})+wp(b.runs,{jc:"both",after:260});
-    if(b.t==="sigR")return wp([{t:""}],{after:560})+wp([{t:"______________________________________"}],{jc:"right",after:0})+wp([{t:b.name.ph?"______":b.name.t,b:true}],{jc:"right",after:0})+wp([b.sub],{jc:"right",after:200,size:19});
+    if(b.t==="sigR")return wp([{t:""}],{after:560})+wp([{t:"______________________________________"}],{jc:"right",after:0})+wp([{t:b.name.ph?"______________":b.name.t,b:true}],{jc:"right",after:0})+wp([b.sub],{jc:"right",after:200,size:19});
     if(b.t==="sig")return wp([{t:b.label+":",b:true}],{before:160,after:420})+wp([{t:"_________________________________________"}],{after:0})+wp([b.name],{after:b.sub?0:200,size:19})+(b.sub?wp([{t:b.sub}],{size:18,after:200}):"");
     const jc=b.small?"center":b.align==="right"?"right":b.align==="justify"?"both":"left";
     return wp(b.runs,{jc,size:b.small?20:22,after:b.small?20:200,before:b.before?120:0,color:b.small?"514841":undefined});
