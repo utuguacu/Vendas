@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B0B0A">
+<meta name="robots" content="noindex,nofollow">
+<meta property="og:title" content="Guia do Financiamento · Utu-Guaçu Imóveis">
+<meta property="og:description" content="Descubra em que etapa do financiamento você está e qual é o próximo passo.">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Guia do Financiamento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Poppins:wght@400;500;600&display=swap">
+<style>
+/* Layout: faixa preta da marca + uma pergunta por tela, com a trilha das 6 etapas sempre visível. */
+:root{
+  --bg:#F4F0E9; --surface:#FFFFFF; --fg:#1B1814; --muted:#6F675B; --line:#E2D9C9; --line-strong:#CDBFA6;
+  --gold:#8C6E3C; --gold-soft:#EFE5D2; --gold-bright:#B89A5E;
+  --band:#0B0B0A; --band-fg:#F3EEE4; --band-muted:#A79E8E;
+  --ok:#2F6B45; --ok-soft:#E3EFE6; --warn:#9A5B12; --warn-soft:#F7EAD7;
+  --display:"Lora",Georgia,"Times New Roman",serif;
+  --body:"Poppins",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:8px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F0E0C; --surface:#191714; --fg:#EEE8DC; --muted:#A49B8B; --line:#2D2924; --line-strong:#4A4338;
+  --gold:#CDAE70; --gold-soft:#2A2418; --gold-bright:#C9A96A; --band:#050505; --band-fg:#F3EEE4; --band-muted:#958C7D;
+  --ok:#7FC394; --ok-soft:#18271D; --warn:#E3A55A; --warn-soft:#2C2112; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F0E0C; --surface:#191714; --fg:#EEE8DC; --muted:#A49B8B; --line:#2D2924; --line-strong:#4A4338;
+  --gold:#CDAE70; --gold-soft:#2A2418; --gold-bright:#C9A96A; --band:#050505; --band-fg:#F3EEE4; --band-muted:#958C7D;
+  --ok:#7FC394; --ok-soft:#18271D; --warn:#E3A55A; --warn-soft:#2C2112; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--band)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px}
+.wrap{max-width:620px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.proto{background:var(--warn-soft);color:var(--warn);font-size:12.5px}
+.proto .wrap{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding-block:8px}
+.pseg{background:var(--surface)}.pseg span{padding:5px 14px!important;font-size:12.5px!important}
+.trail.t3{grid-template-columns:repeat(3,1fr)}
+.later{opacity:.75}
+.copybox{white-space:pre-wrap;font-size:13.5px;background:var(--bg);border:1px dashed var(--line-strong);border-radius:var(--r);padding:12px 14px;word-break:break-word}
+.proto select{padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px;background:var(--surface);font-size:12.5px}
+.band{background:var(--band);color:var(--band-fg)}
+.band .wrap{display:flex;align-items:center;gap:14px;padding-block:14px}
+.logo{display:block;width:118px;height:26px;background:var(--band-fg);-webkit-mask:url("data:image/png;base64,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") center/contain no-repeat;mask:url("data:image/png;base64,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") center/contain no-repeat;flex:none}
+.band .t{border-left:1px solid #3a352d;padding-left:14px;line-height:1.2}
+.band .t b{font-family:var(--display);font-weight:500;font-size:17px;display:block}
+.band .t span{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--band-muted)}
+/* trilha */
+.trail{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin:18px 0 6px}
+.trail i{height:5px;border-radius:3px;background:var(--line)}
+.trail i.done{background:var(--ok)}
+.trail i.here{background:var(--gold)}
+.trail-lbl{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+main{padding-block:6px 56px}
+.screen{display:flex;flex-direction:column;gap:16px;padding-top:14px}
+.eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:600}
+h1,h2{font-family:var(--display);font-weight:500;margin:0;text-wrap:balance}
+h1{font-size:clamp(26px,7vw,32px);line-height:1.15}
+h1 em{color:var(--gold)}
+h2{font-size:22px;line-height:1.2}
+p{margin:0}
+.lede{color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.card.tip{background:var(--gold-soft);border-color:transparent}
+.card ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.q{font-family:var(--display);font-size:22px;line-height:1.3}
+.yn{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:var(--r);padding:14px 16px;font-size:15px;font-weight:500;cursor:pointer;border:1px solid var(--line-strong);background:var(--surface);color:var(--fg);text-decoration:none;text-align:center;min-width:0}
+.btn:hover{border-color:var(--gold)}
+.btn.dark{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#fff}
+.btn.ghost{background:none;border-color:transparent;color:var(--muted);padding:8px 4px;align-self:flex-start;font-size:13.5px}
+.btn svg{width:18px;height:18px;flex:none}
+.stack{display:flex;flex-direction:column;gap:10px}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field label,.legend{font-size:13px;font-weight:500}
+.field .opt{color:var(--muted);font-weight:400}
+.field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1px solid var(--line-strong);border-radius:var(--r);background:var(--surface);font-size:16px;min-width:0}
+.field.err input,.field.err select{border-color:#A3322A}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.two>*{min-width:0}
+.seg{display:flex;border:1px solid var(--line-strong);border-radius:var(--r);overflow:hidden}
+.seg label{flex:1;position:relative;text-align:center}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:block;padding:10px 6px;font-size:14px;cursor:pointer;color:var(--muted)}
+.seg input:checked+span{background:var(--fg);color:var(--bg)}
+.seg input:focus-visible+span{outline:2px solid var(--gold-bright);outline-offset:-2px}
+.sum{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px}
+.sum dt{color:var(--muted)}
+.sum dd{margin:0;font-weight:500;min-width:0;word-break:break-word}
+.status{display:flex;flex-direction:column;gap:8px;font-size:14px}
+.status div{display:flex;gap:10px;align-items:flex-start}
+.status .dot{width:20px;height:20px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:12px;font-weight:600;margin-top:1px}
+.status .ok .dot{background:var(--ok-soft);color:var(--ok)}
+.status .now .dot{background:var(--gold);color:#fff}
+.status .next .dot{background:var(--line);color:var(--muted)}
+.status .now{font-weight:600}
+.status .next{color:var(--muted)}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;cursor:pointer}
+.check input{width:20px;height:20px;margin:1px 0 0;flex:none;accent-color:var(--gold)}
+.sect{font-family:var(--display);font-size:17px;margin:6px 0 -2px}
+.err-msg{font-size:13px;color:#A3322A;background:#F6E1DE;border-radius:var(--r);padding:10px 12px}
+.dicas{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.partner{display:flex;flex-direction:column;gap:8px}
+.partner b{font-size:15px}
+.partner span{font-size:13px;color:var(--muted)}
+.msg{white-space:pre-wrap;font-size:13.5px;background:var(--bg);border-radius:var(--r);padding:12px 14px;word-break:break-word}
+.note{font-size:12px;color:var(--muted)}
+.foot{margin-top:28px;font-size:11.5px;color:var(--muted);text-align:center}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:var(--r);font-size:13px;z-index:20;max-width:calc(100% - 32px)}
+@media (max-width:380px){.two{grid-template-columns:1fr}.band .t span{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+
+</head>
+<body>
+<header class="band"><div class="wrap">
+  <span class="logo" role="img" aria-label="Utu-Guaçu"></span>
+  <span class="t"><b>Guia do Financiamento</b><span>Atendimento personalizado</span></span>
+</div></header>
+<main class="wrap">
+  <div id="trailBox" hidden>
+    <div class="trail t3" id="trail"></div>
+    <div class="trail-lbl"><span id="trailTxt"></span><span id="trailName"></span></div>
+  </div>
+  <div id="app"></div>
+  <p class="foot">Orientação geral. Condições sujeitas às regras e à aprovação do banco.<br>Utu-Guaçu Imóveis · R. Paula Souza, 483, Centro, Itu/SP · CRECI 3395-J</p>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ARROW='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>';
+const WA='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 1-13.4 7.9L3 21l1.2-4.4A9 9 0 1 1 21 12z"/></svg>';
+
+/* Parceiro de análise de crédito. Para trocar, mude só aqui. */
+const PARCEIRO={empresa:"CRESAC Comercial",contato:"Raquel",fone:"5511964749682",foneTxt:"(11) 96474-9682"};
+const UTU_FONE="5511985943067";
+
+/* As 6 etapas do guia, com a pergunta e a orientação de cada uma. */
+const ETAPAS=[
+ {id:1,nome:"Poder de compra",q:"Você já fez uma simulação de financiamento com um banco ou correspondente bancário?",
+  titulo:"Você está no começo: descobrir o seu poder de compra",
+  texto:"Antes de procurar o imóvel, o ideal é saber quanto você consegue financiar. A simulação considera a sua renda, o valor que você tem para a entrada e se dá para usar o FGTS ou somar a renda com cônjuge, filhos ou outros familiares.",
+  dicas:["Separe a sua renda mensal e a de quem pode compor renda com você.","Veja quanto você tem disponível para a entrada.","Confira se tem 3 anos ou mais de carteira assinada, somando todos os empregos, para usar o FGTS."]},
+ {id:2,nome:"Parcela que cabe",q:"Com a simulação, você já sabe a faixa de preço que pode procurar, a entrada e a parcela que cabem no seu orçamento?",
+  titulo:"Você já simulou: agora é achar a parcela confortável",
+  texto:"A simulação mostra os números, mas o mais importante é a parcela caber com folga no seu mês. Vale comparar taxas e o custo total entre a Caixa, outros bancos e o banco em que você já tem conta.",
+  dicas:["Uma referência comum é a parcela não passar de 30% da renda.","Compare o custo total do financiamento, não só a taxa de juros.","Defina a faixa de preço do imóvel antes de começar as visitas."]},
+ {id:3,nome:"Análise de crédito",q:"O banco já analisou e aprovou o seu crédito?",
+  titulo:"Você já sabe o seu orçamento: falta a aprovação do crédito",
+  texto:"A simulação é uma estimativa e não garante aprovação. O banco precisa analisar o seu crédito, e o resultado final também depende da documentação e da avaliação do imóvel escolhido.",
+  dicas:["Com o crédito aprovado, você negocia o imóvel com muito mais segurança.","Mantenha os documentos pessoais e de renda atualizados.","Evite assumir novas dívidas enquanto a análise estiver em andamento."]},
+ {id:4,nome:"Imóvel e negociação",q:"Você já escolheu o imóvel e assinou o compromisso de compra e venda com o proprietário?",
+  titulo:"Crédito aprovado: hora de escolher o imóvel e negociar",
+  texto:"O vendedor precisa aceitar financiamento e o imóvel deve atender às exigências do banco. O compromisso de compra e venda define preço, prazos, sinal, entrada e as condições do financiamento.",
+  dicas:["Confirme com o proprietário que ele aceita financiamento bancário.","A entrada é a parte não financiada e pode incluir um sinal.","Leia com atenção os prazos combinados no compromisso."]},
+ {id:5,nome:"Análises e contrato",q:"O banco já avaliou o imóvel, aprovou a documentação e o contrato bancário já foi assinado?",
+  titulo:"Negócio fechado: agora o banco faz as análises",
+  texto:"O banco analisa os documentos do comprador, do vendedor e do imóvel e faz a avaliação com um profissional credenciado. Com tudo aprovado, as partes assinam o contrato bancário, que nos financiamentos habitacionais usuais já tem força de escritura pública.",
+  dicas:["Responda rápido aos pedidos de documentos do banco.","Reserve o valor da tarifa de avaliação do imóvel.","Para planejar, conte de 45 a 90 dias do início ao fim, podendo passar disso."]},
+ {id:6,nome:"Registro e chaves",q:"O contrato já foi registrado no Cartório de Registro de Imóveis?",
+  titulo:"Contrato assinado: falta o registro e a entrega das chaves",
+  texto:"O contrato é registrado na matrícula do imóvel, que fica vinculado ao banco como garantia até a quitação. Depois do registro, o banco libera o valor ao vendedor, você passa a pagar as parcelas e as chaves são entregues no prazo combinado.",
+  dicas:["Separe o valor do ITBI e do registro em cartório.","Guarde uma cópia do contrato registrado.","Combine com o vendedor a data da entrega das chaves."]}
+];
+
+const NQ=3; /* perguntas = pré-requisitos 1 a 3; etapas 4 a 6 acontecem depois, com a Utu-Guaçu */
+const LINK_GUIA="https://utuguacu.github.io/Vendas/financiamento/";
+const S={tela:"inicio",etapa:0,parou:null,d:{},visao:"cliente",c:{}};
+function trail(){
+  $("#trailBox").hidden=S.tela==="inicio";
+  const at=S.parou??S.etapa;
+  $("#trailBox").hidden=S.tela==="inicio"||S.visao==="corretor";
+  $("#trail").innerHTML=ETAPAS.slice(0,NQ).map((e,i)=>`<i class="${i<at?"done":i===at?"here":""}"></i>`).join("");
+  $("#trailTxt").textContent=at>=NQ?"Pré-requisitos completos":`Pré-requisito ${at+1} de ${NQ}`;
+  $("#trailName").textContent=at>=NQ?"":ETAPAS[at].nome;
+}
+function statusList(at){const row=(x,i)=>`<div class="${i<at?"ok":i===at?"now":"next"}"><span class="dot">${i<at?"✓":x.id}</span><span>${esc(x.nome)}</span></div>`;
+  return `<div class="card status"><span class="eyebrow">Pré-requisitos</span>${ETAPAS.slice(0,NQ).map(row).join("")}<span class="eyebrow" style="margin-top:6px">Depois, com a Utu-Guaçu</span><div class="later status">${ETAPAS.slice(NQ).map((x,i)=>row(x,i+NQ)).join("")}</div></div>`}
+function custos(){return `<details class="card"><summary style="cursor:pointer;font-weight:500">Quais custos reservar além da entrada?</summary>
+  <ul><li><b>ITBI:</b> imposto municipal sobre a transmissão do imóvel.</li><li><b>Registro:</b> do contrato no Cartório de Registro de Imóveis.</li><li><b>Avaliação do imóvel:</b> tarifa da vistoria pelo profissional credenciado do banco.</li><li><b>Outras despesas:</b> eventuais tarifas bancárias e documentos.</li></ul>
+  <p class="note">Os valores e as datas variam conforme o banco. Para planejar, considere de 45 a 90 dias do início ao fim.</p></details>`}
+function go(t){S.tela=t;render();window.scrollTo({top:0})}
+
+function render(){
+  trail(); const a=$("#app");
+  if(S.visao==="corretor"){renderCorretor();return}
+  if(S.tela==="inicio"){
+    a.innerHTML=`<section class="screen">
+      <div class="eyebrow">Comprar com financiamento</div>
+      <h1>Vamos ver em que <em>etapa você está</em></h1>
+      <p class="lede">Responda 3 perguntas rápidas de sim ou não sobre o seu financiamento. No final, você recebe uma orientação sobre o seu momento e o próximo passo para continuar com segurança.</p>
+      <div class="card tip"><b>Atendimento personalizado Utu-Guaçu Imóveis</b><span class="note" style="color:inherit">Há mais de 46 anos no mercado, desde 1980, ajudando famílias de Itu e região a comprar o imóvel certo. Leva cerca de 2 minutos.</span></div>
+      <button class="btn dark" id="go">Começar ${ARROW}</button>
+    </section>`;
+    $("#go").onclick=()=>{S.etapa=0;S.parou=null;go("pergunta")};
+  }
+  else if(S.tela==="pergunta"){
+    const e=ETAPAS[S.etapa];
+    a.innerHTML=`<section class="screen">
+      <div class="eyebrow">Pré-requisito ${e.id} de ${NQ} · ${esc(e.nome)}</div>
+      <p class="q">${esc(e.q)}</p>
+      <div class="yn"><button class="btn dark" id="sim">Sim, já fiz</button><button class="btn" id="nao">Ainda não</button></div>
+      ${S.etapa>0?`<button class="btn ghost" id="voltar">Voltar à pergunta anterior</button>`:""}
+    </section>`;
+    $("#sim").onclick=()=>{if(S.etapa<NQ-1){S.etapa++;render()}else{S.parou=NQ;go("pronto")}};
+    $("#nao").onclick=()=>{S.parou=S.etapa;go("etapa")};
+    if($("#voltar"))$("#voltar").onclick=()=>{S.etapa--;render()};
+  }
+  else if(S.tela==="etapa"){
+
+    const e=ETAPAS[S.parou];
+    a.innerHTML=`<section class="screen">
+      <div class="eyebrow">Seu momento</div>
+      <h2>${esc(e.titulo)}</h2>
+      ${statusList(S.parou)}
+      <p>${esc(e.texto)}</p>
+      <div class="card"><b>O que fazer agora</b><ul class="dicas">${e.dicas.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+      ${custos()}
+      <button class="btn dark" id="prox">Próximo passo ${ARROW}</button>
+      <button class="btn ghost" id="refazer">Refazer as perguntas</button>
+    </section>`;
+    $("#prox").onclick=()=>go("parceiro");
+    $("#refazer").onclick=()=>go("inicio");
+  }
+  else if(S.tela==="parceiro"){
+    a.innerHTML=`<section class="screen">
+      <div class="eyebrow">Próximo passo</div>
+      <h2>Um especialista vai cuidar do seu financiamento</h2>
+      <p>Para o próximo passo, temos um parceiro especialista em crédito imobiliário que vai te ajudar e dar todo o suporte: ele faz as simulações e as análises certinho, acompanha o processo com o banco e tira as suas dúvidas, <b>sem custo nenhum para você</b>.</p>
+      <div class="card partner"><span class="eyebrow">Parceiro Utu-Guaçu</span><b>${esc(PARCEIRO.empresa)}</b><span>Atendimento com ${esc(PARCEIRO.contato)} · ${esc(PARCEIRO.foneTxt)}</span></div>
+      <p class="lede">Preencha um formulário rápido. Ao enviar, o WhatsApp abre com tudo pronto para a ${esc(PARCEIRO.contato)}, e você só precisa tocar em enviar.</p>
+      <button class="btn dark" id="form">Preencher o formulário ${ARROW}</button>
+      <button class="btn ghost" id="voltar">Voltar</button>
+    </section>`;
+    $("#form").onclick=()=>go("form"); $("#voltar").onclick=()=>go("etapa");
+  }
+  else if(S.tela==="pronto"){
+    const d=S.d;
+    a.innerHTML=`<section class="screen">
+      <div class="eyebrow">Tudo certo</div>
+      <h2>Você já está com o crédito aprovado</h2>
+      ${statusList(NQ)}
+      <p>Ótimo! Com a simulação feita, a parcela definida e o crédito aprovado, você está pronto para a próxima fase: escolher o imóvel e negociar com segurança, com o acompanhamento da Utu-Guaçu.</p>
+      <form class="card" id="fp" novalidate>
+        <p class="sect">Para o seu atendimento</p>
+        ${fld("nome","Nome completo",{ac:"name"})}
+        <div class="two">${fld("banco","Banco ou correspondente que aprovou",{opt:true})}${fld("aprov","Valor do crédito aprovado (R$)",{opt:true,im:"decimal"})}</div>
+        <div class="two">${fld("entrada","Valor para a entrada (R$)",{opt:true,im:"decimal"})}${fld("tipoIm","Tipo de imóvel que procura",{opt:true,sel:["Casa","Casa em condomínio","Apartamento","Terreno ou lote","Chácara ou imóvel rural","Ainda não sei"]})}</div>
+        <div class="err-msg" id="faltaP" hidden></div>
+        <button class="btn dark" type="submit">Ver minha resposta ${ARROW}</button>
+      </form>
+      <button class="btn ghost" id="refazer">Refazer as perguntas</button>
+    </section>`;
+    $("#fp").addEventListener("input",e=>{const fl=e.target.closest(".field");if(fl)fl.classList.remove("err")});
+    $("#fp").addEventListener("submit",e=>{e.preventDefault();["nome","banco","aprov","entrada","tipoIm"].forEach(k=>S.d[k]=($("#"+k).value||"").trim());
+      if(!S.d.nome){$("#nome").closest(".field").classList.add("err");const f=$("#faltaP");f.hidden=false;f.textContent="Falta preencher: nome completo.";return}
+      go("resposta")});
+    $("#refazer").onclick=()=>go("inicio");
+  }
+  else if(S.tela==="resposta"){
+    const txt=respostaPronta();
+    a.innerHTML=`<section class="screen">
+      <div class="eyebrow">Último passo</div>
+      <h2>Copie a sua resposta e envie para quem está te atendendo</h2>
+      <p>Toque em <b>Copiar resposta</b> e cole no WhatsApp do especialista da Utu-Guaçu que te mandou este guia. A partir daí, seguimos juntos para a escolha e a negociação do imóvel.</p>
+      <div class="copybox">${esc(txt)}</div>
+      <button class="btn dark" id="copiar">Copiar resposta</button>
+      <a class="btn" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(txt)}">${WA}Abrir o WhatsApp e escolher o contato</a>
+      <button class="btn ghost" id="voltar">Corrigir minhas informações</button>
+    </section>`;
+    $("#copiar").onclick=()=>copiar(txt,"Resposta copiada. Agora é só colar no WhatsApp do seu atendimento.");
+    $("#voltar").onclick=()=>go("pronto");
+  }
+  else if(S.tela==="form") renderForm();
+  else if(S.tela==="enviado"){
+    a.innerHTML=`<section class="screen">
+      <div class="eyebrow">Quase lá</div>
+      <h2>Agora é só enviar a mensagem no WhatsApp</h2>
+      <p>Abrimos o WhatsApp com a mensagem pronta para a ${esc(PARCEIRO.contato)}, da ${esc(PARCEIRO.empresa)}. Confira e toque em enviar. Ela vai entrar em contato para seguir com a sua análise.</p>
+      <a class="btn gold" target="_blank" rel="noopener" href="${esc(waLink())}">${WA}Abrir o WhatsApp de novo</a>
+      <button class="btn ghost" id="editar">Corrigir minhas informações</button>
+    </section>`;
+    $("#editar").onclick=()=>go("form");
+  }
+}
+
+function fld(id,label,o={}){const v=S.d[id]??"";return `<div class="field" ${o.hide?'id="w_'+id+'" hidden':""}><label for="${id}">${esc(label)}${o.opt?' <span class="opt">(opcional)</span>':""}</label>${o.sel?`<select id="${id}">${["",...o.sel].map(x=>`<option value="${esc(x)}" ${x===v?"selected":""}>${x?esc(x):"Escolha"}</option>`).join("")}</select>`:`<input id="${id}" value="${esc(v)}" ${o.im?`inputmode="${o.im}"`:""} ${o.ph?`placeholder="${esc(o.ph)}"`:""} ${o.type?`type="${o.type}"`:""} ${o.ac?`autocomplete="${o.ac}"`:""}>`}</div>`}
+function seg(name,label,opts){const v=S.d[name]??opts[0];return `<div class="field"><span class="legend">${esc(label)}</span><div class="seg">${opts.map(x=>`<label><input type="radio" name="${name}" value="${esc(x)}" ${x===v?"checked":""}><span>${esc(x)}</span></label>`).join("")}</div></div>`}
+function renderForm(){
+  $("#app").innerHTML=`<section class="screen">
+    <div class="eyebrow">Formulário para a análise</div>
+    <h2>Suas informações</h2>
+    <p class="lede">São os dados que o especialista usa para começar a análise. Os campos marcados como opcionais podem ficar em branco.</p>
+    <form class="card" id="f" novalidate>
+      <p class="sect">Dados pessoais</p>
+      ${fld("nome","Nome completo",{ac:"name"})}
+      <div class="two">${fld("cpf","CPF",{im:"numeric",ph:"000.000.000-00"})}${fld("nasc","Data de nascimento",{type:"date"})}</div>
+      <div class="two">${fld("civil","Estado civil",{sel:["Solteiro(a)","Casado(a)","União estável","Divorciado(a)","Viúvo(a)"]})}${fld("fone","WhatsApp",{im:"tel",ph:"(11) 90000-0000",ac:"tel"})}</div>
+      <div class="two">${fld("email","E-mail",{opt:true,type:"email",ac:"email"})}${fld("cidade","Cidade onde mora")}</div>
+      <p class="sect">Renda</p>
+      <div class="two">${fld("prof","Profissão")}${fld("tipoRenda","Como recebe",{sel:["Carteira assinada (CLT)","Servidor público","Autônomo ou profissional liberal","Empresário","Aposentado ou pensionista"]})}</div>
+      <div class="two">${fld("renda","Renda mensal bruta (R$)",{im:"decimal",ph:"Ex.: 8.500"})}${fld("tempo","Tempo nesse trabalho",{sel:["Menos de 1 ano","De 1 a 3 anos","Mais de 3 anos"]})}</div>
+      ${seg("compor","Vai somar renda com outra pessoa?",["Não","Sim"])}
+      <div id="w_comp" ${S.d.compor==="Sim"?"":"hidden"} class="stack">
+        <div class="two">${fld("cNome","Nome dessa pessoa")}${fld("cParent","Parentesco",{sel:["Cônjuge","Companheiro(a)","Pai ou mãe","Filho(a)","Irmão(ã)","Outro"]})}</div>
+        <div class="two">${fld("cCpf","CPF dessa pessoa",{im:"numeric",ph:"000.000.000-00"})}${fld("cRenda","Renda mensal bruta dela (R$)",{im:"decimal"})}</div>
+      </div>
+      <p class="sect">Imóvel e entrada</p>
+      <div class="two">${fld("valor","Valor do imóvel (R$)",{im:"decimal",ph:"Ex.: 450.000"})}${fld("entrada","Valor para a entrada (R$)",{im:"decimal",ph:"Ex.: 90.000"})}</div>
+      <div class="two">${fld("tipoIm","Tipo de imóvel",{sel:["Casa","Casa em condomínio","Apartamento","Terreno ou lote","Chácara ou imóvel rural","Ainda não sei"]})}${fld("cidIm","Cidade do imóvel",{opt:true,ph:"Ex.: Itu"})}</div>
+      ${seg("fgts","Vai usar o FGTS?",["Sim","Não","Não sei"])}
+      ${seg("outroFin","Já tem financiamento imobiliário em andamento?",["Não","Sim"])}
+      ${seg("restr","Tem alguma restrição no nome (SPC ou Serasa)?",["Não","Sim","Não sei"])}
+      ${fld("obs","Algo mais que o especialista deve saber?",{opt:true})}
+      <label class="check"><input type="checkbox" id="lgpd" ${S.d.lgpd?"checked":""}><span>Autorizo o envio destas informações para a ${esc(PARCEIRO.empresa)}, parceira da Utu-Guaçu Imóveis, para a análise do meu financiamento.</span></label>
+      <div class="err-msg" id="falta" hidden></div>
+      <button class="btn gold" type="submit">${WA}Enviar para a ${esc(PARCEIRO.contato)} no WhatsApp</button>
+    </form>
+    <button class="btn ghost" id="voltar">Voltar</button>
+  </section>`;
+  const f=$("#f");
+  f.addEventListener("change",e=>{if(e.target.name==="compor")$("#w_comp").hidden=e.target.value!=="Sim"});
+  f.addEventListener("input",e=>{const fl=e.target.closest(".field");if(fl)fl.classList.remove("err");if(["cpf","cCpf"].includes(e.target.id))e.target.value=maskCpf(e.target.value);if(e.target.id==="fone")e.target.value=maskTel(e.target.value)});
+  f.addEventListener("submit",e=>{e.preventDefault();
+    collect();
+    const req=[["nome","nome completo"],["cpf","CPF"],["nasc","data de nascimento"],["civil","estado civil"],["fone","WhatsApp"],["cidade","cidade onde mora"],["prof","profissão"],["tipoRenda","como recebe"],["renda","renda mensal"],["valor","valor do imóvel"],["entrada","valor para a entrada"]];
+    if(S.d.compor==="Sim")req.push(["cNome","nome de quem soma renda"],["cRenda","renda de quem soma renda"]);
+    const falta=req.filter(([k])=>!S.d[k]);
+    if(S.d.cpf&&!cpfOk(S.d.cpf)&&!falta.some(x=>x[0]==="cpf"))falta.push(["cpf","CPF (número inválido, confira)"]);
+    if(S.d.cCpf&&!cpfOk(S.d.cCpf))falta.push(["cCpf","CPF de quem soma renda (inválido)"]);
+    if(!S.d.lgpd)falta.push(["lgpd","a autorização no final"]);
+    document.querySelectorAll(".field").forEach(x=>x.classList.remove("err"));
+    falta.forEach(([k])=>{const el=$("#"+k);if(el&&el.closest(".field"))el.closest(".field").classList.add("err")});
+    const fm=$("#falta");
+    if(falta.length){fm.hidden=false;fm.innerHTML="<b>Falta preencher:</b> "+falta.map(x=>esc(x[1])).join(", ")+".";fm.scrollIntoView({behavior:"smooth",block:"center"});return}
+    fm.hidden=true;
+    window.open(waLink(),"_blank","noopener");
+    go("enviado");
+  });
+  $("#voltar").onclick=()=>{collect();go("parceiro")};
+}
+function collect(){
+  const g=id=>{const el=$("#"+id);return el?(el.value||"").trim():""}, r=n=>(document.querySelector(`input[name="${n}"]:checked`)||{}).value;
+  ["nome","cpf","nasc","civil","fone","email","cidade","prof","tipoRenda","renda","tempo","cNome","cParent","cCpf","cRenda","valor","entrada","tipoIm","cidIm","obs"].forEach(k=>S.d[k]=g(k));
+  ["compor","fgts","outroFin","restr"].forEach(k=>S.d[k]=r(k));
+  S.d.lgpd=!!($("#lgpd")&&$("#lgpd").checked);
+}
+const onlyDig=s=>String(s||"").replace(/\D/g,"");
+function cpfOk(s){s=onlyDig(s);if(s.length!==11||/^(\d)\1+$/.test(s))return false;for(const t of[9,10]){let sum=0;for(let i=0;i<t;i++)sum+=+s[i]*(t+1-i);let d=(sum*10)%11;if(d===10)d=0;if(d!==+s[t])return false}return true}
+const maskCpf=s=>{s=onlyDig(s).slice(0,11);return s.replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d{1,2})$/,"$1-$2")};
+const maskTel=s=>{s=onlyDig(s).slice(0,11);return s.length<=10?s.replace(/^(\d{2})(\d)/,"($1) $2").replace(/(\d{4})(\d)/,"$1-$2"):s.replace(/^(\d{2})(\d)/,"($1) $2").replace(/(\d{5})(\d)/,"$1-$2")};
+const brData=iso=>{const [y,m,d]=(iso||"").split("-");return y?`${d}/${m}/${y}`:""};
+function money(v){const s=String(v||"").trim();return s?(/^r\$/i.test(s)?s:"R$ "+s):""}
+function mensagem(){
+  const d=S.d, at=`${ETAPAS[S.parou].nome} (pré-requisito ${S.parou+1} de ${NQ})`;
+  const L=(k,v)=>v?`• ${k}: ${v}`:null;
+  const blocos=[
+    ["Dados pessoais",[L("Nome",d.nome),L("CPF",d.cpf),L("Nascimento",brData(d.nasc)),L("Estado civil",d.civil),L("WhatsApp",d.fone),L("E-mail",d.email),L("Cidade",d.cidade)]],
+    ["Renda",[L("Profissão",d.prof),L("Como recebe",d.tipoRenda),L("Renda mensal bruta",money(d.renda)),L("Tempo nesse trabalho",d.tempo),
+      d.compor==="Sim"?L("Soma renda com",`${d.cNome}${d.cParent?" ("+d.cParent.toLowerCase()+")":""}${d.cCpf?", CPF "+d.cCpf:""}, renda de ${money(d.cRenda)}`):L("Soma renda","não")]],
+    ["Imóvel e entrada",[L("Valor do imóvel",money(d.valor)),L("Entrada disponível",money(d.entrada)),L("Tipo de imóvel",d.tipoIm),L("Cidade do imóvel",d.cidIm),L("Vai usar FGTS",d.fgts),L("Financiamento em andamento",d.outroFin),L("Restrição no nome",d.restr),L("Onde parei",at),L("Observação",d.obs)]]
+  ];
+  return `Olá, ${PARCEIRO.contato}! Tudo bem? Meu nome é ${d.nome} e vim por indicação da Utu-Guaçu Imóveis.\n\nGostaria da sua ajuda com o meu financiamento imobiliário. Seguem as minhas informações para a análise:\n\n`+
+    blocos.map(([t,ls])=>`*${t}*\n`+ls.filter(Boolean).join("\n")).join("\n\n")+`\n\nFico no aguardo. Agradeço desde já!`;
+}
+function respostaPronta(){const d=S.d,L=(k,v)=>v?`• ${k}: ${v}`:null;
+  return [`Olá! Aqui é ${d.nome}. Respondi o guia do financiamento da Utu-Guaçu e já estou com os pré-requisitos completos:`,"",
+   "• Simulação de financiamento: feita","• Faixa de preço, entrada e parcela: definidas","• Crédito: aprovado",
+   L("Banco ou correspondente",d.banco),L("Crédito aprovado",money(d.aprov)),L("Entrada disponível",money(d.entrada)),L("Imóvel que procuro",d.tipoIm),
+   "","Podemos seguir para a escolha do imóvel?"].filter(x=>x!==null).join("\n")}
+function copiar(t,ok){const fb=()=>{const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();let r=false;try{r=document.execCommand("copy")}catch(_){}ta.remove();toast(r?ok:"Não consegui copiar. Segure o dedo sobre o texto para copiar.")};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>toast(ok),fb);else fb()}
+let tT;function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(tT);tT=setTimeout(()=>t.hidden=true,3200)}
+/* ===== Visão do corretor: enviar o guia ao cliente ===== */
+function msgCliente(){const c=S.c,cli=c.cli||"[nome do cliente]",eu=c.eu||"[seu nome]";
+  if(c.tipo==="cont") return `Perfeito, ${cli}! Como você vai comprar com financiamento, vou te mandar um passo a passo rápido para entendermos a sua situação e os próximos passos:
+${LINK_GUIA}
+
+Preencha com calma e siga as orientações. Qualquer dúvida, estou à disposição!`;
+  return `Olá, ${cli}! Tudo bem? Aqui é ${eu}, da Utu-Guaçu Imóveis. Vou te acompanhar na busca do seu imóvel.
+
+Como você vai comprar com financiamento, separei um passo a passo rápido para entendermos a sua situação e os próximos passos:
+${LINK_GUIA}
+
+Preencha com calma e siga as orientações. Qualquer dúvida, estou à disposição!`}
+function renderCorretor(){
+  const c=S.c;
+  $("#app").innerHTML=`<section class="screen">
+    <div class="eyebrow">Portal de Vendas · Financiamento</div>
+    <h1>Enviar o guia do <em>financiamento</em></h1>
+    <p class="lede">Para o cliente que vai comprar financiado. Ele responde o guia, e só volta para você quando estiver com o crédito aprovado. Se faltar algo, o próprio guia encaminha para a ${esc(PARCEIRO.empresa)}.</p>
+    <form class="card" id="fc" novalidate>
+      <div class="field"><span class="legend">Tipo de mensagem</span><div class="seg"><label><input type="radio" name="tipo" value="ini" ${S.c.tipo!=="cont"?"checked":""}><span>Início de conversa</span></label><label><input type="radio" name="tipo" value="cont" ${S.c.tipo==="cont"?"checked":""}><span>Continuação</span></label></div><span class="note" id="tipoHint"></span></div>
+      <div class="two">${fldC("cli","Nome do cliente")}<div id="wEu">${fldC("eu","Seu nome")}</div></div>
+      <div class="field"><label for="tel">WhatsApp do cliente <span class="opt">(opcional, para abrir direto na conversa dele)</span></label><input id="tel" inputmode="tel" placeholder="(11) 90000-0000" value="${esc(S.c.tel||"")}"></div>
+    </form>
+    <div class="copybox" id="prev"></div>
+    <a class="btn gold" id="enviar" target="_blank" rel="noopener">${WA}<span id="enviarLbl">Enviar ao cliente no WhatsApp</span></a>
+    <p class="note" style="margin-top:-6px">A mensagem e o link vão juntos. É só tocar em enviar no WhatsApp.</p>
+    <button class="btn" id="copiarC">Copiar mensagem</button>
+    <p class="note">Quer ver o que o cliente recebe? Toque em "Cliente" na faixa amarela lá em cima.</p>
+  </section>`;
+  const upd=()=>{S.c={tel:$("#tel").value.trim(),eu:$("#eu").value.trim(),cli:$("#cli").value.trim(),tipo:(document.querySelector('input[name="tipo"]:checked')||{}).value};
+    $("#wEu").hidden=S.c.tipo==="cont";$("#tipoHint").textContent=S.c.tipo==="cont"?"Para quando você já está conversando com o cliente.":"Para o primeiro contato, por exemplo depois do pré-atendimento.";
+    const t=msgCliente();$("#prev").textContent=t;let n=S.c.tel.replace(/\D/g,"");if(n.length===10||n.length===11)n="55"+n;$("#enviar").href="https://wa.me/"+(n.length>=12?n:"")+"?text="+encodeURIComponent(t);$("#enviarLbl").textContent=n.length>=12?"Enviar ao cliente no WhatsApp":"Enviar no WhatsApp (escolher contato)"};
+  $("#fc").addEventListener("input",e=>{if(e.target.id==="tel"){let d=e.target.value.replace(/\D/g,"").slice(0,11);e.target.value=d.length<=10?d.replace(/^(\d{2})(\d)/,"($1) $2").replace(/(\d{4})(\d)/,"$1-$2"):d.replace(/^(\d{2})(\d)/,"($1) $2").replace(/(\d{5})(\d)/,"$1-$2")}upd()});$("#fc").addEventListener("change",upd);upd();
+  $("#copiarC").onclick=()=>copiar(msgCliente(),"Mensagem copiada.");
+}
+function fldC(id,label){return `<div class="field"><label for="${id}">${esc(label)}</label><input id="${id}" value="${esc(S.c[id]||"")}"></div>`}
+function segC(name,label,opts){const v=S.c[name]||opts[0][0];return `<div class="field"><span class="legend">${esc(label)}</span><div class="seg">${opts.map(([val,t])=>`<label><input type="radio" name="${name}" value="${val}" ${val===v?"checked":""}><span>${t}</span></label>`).join("")}</div></div>`}
+function waLink(){return `https://wa.me/${PARCEIRO.fone}?text=${encodeURIComponent(mensagem())}`}
+document.querySelectorAll('input[name="visao"]').forEach(r=>r.addEventListener("change",()=>{S.visao=r.value;S.tela="inicio";render();window.scrollTo({top:0})}));
+render();
+})();
+
+</script>
+
+</body>
+</html>

@@ -180,6 +180,12 @@ h1 em,h2 em{font-style:italic;color:var(--gold)}
 .gres .gnone{background:var(--surface);border:1px dashed var(--line-strong);border-radius:var(--r);padding:18px;text-align:center;color:var(--muted)}
 .msg-card.flash{outline:2px solid var(--gold);outline-offset:3px}
 @media (max-width:480px){.gres .gr .tg{min-width:0}}
+.blk.fin{background:var(--surface);border-color:var(--gold)}
+.fin-form{display:flex;flex-direction:column;gap:12px;margin-top:22px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.fin-form .seg{display:flex;width:100%}.fin-form .seg label{flex:1;text-align:center}
+.fin-prev{margin-top:14px;background:var(--surface);border:1px dashed var(--line-strong)}
+.fin-act{display:flex;flex-direction:column;gap:10px;margin-top:14px;max-width:520px}
+.fin-note{font-size:12px;color:var(--muted);margin:-4px 0 0}
 .card-admin{display:flex;gap:4px;border-top:1px solid var(--line);padding:6px 8px}
 .card-admin .btn{padding:6px 8px;font-size:12px}
 .note{border:1px dashed var(--line-strong);border-radius:var(--r);padding:28px 22px;text-align:center;color:var(--muted);background:var(--surface)}
@@ -548,6 +554,33 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
   <datalist id="corList"><option value="Lucas Calicchio"><option value="Ricardo"><option value="Rose"><option value="Marisa"><option value="Nicole"><option value="Plinio Bernardi"><option value="João Pires"></datalist>
 </section>
 
+<!-- ================= FINANCIAMENTO ================= -->
+<section id="view-financiamento" hidden>
+  <div class="files-head">
+    <div>
+      <div class="eyebrow">Financiamento</div>
+      <h1>Enviar o guia do <em>financiamento</em></h1>
+      <p class="lede">Para o cliente que vai comprar financiado. Ele responde o passo a passo e só volta para você quando estiver com o crédito aprovado. Se faltar algo, o próprio guia encaminha para a CRESAC Comercial, nossa parceira em crédito imobiliário.</p>
+    </div>
+  </div>
+  <form class="fin-form" id="finForm" novalidate>
+    <div class="field"><span class="legend">Tipo de mensagem</span><div class="seg"><label><input type="radio" name="finTipo" id="finIni" value="ini" checked><span>Início de conversa</span></label><label><input type="radio" name="finTipo" id="finCont" value="cont"><span>Continuação</span></label></div><span class="hint" id="finTipoHint"></span></div>
+    <div class="two">
+      <div class="field"><label for="finCli">Nome do cliente</label><input id="finCli"></div>
+      <div class="field"><span class="legend">Cliente é</span><div class="seg"><label><input type="radio" name="finCg" id="finCgM" value="m" checked><span>Homem</span></label><label><input type="radio" name="finCg" id="finCgF" value="f"><span>Mulher</span></label></div></div>
+    </div>
+    <div class="field" id="finEuW"><label for="finEu">Seu nome</label><input id="finEu"></div>
+    <div class="field"><label for="finTel">WhatsApp do cliente <span class="opt">(opcional, para abrir direto na conversa dele)</span></label><input id="finTel" inputmode="tel" placeholder="(11) 90000-0000"></div>
+  </form>
+  <div class="msg-text fin-prev" id="finPrev"></div>
+  <div class="fin-act">
+    <a class="btn gold big" id="finSend" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 1-13.4 7.9L3 21l1.2-4.4A9 9 0 1 1 21 12z"/></svg><span id="finSendLbl">Enviar ao cliente no WhatsApp</span></a>
+    <p class="hint fin-note">A mensagem e o link vão juntos. É só tocar em enviar no WhatsApp.</p>
+    <button class="btn" id="finCopy" type="button">Copiar mensagem</button>
+    <a class="btn ghost" href="financiamento/" target="_blank" rel="noopener">Ver o guia como o cliente vê</a>
+  </div>
+</section>
+
 <!-- ================= MENSAGENS ================= -->
 <section id="view-mensagens" hidden>
   <div class="files-head">
@@ -737,7 +770,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 27/10/2026 22h50</p>
+<p class="ver">Portal de Vendas · versão 27/10/2026 23h00</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -990,7 +1023,7 @@ $("#msgsOut").addEventListener("click",e=>{const b=e.target.closest("[data-copy]
 const slug=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 let pendingHash=location.hash.replace("#","");
 function show(view,cat){
-  $("#view-inicio").hidden=view!=="inicio"; $("#view-arquivos").hidden=view!=="arquivos"; $("#view-proposta").hidden=view!=="proposta"; $("#view-mensagens").hidden=view!=="mensagens"; $("#view-documentos").hidden=view!=="documentos"; $("#view-avaliacao").hidden=view!=="avaliacao"; if(view==="avaliacao")avUpdate();
+  $("#view-inicio").hidden=view!=="inicio"; $("#view-arquivos").hidden=view!=="arquivos"; $("#view-proposta").hidden=view!=="proposta"; $("#view-mensagens").hidden=view!=="mensagens"; $("#view-documentos").hidden=view!=="documentos"; $("#view-avaliacao").hidden=view!=="avaliacao"; $("#view-financiamento").hidden=view!=="financiamento"; if(view==="financiamento")finUpd(); if(view==="avaliacao")avUpdate();
   if(view==="mensagens")renderMsgs();
   $("#crumb").hidden=view==="inicio";
   curView=view; $("#crumbLbl").textContent=(view==="proposta"||view==="avaliacao")?"Documentos":"Início";
@@ -1002,7 +1035,7 @@ function show(view,cat){
 let curView="inicio";
 $("#crumb").addEventListener("click",()=>show(curView==="proposta"||curView==="avaliacao"?"documentos":"inicio"));
 $("#brandHome").addEventListener("click",()=>show("inicio"));
-$("#home").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(!b)return;const t=b.dataset.open;if(t==="__proposta")show("proposta");else if(t==="__documentos")show("documentos");else if(t==="__mensagens")show("mensagens");else show("arquivos",t)});
+$("#home").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(!b)return;const t=b.dataset.open;if(t==="__proposta")show("proposta");else if(t==="__documentos")show("documentos");else if(t==="__financiamento")show("financiamento");else if(t==="__mensagens")show("mensagens");else show("arquivos",t)});
 
 /* =====================================================
    ARQUIVOS
@@ -1034,6 +1067,9 @@ function renderHome(){
       <span class="minisheet" aria-hidden="true"><i class="h"></i><i></i><i></i><i class="g"></i><i></i><i></i><i></i><i class="g"></i><i></i></span>
       <span class="txt"><span class="k">Ferramenta · ${DOCS.length} ${DOCS.length===1?"documento":"documentos"}</span><h2>Gerar documentos</h2><p>Preencha a ficha e baixe o documento pronto, com a marca Utu-Guaçu, em PDF ou Word.</p></span>
       <span class="go">Ver documentos${ARROW}</span></button>`;
+  const finTile=`<button class="blk fin" type="button" data-open="__financiamento">
+      <span class="txt"><span class="k">Ferramenta</span><h2>Guia do financiamento</h2><p>Envie ao cliente que vai comprar financiado o passo a passo para ver em que etapa ele está, com a parceira de crédito.</p></span>
+      <span class="go">Enviar o guia${ARROW}</span></button>`;
   const msgTile=`<button class="blk msg" type="button" data-open="__mensagens">
       <span class="txt"><span class="k">${MENSAGENS.length} modelos</span><h2>Modelos de mensagem</h2><p>Textos prontos para captação, follow-up, proposta e pós-venda. É só copiar e mandar no WhatsApp.</p></span>
       <span class="go">Ver mensagens${ARROW}</span></button>`;
@@ -1052,7 +1088,7 @@ function renderHome(){
     if(!cats.length) blocks=`<div class="note" style="grid-column:span 1"><b>Nenhum material ainda</b>${S.editor?"Use “Adicionar arquivo” para criar a primeira seção.":"A gerência adiciona os materiais por aqui."}</div>`;
     if(S.editor) blocks+=`<button class="blk empty" type="button" data-addhome><span class="txt"><span class="k">Gerência</span><h2>Nova seção</h2><p>Adicione um arquivo com um nome de seção novo e ele vira um bloco aqui.</p></span><span class="go">Adicionar${ARROW}</span></button>`;
   }
-  $("#home").innerHTML=lead+blocks+msgTile;
+  $("#home").innerHTML=lead+finTile+blocks+msgTile;
   $("#catList").innerHTML=[...new Set([...CATS,...catsInUse().map(x=>x.c)])].map(c=>`<option value="${esc(c)}">`).join("");
 }
 $("#home").addEventListener("click",e=>{if(e.target.closest("[data-addhome]"))openPanel(null,"")});
@@ -1209,9 +1245,37 @@ const ARQUIVOS=[
 S.files=ARQUIVOS; S.ready=true; S.editor=false;
 renderDocs(); renderFiles(); refreshEmpList();
 
+
+/* ===== Guia do financiamento: mensagem do corretor ===== */
+const FIN_LINK="https://utuguacu.github.io/Vendas/financiamento/";
+function finMsg(){
+  const cli=($("#finCli").value||"").trim()||"[nome do cliente]", eu=($("#finEu").value||"").trim()||"[seu nome]";
+  const cont=(document.querySelector('input[name="finTipo"]:checked')||{}).value==="cont", f=(document.querySelector('input[name="finCg"]:checked')||{}).value==="f";
+  const abertura=cont?`Perfeito, ${cli}! Como você mencionou que a forma de pagamento será via financiamento, temos um guia passo a passo para entendermos em que etapa do financiamento você está e o que ainda é preciso:`
+    :`Olá, ${cli}! Tudo bem? Aqui é ${eu}, da Utu-Guaçu Imóveis, e vou te acompanhar na busca do seu imóvel.\n\nComo você mencionou que a forma de pagamento será via financiamento, temos um guia passo a passo para entendermos em que etapa do financiamento você está e o que ainda é preciso:`;
+  return `${abertura}\n${FIN_LINK}\n\nPeço que preencha com atenção. Se for necessário, você será ${f?"encaminhada":"encaminhado"} a um profissional especializado em crédito imobiliário, sem custo, e assim que estiver tudo certo, retomamos o seu atendimento por aqui. Se já estiver tudo em ordem, você volta direto para mim e damos continuidade.\n\nEsse passo é muito importante: com a sua simulação em mãos, conseguimos escolher com muito mais assertividade o imóvel ideal para você.\n\nQualquer dúvida, estou à disposição!`;
+}
+function finUpd(){
+  const cont=(document.querySelector('input[name="finTipo"]:checked')||{}).value==="cont";
+  $("#finEuW").hidden=cont;
+  $("#finTipoHint").textContent=cont?"Para quando você já está conversando com o cliente.":"Para o primeiro contato, por exemplo depois do pré-atendimento.";
+  const t=finMsg(); $("#finPrev").textContent=t;
+  let n=($("#finTel").value||"").replace(/\D/g,""); if(n.length===10||n.length===11)n="55"+n;
+  $("#finSend").href="https://wa.me/"+(n.length>=12?n:"")+"?text="+encodeURIComponent(t);
+  $("#finSendLbl").textContent=n.length>=12?"Enviar ao cliente no WhatsApp":"Enviar no WhatsApp (escolher contato)";
+  LS.set("utu.fin.eu",$("#finEu").value);
+}
+try{$("#finEu").value=LS.get("utu.fin.eu","")||LS.get("utu.msg.eu",{}).nome||""}catch(_){}
+$("#finForm").addEventListener("input",e=>{if(e.target.id==="finTel"){let d=e.target.value.replace(/\D/g,"").slice(0,11);e.target.value=d.length<=10?d.replace(/^(\d{2})(\d)/,"($1) $2").replace(/(\d{4})(\d)/,"$1-$2"):d.replace(/^(\d{2})(\d)/,"($1) $2").replace(/(\d{5})(\d)/,"$1-$2")}finUpd()});
+$("#finForm").addEventListener("change",finUpd);
+$("#finForm").addEventListener("submit",e=>e.preventDefault());
+$("#finCopy").addEventListener("click",()=>copyText(finMsg(),"Mensagem copiada."));
+finUpd();
+
 /* ===== Busca geral do início ===== */
 const nrm=x=>String(x||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
 const SECOES=[
+ {tit:"Guia do financiamento",sub:"Enviar ao cliente o passo a passo do financiamento",chaves:"financiamento financiado credito banco caixa simulacao cresac parceiro fgts guia",abre:()=>show("financiamento")},
  {tit:"Gerar documentos",sub:"Proposta de compra, avaliação de imóvel e outros documentos prontos",chaves:"gerar documento documentos ficha pdf word",abre:()=>show("documentos")},
  {tit:"Modelos de mensagem",sub:"Textos prontos para WhatsApp",chaves:"mensagem mensagens whatsapp texto modelo abordagem cliente",abre:()=>show("mensagens")},
  {tit:"Outra situação",sub:"Monte uma mensagem sob medida com o ChatGPT",chaves:"outra situacao ajuda chatgpt gemini ia inteligencia artificial personalizada",abre:()=>{show("mensagens");msgCat="Outra situação";renderMsgs()}}
