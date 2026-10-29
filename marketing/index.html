@@ -193,7 +193,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
       <fieldset>
         <legend><small>2</small>O imóvel</legend>
         <div class="lk">
-          <label for="lkUrl"><b>Imóvel do nosso site?</b> Cole o link e eu preencho tudo, com as fotos.</label>
+          <label for="lkUrl"><b>Imóvel do nosso site?</b> Cole o link e as informações são preenchidas sozinhas. As fotos você adiciona logo abaixo.</label>
           <div class="lk-row"><input id="lkUrl" type="url" inputmode="url" autocomplete="off" placeholder="utuguacu.com.br/imovel/..."><button class="btn dark small" id="lkGo" type="button">Puxar dados</button></div>
           <p class="lk-st" id="lkSt">No site, abra o imóvel, toque em compartilhar e copie o link. Depois é só conferir e ajustar o que quiser.</p>
         </div>
@@ -586,15 +586,11 @@ async function puxarLink(){
     const put=(id,x)=>{if(x)$("#"+id).value=x};put("pTitulo",R.titulo);put("pLocal",R.local);put("pArea",R.area);put("pQ",R.q||"");put("pS",R.s||"");put("pV",R.vg||"");put("pValor",R.valor);
     if(R.difs.length)$("#pDif").value=R.difs.join("\n");
     const achou=[R.tipo&&"tipo",R.titulo&&"título",R.local&&"local",R.area&&"área",R.q&&"dormitórios",R.s&&"suítes",R.vg&&"vagas",R.valor&&"valor",R.difs.length&&"diferenciais"].filter(Boolean);
-    let nf=0;
-    if(R.fotos.length){st.textContent=`Achei as informações. Baixando as fotos (0 de ${Math.min(9,R.fotos.length)})…`;const novas=[];
-      for(const f of R.fotos){if(novas.length>=9)break;try{const b=await baixar(f,true);const img=await loadImg(await shrink(b,1600));if(img.width>=400&&img.height>=300)novas.push({img})}catch(_){}
-        st.textContent=`Achei as informações. Baixando as fotos (${novas.length} de ${Math.min(9,R.fotos.length)})…`}
-      if(novas.length){FOTOS=novas;nf=novas.length;renderThumbs()}}
+    const nf=0;
     SEED=0;draw();
-    if(!achou.length&&!nf){st.className="lk-st warn";st.textContent="Abri a página, mas não consegui ler as informações desse imóvel. Preencha os campos abaixo e me avise qual link foi, para eu ajustar.";return}
+    if(!achou.length){st.className="lk-st warn";st.textContent="Abri a página, mas não consegui ler as informações desse imóvel. Preencha os campos abaixo e avise a gerência qual link foi, para ajustar.";return}
     st.className="lk-st ok";
-    st.innerHTML=`Pronto${R.cod?` (${esc(R.cod)})`:""}. Preenchi: ${esc(achou.join(", ")||"nenhum campo")}${nf?`, e ${nf} ${nf===1?"foto":"fotos"}`:", mas as fotos não vieram: adicione pelo botão abaixo"}. <b>Confira tudo antes de postar</b>, principalmente o valor e o título.`;
+    st.innerHTML=`Pronto${R.cod?` (${esc(R.cod)})`:""}. Preenchi: ${esc(achou.join(", ")||"nenhum campo")}. Agora adicione as fotos do imóvel logo abaixo. <b>Confira tudo antes de postar</b>, principalmente o valor e o título.`;
   }catch(e){st.className="lk-st warn";st.textContent="Não consegui abrir esse link agora. Tente de novo em alguns segundos. Se continuar, preencha os campos abaixo."}
   finally{btn.disabled=false;btn.textContent=old}}
 $("#lkGo").addEventListener("click",puxarLink);
