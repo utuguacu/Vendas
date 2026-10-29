@@ -1,0 +1,22 @@
+name: probe
+on:
+  push:
+    branches: [probe]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir -p out
+          UA="Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"
+          curl -sSL -A "$UA" -D out/h1.txt "https://www.utuguacu.com.br/imovel/apartamento-itu/AP0858-UTG" -o out/ap.html || true
+          curl -sSL -A "$UA" -D out/h2.txt "https://www.utuguacu.com.br/imovel/terreno-itu-1-006-m/TE2617-UTG" -o out/te.html || true
+          curl -sSL -A "$UA" -D out/h3.txt "https://www.utuguacu.com.br/imoveis/a-venda/casa/itu" -o out/list.html || true
+          curl -sS -A "$UA" -H "Origin: https://utuguacu.github.io" -D out/cors.txt -o /dev/null "https://www.utuguacu.com.br/imovel/apartamento-itu/AP0858-UTG" || true
+          ls -la out
+      - run: |
+          git config user.name Claude && git config user.email noreply@anthropic.com
+          git add out && git commit -m "probe output" && git push origin HEAD:probe-out --force
