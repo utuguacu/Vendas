@@ -885,7 +885,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 03/11/2026 16h00</p>
+<p class="ver">Portal de Vendas · versão 03/11/2026 15h35</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -1975,11 +1975,11 @@ const pa=id=>($("#"+id).value||"").trim();
 let paLast=null;
 function paImRow(c="",l=""){const d=document.createElement("div");d.className="pa-im";d.innerHTML=`<input class="pa-cod" placeholder="Código ou descrição" value="${esc(c)}"><input class="pa-loc" placeholder="Cidade ou bairro" value="${esc(l)}"><button type="button" class="pa-rm" aria-label="Remover imóvel">×</button>`;$("#paIms").appendChild(d)}
 function paIms(){return $$("#paIms .pa-im").map(r=>({c:r.querySelector(".pa-cod").value.trim(),l:r.querySelector(".pa-loc").value.trim()}))}
-(function(){const d=LS.get("utu.parc.rascunho",null);
+(function(){try{localStorage.removeItem("utu.parc.rascunho")}catch(_){}const d=null;
   if(d){PAF.forEach(k=>{if(d[k]!=null)$("#"+k).value=d[k]});["paCorG","paTipo","paCen"].forEach(n=>{if(d[n]){const r=document.querySelector(`input[name="${n}"][value="${d[n]}"]`);if(r)r.checked=true}});$("#paAnuncio").checked=!!d.an}
   const ims=d&&d.ims&&d.ims.length?d.ims:[{c:"",l:""},{c:"",l:""}];ims.forEach(i=>paImRow(i.c,i.l));
   if(!pa("paData"))$("#paData").value=today()})();
-function paSave(){const d={};PAF.forEach(k=>d[k]=$("#"+k).value);["paCorG","paTipo","paCen"].forEach(n=>d[n]=radio(n));d.an=$("#paAnuncio").checked;d.ims=paIms();LS.set("utu.parc.rascunho",d)}
+function paSave(){return;const d={};PAF.forEach(k=>d[k]=$("#"+k).value);["paCorG","paTipo","paCen"].forEach(n=>d[n]=radio(n));d.an=$("#paAnuncio").checked;d.ims=paIms();LS.set("utu.parc.rascunho",d)}
 const pct=n=>`${String(Math.round(n*100)/100).replace(".",",")}%`;
 function paCollect(){
   const m={missing:[],errs:{}};
@@ -2082,10 +2082,10 @@ $("#paDoc").addEventListener("input",e=>{const d=onlyDig(e.target.value);e.targe
 $("#paAddIm").addEventListener("click",()=>{if($$("#paIms .pa-im").length>=15){toast("Até 15 imóveis por termo.");return}paImRow();paUpdate();const l=$$("#paIms .pa-cod");l[l.length-1].focus()});
 $("#paIms").addEventListener("click",e=>{const b=e.target.closest(".pa-rm");if(!b)return;b.parentElement.remove();if(!$$("#paIms .pa-im").length)paImRow();paUpdate()});
 $("#paMissing").addEventListener("click",e=>{const a=e.target.closest("[data-pago]");if(!a)return;const i=a.dataset.pago==="paIms"?$("#paIms .pa-cod"):$("#"+a.dataset.pago);i.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>i.focus({preventScroll:true}),250)});
-$("#paLimpar").addEventListener("click",()=>{const keep={paCor:pa("paCor"),paCreci:pa("paCreci")};PAF.forEach(k=>{const el=$("#"+k);el.value=el.tagName==="SELECT"?el.options[0].value:""});
+$("#paLimpar").addEventListener("click",()=>{const keep={paCor:"",paCreci:""};PAF.forEach(k=>{const el=$("#"+k);el.value=el.tagName==="SELECT"?el.options[0].value:""});
   $("#paPrazo").value="24";$("#paCom").value="6";$("#paData").value=today();$("#paCor").value=keep.paCor;$("#paCreci").value=keep.paCreci;
   document.querySelector('input[name="paTipo"][value="corretor"]').checked=true;document.querySelector('input[name="paCen"][value="nosso"]').checked=true;$("#paAnuncio").checked=false;
-  $("#paIms").innerHTML="";paImRow();paImRow();delete document.body.dataset.paTried;paUpdate();toast("Ficha limpa. Seu nome e CRECI ficaram.")});
+  $("#paIms").innerHTML="";paImRow();paImRow();delete document.body.dataset.paTried;paUpdate();document.querySelector('input[name="paCorG"][value="m"]').checked=true;paUpdate();toast("Ficha limpa.")});
 function paShowForm(){$("#paWrap").classList.remove("result");$("#view-parceria").classList.remove("done");$("#paSide").hidden=true}
 $("#paGerar").addEventListener("click",()=>{
   const eb=$("#paErr");eb.hidden=true;
@@ -2112,41 +2112,26 @@ $("#paShare").addEventListener("click",async()=>{
 
 
 function paAskMsg(){
-  const tipo=radio("paTipo"),eu=pa("paCor")||"[seu nome]",nome=(tipo==="imobiliaria"?pa("paResp"):pa("paNome")).split(" ")[0];
-  const oi=`Olá${nome?", "+nome:""}! Tudo bem? Aqui é ${eu}, da Utu-Guaçu Imóveis.`;
-  if(tipo==="investidor")return `${oi}
-
-Fico feliz com o seu interesse! Antes de apresentar as opções com todos os detalhes, trabalhamos com um termo de confidencialidade, que é padrão aqui na Utu-Guaçu para negócios desse porte. Ele deixa tudo combinado e dá segurança para os dois lados.
-
-Para eu preparar o termo, preciso de:
-• Nome completo ou razão social da empresa
+  const tipo=radio("paTipo"),nome=(tipo==="imobiliaria"?pa("paResp"):pa("paNome")).split(" ")[0];
+  const h=new Date().getHours(),sd=h<12?"Bom dia":h<18?"Boa tarde":"Boa noite";
+  const oi=`${sd}${nome?", "+nome:""}!`;
+  const lista=tipo==="investidor"?`• Nome completo ou razão social da empresa
 • CPF ou CNPJ
 • Cidade
-• E-mail
-
-Assim que você me enviar, te mando o termo para assinatura e já seguimos com a apresentação.
-
-Qualquer dúvida, estou à disposição.`;
-  const lista=tipo==="imobiliaria"?`• Razão social da imobiliária
+• E-mail`:tipo==="imobiliaria"?`• Razão social da imobiliária
 • CRECI da imobiliária
 • CNPJ
 • Cidade
 • Nome e CRECI do corretor que vai acompanhar o negócio
 • E-mail`:`• Nome completo
-• Número do CRECI
+• CRECI
 • CPF (ou CNPJ, se atuar como empresa)
-• Cidade onde atua
+• Cidade
 • E-mail`;
-  return `${oi}
+  const doc=tipo==="investidor"?"termo de confidencialidade":"contrato de parceria";
+  return `${oi} Como protocolo da empresa, para darmos continuidade ${tipo==="investidor"?"ao nosso atendimento":"na nossa parceria"} precisamos assinar um ${doc}. Vamos estruturar esse ${tipo==="investidor"?"termo":"contrato"} e já te envio, só preciso das seguintes informações:
 
-Que bom fazer essa parceria com ${tipo==="imobiliaria"?"vocês":"você"}! Como de costume aqui na Utu-Guaçu, antes de passarmos os detalhes formalizamos a parceria com um termo simples, que deixa tudo combinado e dá segurança para ${tipo==="imobiliaria"?"as duas imobiliárias":"nós dois"}.
-
-Para eu preparar o termo, preciso de:
-${lista}
-
-Assim que você me enviar, te mando o termo para assinatura e seguimos com o atendimento.
-
-Qualquer dúvida, estou à disposição.`}
+${lista}`}
 function paAskUpd(){const t=paAskMsg();$("#paAskTxt").textContent=t;let n=onlyDig(pa("paTel"));if(n.length===10||n.length===11)n="55"+n;$("#paAskWa").href="https://wa.me/"+(n.length>=12?n:"")+"?text="+encodeURIComponent(t)}
 $("#paAskCopy").addEventListener("click",()=>copyText(paAskMsg(),"Mensagem copiada."));
 $("#paForm").addEventListener("input",paAskUpd);$("#paForm").addEventListener("change",paAskUpd);paAskUpd();
