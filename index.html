@@ -162,6 +162,10 @@ h1 em,h2 em{font-style:italic;color:var(--gold)}
 .av-wrap.result .av-side{display:flex!important;position:static}
 #view-avaliacao.done #avHead{display:none}
 #view-parceria.done #paHead{display:none}
+.pa-ask{border:1px dashed var(--gold-bright,#B89A5E);background:var(--gold-soft,#EFE5D2);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:6px;font-size:13px;line-height:1.45}
+.pa-ask-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}.pa-ask-btns .btn{text-decoration:none}
+.pa-ask summary{cursor:pointer;font-size:12.5px;color:var(--muted);margin-top:2px}
+.pa-ask pre{white-space:pre-wrap;font:inherit;font-size:13px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px;margin:8px 0 0}
 .segw{display:flex;width:100%}.segw label{flex:1;text-align:center}.segw span{display:flex;align-items:center;justify-content:center;height:100%;line-height:1.3}
 .pa-ims{display:flex;flex-direction:column;gap:8px}.pa-im{display:grid;grid-template-columns:1.2fr 1fr 34px;gap:6px;align-items:center}.pa-im input{min-width:0;width:100%;padding:9px 11px;border:1px solid var(--line-strong);border-radius:var(--r);background:var(--surface)}
 @media (max-width:480px){.pa-im input{font-size:16px}}
@@ -583,6 +587,12 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
         <legend><small>2</small>Parceiro</legend>
         <div class="seg segw"><label><input type="radio" name="paTipo" value="corretor" checked><span>Corretor autônomo</span></label><label><input type="radio" name="paTipo" value="imobiliaria"><span>Imobiliária</span></label><label><input type="radio" name="paTipo" value="investidor"><span>Investidor</span></label></div>
         <p class="hint" id="paTipoHint"></p>
+        <div class="pa-ask">
+          <b>Ainda não tem os dados do parceiro?</b>
+          <span>Mande a mensagem pronta pedindo o que precisa para o termo. Ela muda conforme o tipo de parceiro escolhido acima.</span>
+          <div class="pa-ask-btns"><a class="btn primary small" id="paAskWa" href="#" target="_blank" rel="noopener">Pedir dados no WhatsApp</a><button class="btn small" id="paAskCopy" type="button">Copiar mensagem</button></div>
+          <details><summary>Ver a mensagem</summary><pre id="paAskTxt"></pre></details>
+        </div>
         <div class="field" data-req><label for="paNome" id="paNomeLbl">Nome completo</label><input id="paNome"></div>
         <div class="two">
           <div class="field" data-req id="fPaCreciP"><label for="paCreciP" id="paCreciPLbl">CRECI</label><input id="paCreciP" placeholder="Ex.: 171096"></div>
@@ -875,7 +885,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 03/11/2026 15h40</p>
+<p class="ver">Portal de Vendas · versão 03/11/2026 16h00</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -2099,6 +2109,47 @@ $("#paShare").addEventListener("click",async()=>{
   try{navigator.clipboard&&navigator.clipboard.writeText(texto).catch(()=>{})}catch(_){}
   try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:texto,title:"Termo de parceria"});toast("Se a mensagem não aparecer junto do PDF, cole no WhatsApp: ela já está copiada.");return}}catch(err){if(err&&err.name==="AbortError")return}
   nativeSave(name,blob);window.open("https://wa.me/"+(n.length>=12?n:"")+"?text="+encodeURIComponent(texto),"_blank","noopener");toast("PDF baixado. Anexe o arquivo na conversa do WhatsApp.")});
+
+
+function paAskMsg(){
+  const tipo=radio("paTipo"),eu=pa("paCor")||"[seu nome]",nome=(tipo==="imobiliaria"?pa("paResp"):pa("paNome")).split(" ")[0];
+  const oi=`Olá${nome?", "+nome:""}! Tudo bem? Aqui é ${eu}, da Utu-Guaçu Imóveis.`;
+  if(tipo==="investidor")return `${oi}
+
+Fico feliz com o seu interesse! Antes de apresentar as opções com todos os detalhes, trabalhamos com um termo de confidencialidade, que é padrão aqui na Utu-Guaçu para negócios desse porte. Ele deixa tudo combinado e dá segurança para os dois lados.
+
+Para eu preparar o termo, preciso de:
+• Nome completo ou razão social da empresa
+• CPF ou CNPJ
+• Cidade
+• E-mail
+
+Assim que você me enviar, te mando o termo para assinatura e já seguimos com a apresentação.
+
+Qualquer dúvida, estou à disposição.`;
+  const lista=tipo==="imobiliaria"?`• Razão social da imobiliária
+• CRECI da imobiliária
+• CNPJ
+• Cidade
+• Nome e CRECI do corretor que vai acompanhar o negócio
+• E-mail`:`• Nome completo
+• Número do CRECI
+• CPF (ou CNPJ, se atuar como empresa)
+• Cidade onde atua
+• E-mail`;
+  return `${oi}
+
+Que bom fazer essa parceria com ${tipo==="imobiliaria"?"vocês":"você"}! Como de costume aqui na Utu-Guaçu, antes de passarmos os detalhes formalizamos a parceria com um termo simples, que deixa tudo combinado e dá segurança para ${tipo==="imobiliaria"?"as duas imobiliárias":"nós dois"}.
+
+Para eu preparar o termo, preciso de:
+${lista}
+
+Assim que você me enviar, te mando o termo para assinatura e seguimos com o atendimento.
+
+Qualquer dúvida, estou à disposição.`}
+function paAskUpd(){const t=paAskMsg();$("#paAskTxt").textContent=t;let n=onlyDig(pa("paTel"));if(n.length===10||n.length===11)n="55"+n;$("#paAskWa").href="https://wa.me/"+(n.length>=12?n:"")+"?text="+encodeURIComponent(t)}
+$("#paAskCopy").addEventListener("click",()=>copyText(paAskMsg(),"Mensagem copiada."));
+$("#paForm").addEventListener("input",paAskUpd);$("#paForm").addEventListener("change",paAskUpd);paAskUpd();
 
 })();
 </script>
