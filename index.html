@@ -161,6 +161,12 @@ h1 em,h2 em{font-style:italic;color:var(--gold)}
 .av-wrap.result .form{display:none}
 .av-wrap.result .av-side{display:flex!important;position:static}
 #view-avaliacao.done #avHead{display:none}
+#view-parceria.done #paHead{display:none}
+.segw{display:flex;width:100%}.segw label{flex:1;text-align:center}.segw span{display:flex;align-items:center;justify-content:center;height:100%;line-height:1.3}
+.pa-ims{display:flex;flex-direction:column;gap:8px}.pa-im{display:grid;grid-template-columns:1.2fr 1fr 34px;gap:6px;align-items:center}.pa-im input{min-width:0;width:100%;padding:9px 11px;border:1px solid var(--line-strong);border-radius:var(--r);background:var(--surface)}
+@media (max-width:480px){.pa-im input{font-size:16px}}
+.pa-rm{border:1px solid var(--line-strong);background:var(--surface);border-radius:var(--r);height:40px;font-size:18px;cursor:pointer;color:var(--muted)}
+.pa-ims.err .pa-cod{border-color:#B3261E}
 .four{grid-template-columns:repeat(4,minmax(0,1fr))!important}
 @media (max-width:480px){.four{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 .gsearch{position:relative;margin-top:22px}
@@ -555,6 +561,91 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
   <datalist id="corList"><option value="Lucas Calicchio"><option value="Ricardo"><option value="Rose"><option value="Marisa"><option value="Nicole"><option value="Plinio Bernardi"><option value="João Pires"></datalist>
 </section>
 
+<section id="view-parceria" hidden>
+  <div class="prop-head" id="paHead">
+    <div>
+      <div class="eyebrow">Gerar documento</div>
+      <h1>Termo <em>de parceria</em></h1>
+      <p class="lede">Para negócios com corretor autônomo, outra imobiliária ou investidor. Faça o parceiro assinar <b>antes</b> de passar endereço, nome do proprietário ou dados do cliente. Os campos com * são obrigatórios.</p>
+    </div>
+  </div>
+  <div class="av-wrap" id="paWrap">
+    <form class="form" id="paForm" novalidate autocomplete="off">
+      <fieldset>
+        <legend><small>1</small>Corretor da Utu-Guaçu</legend>
+        <div class="two">
+          <div class="field" data-req><label for="paCor">Nome</label><input id="paCor" list="corList" placeholder="Nome completo"></div>
+          <div class="field" data-req><label for="paCreci">CRECI</label><input id="paCreci" placeholder="Ex.: 333.566-F"></div>
+        </div>
+        <div class="seg"><label><input type="radio" name="paCorG" id="paCorM" value="m" checked><span>Corretor</span></label><label><input type="radio" name="paCorG" id="paCorF" value="f"><span>Corretora</span></label></div>
+      </fieldset>
+      <fieldset>
+        <legend><small>2</small>Parceiro</legend>
+        <div class="seg segw"><label><input type="radio" name="paTipo" value="corretor" checked><span>Corretor autônomo</span></label><label><input type="radio" name="paTipo" value="imobiliaria"><span>Imobiliária</span></label><label><input type="radio" name="paTipo" value="investidor"><span>Investidor</span></label></div>
+        <p class="hint" id="paTipoHint"></p>
+        <div class="field" data-req><label for="paNome" id="paNomeLbl">Nome completo</label><input id="paNome"></div>
+        <div class="two">
+          <div class="field" data-req id="fPaCreciP"><label for="paCreciP" id="paCreciPLbl">CRECI</label><input id="paCreciP" placeholder="Ex.: 171096"></div>
+          <div class="field"><label for="paDoc" id="paDocLbl">CPF <span class="opt">(opcional)</span></label><input id="paDoc" inputmode="numeric"><span class="hint"></span></div>
+        </div>
+        <div class="field" id="fPaResp" hidden><label for="paResp">Corretor responsável na imobiliária <span class="opt">(opcional)</span></label><input id="paResp" placeholder="Nome e CRECI de quem está atendendo"></div>
+        <div class="two">
+          <div class="field" data-req><label for="paTel">Telefone / WhatsApp</label><input id="paTel" inputmode="tel" placeholder="(11) 90000-0000"></div>
+          <div class="field"><label for="paCid">Cidade/UF <span class="opt">(opcional)</span></label><input id="paCid" placeholder="Ex.: Indaiatuba/SP"></div>
+        </div>
+        <div class="field"><label for="paEmail">E-mail <span class="opt">(opcional)</span></label><input id="paEmail" type="email" inputmode="email"></div>
+      </fieldset>
+      <fieldset>
+        <legend><small>3</small>O negócio</legend>
+        <div id="paCenBox">
+          <span class="legend">Quem tem o quê</span>
+          <div class="seg segw" style="margin-top:6px"><label><input type="radio" name="paCen" value="nosso" checked><span>O imóvel é nosso, o cliente é do parceiro</span></label><label><input type="radio" name="paCen" value="deles"><span>O cliente é nosso, o imóvel é do parceiro</span></label></div>
+        </div>
+        <div class="two">
+          <div class="field"><label for="paNeg">Negócio</label><select id="paNeg"><option value="venda">Venda</option><option value="locação">Locação</option><option value="venda ou locação">Venda ou locação</option></select></div>
+          <div class="field"><label for="paCli" id="paCliLbl">Cliente <span class="opt">(opcional)</span></label><input id="paCli" placeholder="Nome ou final do telefone"></div>
+        </div>
+        <span class="legend" id="paImLbl">Imóveis apresentados *</span>
+        <p class="hint" style="margin:-2px 0 0">Código do Kenlo (ex.: HA0101-UTG) ou uma descrição curta, e a cidade ou o bairro.</p>
+        <div id="paIms" class="pa-ims"></div>
+        <button class="btn small" id="paAddIm" type="button" style="align-self:flex-start">+ Adicionar imóvel</button>
+      </fieldset>
+      <fieldset>
+        <legend><small>4</small>Comissão e prazo</legend>
+        <div id="paDivBox">
+          <div class="field"><label for="paDiv">Divisão da comissão (Utu-Guaçu x parceiro)</label><select id="paDiv"><option value="50/50">50% para cada</option><option value="60/40">60% Utu-Guaçu e 40% parceiro</option><option value="40/60">40% Utu-Guaçu e 60% parceiro</option><option value="70/30">70% Utu-Guaçu e 30% parceiro</option><option value="30/70">30% Utu-Guaçu e 70% parceiro</option><option value="outro">Outra divisão</option></select></div>
+          <div class="two" id="paDivOutro" hidden>
+            <div class="field" data-req><label for="paDivU">Utu-Guaçu (%)</label><input id="paDivU" inputmode="decimal"></div>
+            <div class="field"><label for="paDivP">Parceiro (%)</label><input id="paDivP" inputmode="decimal" readonly tabindex="-1"></div>
+          </div>
+        </div>
+        <div class="field" id="paComBox" hidden data-req><label for="paCom">Comissão da Utu-Guaçu (% sobre o valor do negócio)</label><input id="paCom" inputmode="decimal" value="6"></div>
+        <div class="two">
+          <div class="field"><label for="paPrazo">Prazo da parceria</label><select id="paPrazo"><option value="6">6 meses</option><option value="12">12 meses</option><option value="24" selected>24 meses</option><option value="36">36 meses</option></select></div>
+          <div class="field"><label for="paData">Data</label><input id="paData" type="date"></div>
+        </div>
+        <label class="check" id="paAnBox" for="paAnuncio"><input type="checkbox" id="paAnuncio"><span>Liberar o parceiro para anunciar os nossos imóveis (sem endereço exato e sem o contato do proprietário). Se não marcar, ele só pode anunciar com autorização por escrito.</span></label>
+      </fieldset>
+      <div class="gen">
+        <button class="btn gold big" id="paGerar" type="button">Gerar termo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button>
+        <div class="gen-missing" id="paMissing" hidden></div>
+        <div class="errbox" id="paErr" hidden></div>
+        <button class="btn ghost small" id="paLimpar" type="button" style="margin-top:6px">Limpar ficha</button>
+      </div>
+    </form>
+    <div class="side av-side" id="paSide" hidden>
+      <button class="btn ghost back" id="paBack" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>Voltar e editar a ficha</button>
+      <div class="actions">
+        <button class="btn gold share-prop" id="paShare" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Enviar ao parceiro (WhatsApp)</button>
+        <button class="btn primary" id="paPdf" type="button">Baixar PDF</button>
+        <button class="btn" id="paDocx" type="button">Baixar Word</button>
+        <button class="btn" id="paTxt" type="button">Copiar texto</button>
+      </div>
+      <div class="sheet-scroll"><div class="sheets" id="paSheet"></div></div>
+    </div>
+  </div>
+</section>
+
 <!-- ================= FINANCIAMENTO ================= -->
 <section id="view-financiamento" hidden>
   <div class="files-head">
@@ -784,7 +875,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 28/10/2026 11h10</p>
+<p class="ver">Portal de Vendas · versão 03/11/2026 15h40</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -803,7 +894,8 @@ let toastT; function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false
 /* Documentos que o portal gera. Para incluir um novo, a gerência envia o modelo ao Claude. */
 const DOCS=[
  {id:"proposta",titulo:"Proposta de compra",desc:"Proposta formal com os dados do comprador, do imóvel, valor, forma de pagamento e comissão. Sai em duas folhas: proposta e aceite do vendedor.",abre:"proposta"},
- {id:"avaliacao",titulo:"Avaliação de imóvel",desc:"Carta de avaliação com o valor sugerido de venda ou locação, a descrição do imóvel e a assinatura do corretor. Uma folha só.",abre:"avaliacao"}
+ {id:"avaliacao",titulo:"Avaliação de imóvel",desc:"Carta de avaliação com o valor sugerido de venda ou locação, a descrição do imóvel e a assinatura do corretor. Uma folha só.",abre:"avaliacao"},
+ {id:"parceria",titulo:"Termo de parceria",desc:"Para negócios com corretor autônomo, outra imobiliária ou investidor. Protege a Utu-Guaçu para que ninguém negocie direto com o proprietário ou com o cliente que apresentamos.",abre:"parceria"}
 ];
 /* Modelos de mensagem: mantidos pela gerência via Claude.
    [cliente], [imóvel] e [corretor] vêm dos campos do topo; o resto entre colchetes o corretor completa.
@@ -1037,17 +1129,17 @@ $("#msgsOut").addEventListener("click",e=>{const b=e.target.closest("[data-copy]
 const slug=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 let pendingHash=location.hash.replace("#","");
 function show(view,cat){
-  $("#view-inicio").hidden=view!=="inicio"; $("#view-arquivos").hidden=view!=="arquivos"; $("#view-proposta").hidden=view!=="proposta"; $("#view-mensagens").hidden=view!=="mensagens"; $("#view-documentos").hidden=view!=="documentos"; $("#view-avaliacao").hidden=view!=="avaliacao"; $("#view-financiamento").hidden=view!=="financiamento"; if(view==="financiamento")finUpd(); if(view==="avaliacao")avUpdate();
+  $("#view-inicio").hidden=view!=="inicio"; $("#view-arquivos").hidden=view!=="arquivos"; $("#view-proposta").hidden=view!=="proposta"; $("#view-mensagens").hidden=view!=="mensagens"; $("#view-documentos").hidden=view!=="documentos"; $("#view-avaliacao").hidden=view!=="avaliacao"; $("#view-parceria").hidden=view!=="parceria"; if(view==="parceria")paUpdate(); $("#view-financiamento").hidden=view!=="financiamento"; if(view==="financiamento")finUpd(); if(view==="avaliacao")avUpdate();
   if(view==="mensagens")renderMsgs();
   $("#crumb").hidden=view==="inicio";
-  curView=view; $("#crumbLbl").textContent=(view==="proposta"||view==="avaliacao")?"Documentos":"Início";
+  curView=view; $("#crumbLbl").textContent=(view==="proposta"||view==="avaliacao"||view==="parceria")?"Documentos":"Início";
   if(view==="arquivos"){S.filter=cat;S.q="";$("#q").value="";renderFiles()}
   const h=view==="arquivos"?slug(cat):view;
   try{history.replaceState(null,"",h==="inicio"?location.pathname+location.search:"#"+h)}catch(e){}
   window.scrollTo({top:0});
 }
 let curView="inicio";
-$("#crumb").addEventListener("click",()=>show(curView==="proposta"||curView==="avaliacao"?"documentos":"inicio"));
+$("#crumb").addEventListener("click",()=>show(curView==="proposta"||curView==="avaliacao"||curView==="parceria"?"documentos":"inicio"));
 $("#brandHome").addEventListener("click",()=>show("inicio"));
 $("#home").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(!b)return;const t=b.dataset.open;if(t==="__proposta")show("proposta");else if(t==="__documentos")show("documentos");else if(t==="__financiamento")show("financiamento");else if(t==="__mensagens")show("mensagens");else show("arquivos",t)});
 
@@ -1299,7 +1391,7 @@ const SECOES=[
  {tit:"Análise do perfil",sub:"Nota do seu Instagram, o que melhorar e cronograma do mês",chaves:"analise perfil instagram cronograma calendario frequencia bio seguidores engajamento melhorar",abre:()=>{location.href="marketing/#analise"}},
  {tit:"Marketing",sub:"Ateliê de artes: story, post e carrossel com legenda",chaves:"marketing instagram story post feed carrossel legenda redes sociais conteudo arte divulgacao",abre:()=>{location.href="marketing/"}},
  {tit:"Guia do financiamento",sub:"Enviar ao cliente o passo a passo do financiamento",chaves:"financiamento financiado credito banco caixa simulacao cresac parceiro fgts guia",abre:()=>show("financiamento")},
- {tit:"Gerar documentos",sub:"Proposta de compra, avaliação de imóvel e outros documentos prontos",chaves:"gerar documento documentos ficha pdf word",abre:()=>show("documentos")},
+ {tit:"Gerar documentos",sub:"Proposta de compra, avaliação de imóvel, termo de parceria e outros documentos prontos",chaves:"gerar documento documentos ficha pdf word parceria parceiro termo",abre:()=>show("documentos")},
  {tit:"Modelos de mensagem",sub:"Textos prontos para WhatsApp",chaves:"mensagem mensagens whatsapp texto modelo abordagem cliente",abre:()=>show("mensagens")},
  {tit:"Outra situação",sub:"Monte uma mensagem sob medida com o ChatGPT",chaves:"outra situacao ajuda chatgpt gemini ia inteligencia artificial personalizada",abre:()=>{show("mensagens");msgCat="Outra situação";renderMsgs()}}
 ];
@@ -1864,6 +1956,149 @@ $("#avShare").addEventListener("click",async()=>{
   try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:texto,title:"Avaliação de imóvel"});toast("Se a mensagem não aparecer junto do PDF, cole no WhatsApp: ela já está copiada.");return}}catch(err){if(err&&err.name==="AbortError")return}
   nativeSave(name,blob);window.open("https://wa.me/?text="+encodeURIComponent(texto),"_blank","noopener");toast("PDF baixado. Anexe o arquivo na conversa do WhatsApp.");
 });
+
+
+/* ===== TERMO DE PARCERIA ===== */
+const HDR_PARC=["TERMO ","DE PARCERIA"];
+const PAF=["paCor","paCreci","paNome","paCreciP","paDoc","paResp","paTel","paCid","paEmail","paNeg","paCli","paDiv","paDivU","paCom","paPrazo","paData"];
+const pa=id=>($("#"+id).value||"").trim();
+let paLast=null;
+function paImRow(c="",l=""){const d=document.createElement("div");d.className="pa-im";d.innerHTML=`<input class="pa-cod" placeholder="Código ou descrição" value="${esc(c)}"><input class="pa-loc" placeholder="Cidade ou bairro" value="${esc(l)}"><button type="button" class="pa-rm" aria-label="Remover imóvel">×</button>`;$("#paIms").appendChild(d)}
+function paIms(){return $$("#paIms .pa-im").map(r=>({c:r.querySelector(".pa-cod").value.trim(),l:r.querySelector(".pa-loc").value.trim()}))}
+(function(){const d=LS.get("utu.parc.rascunho",null);
+  if(d){PAF.forEach(k=>{if(d[k]!=null)$("#"+k).value=d[k]});["paCorG","paTipo","paCen"].forEach(n=>{if(d[n]){const r=document.querySelector(`input[name="${n}"][value="${d[n]}"]`);if(r)r.checked=true}});$("#paAnuncio").checked=!!d.an}
+  const ims=d&&d.ims&&d.ims.length?d.ims:[{c:"",l:""},{c:"",l:""}];ims.forEach(i=>paImRow(i.c,i.l));
+  if(!pa("paData"))$("#paData").value=today()})();
+function paSave(){const d={};PAF.forEach(k=>d[k]=$("#"+k).value);["paCorG","paTipo","paCen"].forEach(n=>d[n]=radio(n));d.an=$("#paAnuncio").checked;d.ims=paIms();LS.set("utu.parc.rascunho",d)}
+const pct=n=>`${String(Math.round(n*100)/100).replace(".",",")}%`;
+function paCollect(){
+  const m={missing:[],errs:{}};
+  const need=(id,label,ok=true)=>{if(!pa(id)||!ok){m.missing.push({id,label});m.errs[id]=true}};
+  const tipo=radio("paTipo"),inv=tipo==="investidor",imob=tipo==="imobiliaria",cen=inv?"nosso":radio("paCen"),f=radio("paCorG")==="f";
+  need("paCor","nome do corretor da Utu-Guaçu");need("paCreci","CRECI do corretor da Utu-Guaçu");
+  need("paNome",imob?"razão social da imobiliária":"nome do parceiro");
+  if(!inv)need("paCreciP",imob?"CRECI da imobiliária":"CRECI do parceiro");
+  need("paTel",pa("paTel")?"telefone com DDD":"telefone do parceiro",onlyDig(pa("paTel")).length>=10);
+  const doc=onlyDig(pa("paDoc"));
+  if(doc&&!(doc.length===11?cpfOk(pa("paDoc")):doc.length===14?cnpjOk(pa("paDoc")):false)){m.missing.push({id:"paDoc",label:(imob?"CNPJ":"CPF ou CNPJ")+" inválido (confira ou apague)"});m.errs.paDoc=true}
+  const ims=paIms().filter(i=>i.c);
+  if(!ims.length){m.missing.push({id:"paIms",label:"pelo menos um imóvel"});m.errs.paIms=true}
+  let u=50,p=50;
+  if(!inv){if(pa("paDiv")==="outro"){u=parseFloat(pa("paDivU").replace(",","."));need("paDivU","percentual da Utu-Guaçu na divisão",u>0&&u<100);p=100-(u||0)}else{[u,p]=pa("paDiv").split("/").map(Number)}}
+  const com=parseFloat(pa("paCom").replace(",","."));if(inv)need("paCom","comissão da Utu-Guaçu (%)",com>0&&com<100);
+  const P=(v,ph)=>v?{t:v}:{t:ph,ph:true};
+  m.inv=inv;m.imob=imob;m.cen=cen;m.u=u;m.p=p;m.com=com;m.prazo=+pa("paPrazo")||24;m.neg=pa("paNeg");m.an=$("#paAnuncio").checked;m.ims=ims;
+  m.utu=[{t:"UTU-GUAÇU IMÓVEIS LTDA - EPP",b:true},{t:", CRECI 3395-J, CNPJ nº 50.365.766/0001-40, com sede na Rua Paula Souza, 483, Centro, Itu/SP, telefone (11) 4013-9090, neste ato por "+(f?"sua corretora responsável ":"seu corretor responsável ")},P(pa("paCor"),"nome do corretor"),{t:", CRECI/SP nº "},P(pa("paCreci"),"CRECI"),{t:", doravante chamada UTU-GUAÇU."}];
+  const docTxt=pa("paDoc")?{t:pa("paDoc")}:{t:"número",ph:true},docLbl=doc.length===14||imob?"CNPJ":"CPF";
+  const tel=[{t:", telefone/WhatsApp "},P(pa("paTel"),"telefone")].concat(pa("paEmail")?[{t:", e-mail "+pa("paEmail")}]:[]);
+  const cid=pa("paCid")?[{t:", com endereço em "+pa("paCid")}]:[];
+  const nomeUp=pa("paNome")?{t:pa("paNome").toUpperCase(),b:true}:{t:imob?"RAZÃO SOCIAL":"NOME DO PARCEIRO",ph:true};
+  if(imob)m.par=[nomeUp,{t:", imobiliária inscrita no CRECI sob o nº "},P(pa("paCreciP"),"CRECI"),{t:`, ${docLbl} nº `},docTxt,...cid,...tel,...(pa("paResp")?[{t:", neste ato por "+pa("paResp")}]:[]),{t:", doravante chamada PARCEIRA."}];
+  else if(inv)m.par=[nomeUp,{t:`, ${docLbl} nº `},docTxt,...cid,...tel,{t:", doravante chamado(a) INVESTIDOR(A)."}];
+  else m.par=[nomeUp,{t:", corretor(a) de imóveis inscrito(a) no CRECI/SP sob o nº "},P(pa("paCreciP"),"CRECI"),{t:`, ${docLbl} nº `},docTxt,...cid,...tel,{t:", doravante chamado(a) PARCEIRO(A)."}];
+  m.parLbl=inv?"INVESTIDOR(A)":imob?"PARCEIRA":"PARCEIRO(A)";
+  m.parNome=pa("paNome");m.cli=pa("paCli");
+  m.data=dataExt(pa("paData"))||dataExt(today());
+  m.fileBase=["Termo de parceria",pa("paNome"),ims[0]?ims[0].c:""].filter(Boolean).join(" - ").replace(/[\\/:*?"<>|]/g,"").slice(0,120);
+  return m;
+}
+function paBlocks(m){
+  const B=[];const p=(runs,o={})=>B.push(Object.assign({t:"p",runs},o));const cl=(n,txt)=>p([{t:`Cláusula ${n}ª: `,b:true},{t:txt}],{align:"justify"});
+  const PAR=m.inv?"o(a) INVESTIDOR(A)":m.imob?"a PARCEIRA":"o(a) PARCEIRO(A)";
+  B.push({t:"title",text:m.inv?"Termo de Confidencialidade e Não Intervenção":"Termo de Parceria"});
+  p([{t:m.inv?"Apresentação de imóveis a investidor":"Parceria de intermediação imobiliária"}],{align:"center",small:true});
+  B.push({t:"gap"});
+  p([{t:"Por este instrumento particular, as partes abaixo qualificadas, de comum acordo, firmam o presente termo"+(m.inv?"":", regido também pelos artigos 722 a 729 do Código Civil,")+" nas condições a seguir."}],{align:"justify"});
+  B.push({t:"lbl",label:"Imobiliária",runs:m.utu});
+  B.push({t:"lbl",label:m.inv?"Investidor(a)":m.imob?"Imobiliária parceira":"Corretor(a) parceiro(a)",runs:m.par});
+  const quemIm=m.cen==="nosso"?"a UTU-GUAÇU":PAR, pelo=m.cen==="nosso"?(m.imob?"pela PARCEIRA":"pelo(a) PARCEIRO(A)"):"pela UTU-GUAÇU";
+  let obj;
+  if(m.inv)obj=`A UTU-GUAÇU apresenta ao(à) INVESTIDOR(A), de forma confidencial, para ${m.neg}, o(s) imóvel(is) abaixo, dos quais detém autorização de intermediação.`;
+  else obj=`${quemIm.charAt(0).toUpperCase()+quemIm.slice(1)} apresenta o(s) imóvel(is) abaixo, para ${m.neg}, dos quais detém autorização de intermediação, para que ${m.cen==="nosso"?(m.imob?"a PARCEIRA o(s) ofereça":"o(a) PARCEIRO(A) o(s) ofereça"):"a UTU-GUAÇU o(s) ofereça"} ao seu cliente.`;
+  B.push({t:"lbl",label:"Objeto",runs:[{t:obj}]});
+  m.ims.forEach((i,k)=>B.push({t:"li",runs:[{t:`${k+1}) `},{t:i.c,b:true},{t:i.l?`, ${i.l}`:""}]}));
+  if(!m.inv)p([{t:"Cliente: ",b:true},{t:m.cli?`${m.cli}, apresentado(a) ${pelo}.`:`a ser identificado(a) ${pelo} no momento da apresentação.`}],{before:true});
+  B.push({t:"gap"});
+  if(m.inv){
+    p([{t:"Comissão da UTU-GUAÇU: ",b:true},{t:`${pct(m.com)} sobre o valor do negócio.     `},{t:"Prazo: ",b:true},{t:`${m.prazo} meses a contar da assinatura.`}]);
+    cl(1,"Todas as informações recebidas da UTU-GUAÇU sobre os imóveis apresentados, como localização, dados do proprietário, valores, documentos e condições, são confidenciais e não podem ser repassadas a terceiros sem autorização por escrito da UTU-GUAÇU.");
+    cl(2,"Durante o prazo deste termo, o(a) INVESTIDOR(A) não procurará nem negociará com os proprietários dos imóveis apresentados, diretamente ou por meio de terceiros, como outros corretores, imobiliárias, sócios, parentes ou empresas ligadas a ele(a), sem a participação da UTU-GUAÇU.");
+    cl(3,`Se o(a) INVESTIDOR(A), ou pessoa ou empresa ligada a ele(a), comprar, alugar, arrendar ou fizer qualquer negócio sobre imóvel apresentado neste termo, a UTU-GUAÇU terá direito à comissão de ${pct(m.com)} sobre o valor do negócio. Se o negócio for feito sem a participação da UTU-GUAÇU, o(a) INVESTIDOR(A) responde pelo pagamento dessa comissão. A obrigação vale também para negócio fechado depois do prazo, quando resultar da apresentação feita pela UTU-GUAÇU (art. 727 do Código Civil).`);
+    cl(4,"Os dados pessoais trocados entre as partes serão usados apenas para este negócio e protegidos nos termos da Lei 13.709/2018 (LGPD).");
+    cl(5,"Este termo não cria vínculo empregatício, societário ou de exclusividade entre as partes. Comunicações por WhatsApp e e-mail, nos contatos acima, são válidas, e este termo pode ser assinado física ou eletronicamente.");
+    cl(6,"Para resolver qualquer controvérsia deste termo, as partes elegem o foro da comarca de Itu/SP.");
+  }else{
+    p([{t:"Divisão da comissão: ",b:true},{t:`UTU-GUAÇU ${pct(m.u)} e ${m.imob?"PARCEIRA":"PARCEIRO(A)"} ${pct(m.p)} da comissão recebida.     `},{t:"Prazo: ",b:true},{t:`${m.prazo} meses a contar da assinatura.`}]);
+    cl(1,"Concluído o negócio de qualquer imóvel deste termo com o cliente deste termo, a comissão acordada com o proprietário será dividida entre as partes nos percentuais acima. A parte que receber a comissão repassa a parte da outra em até 5 (cinco) dias úteis após o recebimento.");
+    cl(2,"Durante o prazo deste termo, nenhuma das partes procurará, negociará ou fechará negócio diretamente com o proprietário do imóvel ou com o cliente apresentado pela outra parte, nem por meio de terceiros, sem a participação de quem os apresentou.");
+    cl(3,"Se, durante o prazo, o imóvel apresentado por uma das partes for vendido ou alugado pela outra, ao cliente deste termo ou a qualquer cliente atendido sem a participação de quem o apresentou, com ou sem o seu conhecimento, a parte que apresentou receberá integralmente a sua parte da comissão. O mesmo vale se o cliente apresentado por uma das partes fechar negócio com a outra. A obrigação vale também para negócio fechado depois do prazo, quando resultar dos trabalhos feitos durante a parceria (art. 727 do Código Civil).");
+    cl(4,m.an?"A parte que recebeu o imóvel pode anunciá-lo, desde que não divulgue o endereço exato nem o contato do proprietário, use o código do imóvel e retire o anúncio quando for pedido.":"Nenhuma das partes poderá anunciar o imóvel apresentado pela outra, em qualquer meio, nem colocar placa, sem autorização por escrito de quem o apresentou.");
+    cl(5,"As visitas serão agendadas por quem representa o imóvel. Propostas e contrapropostas serão feitas por escrito e levadas ao proprietário por quem representa o imóvel, e só valem com o aceite formal do proprietário.");
+    cl(6,"Os dados do cliente, do proprietário e do imóvel são confidenciais, serão usados apenas para este negócio e protegidos nos termos da Lei 13.709/2018 (LGPD).");
+    cl(7,"Este termo não cria vínculo empregatício, societário ou de exclusividade entre as partes, e cada uma arca com as suas próprias despesas. Comunicações por WhatsApp e e-mail, nos contatos acima, são válidas, e este termo pode ser assinado física ou eletronicamente.");
+    cl(8,"Para resolver qualquer controvérsia deste termo, as partes elegem o foro da comarca de Itu/SP.");
+  }
+  B.push({t:"gap"});
+  p([{t:"Por estarem de acordo, assinam o presente termo em duas vias de igual teor, juntamente com 2 (duas) testemunhas."}],{align:"justify"});
+  p([{t:`Itu, ${m.data}.`}],{align:"right"});
+  B.push({t:"sig",label:"UTU-GUAÇU IMÓVEIS",name:pa("paCor")?{t:pa("paCor")}:{t:"corretor",ph:true},sub:pa("paCreci")?`CRECI/SP nº ${pa("paCreci")}`:""});
+  B.push({t:"sig",label:m.parLbl,name:m.parNome?{t:m.parNome}:{t:"nome",ph:true},sub:m.inv?"":(pa("paCreciP")?`CRECI nº ${pa("paCreciP")}`:"")});
+  B.push({t:"sig",label:"TESTEMUNHA 1",name:{t:"Nome e CPF:"}});
+  B.push({t:"sig",label:"TESTEMUNHA 2",name:{t:"Nome e CPF:"}});
+  return B;
+}
+function paUpdate(){
+  const tipo=radio("paTipo"),inv=tipo==="investidor",imob=tipo==="imobiliaria";
+  $("#paNomeLbl").textContent=imob?"Razão social da imobiliária":"Nome completo";
+  $("#fPaCreciP").hidden=inv;$("#paCreciPLbl").textContent=imob?"CRECI da imobiliária":"CRECI do parceiro";
+  $("#paDocLbl").innerHTML=(imob?"CNPJ":"CPF ou CNPJ")+' <span class="opt">(opcional)</span>';
+  $("#fPaResp").hidden=!imob;$("#paCenBox").hidden=inv;$("#paDivBox").hidden=inv;$("#paComBox").hidden=!inv;$("#paAnBox").hidden=inv;$("#paCli").closest(".field").hidden=inv;
+  $("#paTipoHint").textContent=inv?"Para investidor o termo é de confidencialidade e não intervenção: ele não pode negociar direto com o proprietário, e a comissão da Utu-Guaçu fica garantida. Comissão só se divide com quem tem CRECI.":imob?"A comissão é dividida entre a Utu-Guaçu e a imobiliária.":"A comissão é dividida entre a Utu-Guaçu e o corretor.";
+  $("#paCliLbl").innerHTML=(inv?"Identificação do investidor":radio("paCen")==="nosso"?"Cliente do parceiro":"Nosso cliente")+' <span class="opt">(opcional)</span>';
+  const outro=pa("paDiv")==="outro";$("#paDivOutro").hidden=!outro;if(outro){const u=parseFloat(pa("paDivU").replace(",","."));$("#paDivP").value=u>0&&u<100?String(Math.round((100-u)*100)/100).replace(".",","):""}
+  const m=paCollect();paLast=m;
+  $$("#paForm .field").forEach(el=>el.classList.remove("err"));$("#paIms").classList.toggle("err",!!(document.body.dataset.paTried&&m.errs.paIms));
+  if(document.body.dataset.paTried)Object.keys(m.errs).forEach(id=>{const el=$("#"+id);const fl=el&&el.closest(".field");if(fl)fl.classList.add("err")});
+  DOC_HDR=HDR_PARC;$("#paSheet").innerHTML=toHTML(paBlocks(m));DOC_HDR=HDR_PROP;
+  const gm=$("#paMissing");
+  if(!m.missing.length||!document.body.dataset.paTried)gm.hidden=true;
+  else{gm.hidden=false;gm.innerHTML=`<b>Para gerar o termo, falta preencher:</b><ul>${m.missing.map(x=>`<li><a data-pago="${x.id}">${esc(x.label)}</a></li>`).join("")}</ul><span>Toque no item para ir até o campo.</span>`}
+  paSave();
+}
+$("#paForm").addEventListener("input",paUpdate);$("#paForm").addEventListener("change",paUpdate);
+$("#paForm").addEventListener("submit",e=>e.preventDefault());
+$("#paTel").addEventListener("input",e=>{e.target.value=maskTel(e.target.value)});
+$("#paDoc").addEventListener("input",e=>{const d=onlyDig(e.target.value);e.target.value=d.length>11?maskCnpj(d):maskCpf(d)});
+$("#paAddIm").addEventListener("click",()=>{if($$("#paIms .pa-im").length>=15){toast("Até 15 imóveis por termo.");return}paImRow();paUpdate();const l=$$("#paIms .pa-cod");l[l.length-1].focus()});
+$("#paIms").addEventListener("click",e=>{const b=e.target.closest(".pa-rm");if(!b)return;b.parentElement.remove();if(!$$("#paIms .pa-im").length)paImRow();paUpdate()});
+$("#paMissing").addEventListener("click",e=>{const a=e.target.closest("[data-pago]");if(!a)return;const i=a.dataset.pago==="paIms"?$("#paIms .pa-cod"):$("#"+a.dataset.pago);i.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>i.focus({preventScroll:true}),250)});
+$("#paLimpar").addEventListener("click",()=>{const keep={paCor:pa("paCor"),paCreci:pa("paCreci")};PAF.forEach(k=>{const el=$("#"+k);el.value=el.tagName==="SELECT"?el.options[0].value:""});
+  $("#paPrazo").value="24";$("#paCom").value="6";$("#paData").value=today();$("#paCor").value=keep.paCor;$("#paCreci").value=keep.paCreci;
+  document.querySelector('input[name="paTipo"][value="corretor"]').checked=true;document.querySelector('input[name="paCen"][value="nosso"]').checked=true;$("#paAnuncio").checked=false;
+  $("#paIms").innerHTML="";paImRow();paImRow();delete document.body.dataset.paTried;paUpdate();toast("Ficha limpa. Seu nome e CRECI ficaram.")});
+function paShowForm(){$("#paWrap").classList.remove("result");$("#view-parceria").classList.remove("done");$("#paSide").hidden=true}
+$("#paGerar").addEventListener("click",()=>{
+  const eb=$("#paErr");eb.hidden=true;
+  try{document.body.dataset.paTried="1";paUpdate();
+    if(paLast.missing.length){$("#paMissing").scrollIntoView({behavior:"smooth",block:"center"});return}
+    $("#paWrap").classList.add("result");$("#view-parceria").classList.add("done");$("#paSide").hidden=false;window.scrollTo({top:0});
+  }catch(err){eb.hidden=false;eb.textContent="Não consegui gerar o termo por um erro na página. Mande um print desta mensagem para a gerência: "+(err&&err.message?err.message:err)}});
+$("#paBack").addEventListener("click",()=>{paShowForm();window.scrollTo({top:0})});
+function paPdf(){DOC_HDR=HDR_PARC;try{return toPDF(paBlocks(paLast))}finally{DOC_HDR=HDR_PROP}}
+async function paDocx(){DOC_HDR=HDR_PARC;try{return await toDOCX(paBlocks(paLast))}finally{DOC_HDR=HDR_PROP}}
+$("#paPdf").addEventListener("click",()=>{if(!window.jspdf){toast("O gerador de PDF não carregou. Recarregue a página.");return}offer(paLast.fileBase+".pdf",paPdf(),"PDF pronto.")});
+$("#paDocx").addEventListener("click",async()=>{if(!window.JSZip){toast("O gerador de Word não carregou. Recarregue a página.");return}offer(paLast.fileBase+".docx",await paDocx(),"Arquivo Word pronto.")});
+$("#paTxt").addEventListener("click",()=>copyText(toText(paBlocks(paLast)),"Texto copiado."));
+$("#paShare").addEventListener("click",async()=>{
+  if(!window.jspdf){toast("O gerador de PDF não carregou. Recarregue a página.");return}
+  const m=paLast,nome=(m.imob?(pa("paResp")||""):m.parNome).split(" ")[0];
+  const ref=m.ims.length===1?`ao imóvel ${m.ims[0].c}`:`aos ${m.ims.length} imóveis que conversamos`;
+  const texto=`Olá, ${nome||"tudo bem"}! Tudo bem? Aqui é ${pa("paCor")||"[corretor]"}, da Utu-Guaçu Imóveis.\n\nConforme combinamos, envio em anexo o termo ${m.inv?"de confidencialidade":"de parceria"} referente ${ref}. Assim que estiver assinado, me devolva uma via por aqui que já seguimos com ${m.inv?"a apresentação":"o atendimento"}.\n\nAnalise com calma e, qualquer dúvida, estou à disposição.`;
+  const name=m.fileBase+".pdf",blob=paPdf(),file=new File([blob],name,{type:"application/pdf"});
+  let n=onlyDig(pa("paTel"));if(n.length===10||n.length===11)n="55"+n;
+  try{navigator.clipboard&&navigator.clipboard.writeText(texto).catch(()=>{})}catch(_){}
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:texto,title:"Termo de parceria"});toast("Se a mensagem não aparecer junto do PDF, cole no WhatsApp: ela já está copiada.");return}}catch(err){if(err&&err.name==="AbortError")return}
+  nativeSave(name,blob);window.open("https://wa.me/"+(n.length>=12?n:"")+"?text="+encodeURIComponent(texto),"_blank","noopener");toast("PDF baixado. Anexe o arquivo na conversa do WhatsApp.")});
 
 })();
 </script>
