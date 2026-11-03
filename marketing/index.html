@@ -197,7 +197,8 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
           <div class="lk-row"><input id="lkUrl" type="url" inputmode="url" autocomplete="off" placeholder="utuguacu.com.br/imovel/..."><button class="btn dark small" id="lkGo" type="button">Puxar dados</button></div>
           <p class="lk-st" id="lkSt">No site, abra o imóvel, toque em compartilhar e copie o link. Depois é só conferir e ajustar o que quiser.</p>
         </div>
-        <div class="field"><span class="legend">Fotos do imóvel <span class="opt">(a primeira é a capa)</span></span>
+        <button class="btn small" id="pLimpar" type="button" style="align-self:flex-start">Limpar informações</button>
+        <div class="field"><span class="legend">Fotos do imóvel <span class="opt">(a primeira é a capa; no carrossel, as outras entram só com a foto, sem texto)</span></span>
           <div class="file"><label class="btn small" for="pFotos">Adicionar fotos</label><input type="file" id="pFotos" accept="image/*" multiple hidden><span class="hint" id="fotosHint"></span></div>
           <div class="thumbs" id="thumbs"></div>
         </div>
@@ -214,7 +215,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
           <div class="field"><label for="pV">Vagas</label><input id="pV" inputmode="numeric"></div>
         </div>
         <div class="field"><label for="pValor">Valor <span class="opt">(opcional)</span></label><input id="pValor" placeholder="Ex.: a partir de R$ 775 mil"></div>
-        <div class="field"><label for="pDif">Diferenciais <span class="opt">(um por linha, viram os cards do carrossel)</span></label><textarea id="pDif" rows="3"></textarea></div>
+        <div class="field"><label for="pDif">Diferenciais <span class="opt">(um por linha, entram na legenda)</span></label><textarea id="pDif" rows="3"></textarea></div>
       </fieldset>
 
       <fieldset>
@@ -343,7 +344,7 @@ function loadImg(src){return new Promise((ok,no)=>{const i=new Image();i.onload=
 async function shrink(file,max){const i=await loadImg(URL.createObjectURL(file));const s=Math.min(1,max/Math.max(i.width,i.height));const c=document.createElement("canvas");c.width=Math.round(i.width*s);c.height=Math.round(i.height*s);c.getContext("2d").drawImage(i,0,0,c.width,c.height);return c.toDataURL("image/jpeg",.86)}
 function renderThumbs(){$("#thumbs").innerHTML=FOTOS.map((f,i)=>`<div><img src="${f.img.src}" alt=""><span class="n">${i+1}</span><button type="button" data-rm="${i}" aria-label="Remover foto">×</button></div>`).join("");
   $("#fotosHint").textContent=FOTOS.length?`${FOTOS.length} ${FOTOS.length===1?"foto":"fotos"}${FOTOS.some(f=>f.ex)?" de exemplo":""}`:"Nenhuma foto ainda."}
-$("#pFotos").addEventListener("change",async e=>{if(FOTOS.some(f=>f.ex))FOTOS=[];for(const f of e.target.files){if(FOTOS.length>=9)break;FOTOS.push({img:await loadImg(await shrink(f,1600))})}e.target.value="";renderThumbs();draw()});
+$("#pFotos").addEventListener("change",async e=>{if(FOTOS.some(f=>f.ex))FOTOS=[];for(const f of e.target.files){if(FOTOS.length>=19){toast("O Instagram aceita até 20 cards: capa, 18 fotos e o card final.");break}FOTOS.push({img:await loadImg(await shrink(f,1600))})}e.target.value="";renderThumbs();draw()});
 $("#thumbs").addEventListener("click",e=>{const b=e.target.closest("[data-rm]");if(!b)return;FOTOS.splice(+b.dataset.rm,1);renderThumbs();draw()});
 
 /* ---------- Dados ---------- */
@@ -415,14 +416,11 @@ function slideCover(x,W,H,img,d,lay){
     const nome=[KIT.nome||"Seu nome",KIT.creci?"CRECI "+KIT.creci:"",KIT.ig].filter(Boolean).join("  ·  ");text(x,nome,W/2,H-pad,{font:F(0,26,"b"),color:c1,align:"center"})}
   if(story){const t=d.cta;x.font=Fb(30);const w=x.measureText(t).width+80;const by=lay==="moldura"||lay==="claro"?H-pad-130:H-pad-150;x.fillStyle=c2;rr(x,(W-w)/2,by-56,w,76,38);x.fill();text(x,t,W/2,by-8,{font:Fb(30),color:lum(c2)>.6?c1:"#fff",align:"center"})}
 }
-function slidePhoto(x,W,H,img,line,idx,total,lay){const c1=KIT.c1,c2=KIT.c2,light=mix(c1,"#ffffff",.9),pad=64,fy=[.5,.4,.6][Math.floor(rnd(10+idx)*3)];
-  if(lay==="claro"){x.fillStyle=mix(c1,"#ffffff",.93);x.fillRect(0,0,W,H);x.save();rr(x,pad,pad,W-pad*2,H-pad*2-170,26);x.clip();cover(x,img,pad,pad,W-pad*2,H-pad*2-170,fy);x.restore();
-    text(x,line,W/2,H-pad-90,{font:F(0,54,"d"),color:c1,maxW:W-pad*2,maxLines:2,lh:60,align:"center"})}
-  else if(lay==="moldura"){x.fillStyle=c1;x.fillRect(0,0,W,H);cover(x,img,pad,pad,W-pad*2,H-pad*2-170,fy);text(x,line,pad,H-pad-80,{font:F(0,54,"d"),color:light,maxW:W-pad*2-120,maxLines:2,lh:60});x.fillStyle=c2;x.fillRect(pad,H-pad-150,90,8)}
-  else{cover(x,img,0,0,W,H,fy);const g=x.createLinearGradient(0,H*.55,0,H);g.addColorStop(0,rgba(c1,0));g.addColorStop(1,rgba(c1,.9));x.fillStyle=g;x.fillRect(0,0,W,H);
-    if(lay==="editorial"){x.font=F(0,50,"d");const L=wrap(x,line,W-pad*2-80).slice(0,2);const bh=L.length*58+70;x.fillStyle=light;rr(x,pad,H-pad-bh,W-pad*2,bh,6);x.fill();x.fillStyle=c2;x.fillRect(pad,H-pad-bh,10,bh);text(x,L.join(" "),pad+44,H-pad-bh+70,{font:F(0,50,"d"),color:c1,maxW:W-pad*2-80,maxLines:2,lh:58})}
-    else{x.fillStyle=c2;x.fillRect(pad,H-pad-150,10,110);text(x,line,pad+40,H-pad-96,{font:F(0,56,"d"),color:"#fff",maxW:W-pad*2-60,maxLines:2,lh:62})}}
-  x.font=Fb(24);const n=`${idx+1}/${total}`;const w=x.measureText(n).width+30;x.fillStyle="rgba(0,0,0,.45)";rr(x,W-pad-w,pad+18,w,44,22);x.fill();text(x,n,W-pad-w/2,pad+48,{font:Fb(24),color:"#fff",align:"center"})}
+function slidePhoto(x,W,H,img,idx,lay){const c1=KIT.c1,pad=64,fy=[.5,.4,.6][Math.floor(rnd(10+idx)*3)];
+  /* fotos do meio do carrossel: só a foto, sem texto (o texto fica na capa e no card final) */
+  if(lay==="claro"){x.fillStyle=mix(c1,"#ffffff",.93);x.fillRect(0,0,W,H);x.save();rr(x,pad,pad,W-pad*2,H-pad*2,26);x.clip();cover(x,img,pad,pad,W-pad*2,H-pad*2,fy);x.restore()}
+  else if(lay==="moldura"){x.fillStyle=c1;x.fillRect(0,0,W,H);cover(x,img,pad,pad,W-pad*2,H-pad*2,fy)}
+  else cover(x,img,0,0,W,H,fy)}
 function slideCta(x,W,H,d,bg){const c1=KIT.c1,c2=KIT.c2,light=mix(c1,"#ffffff",.9),pad=90;x.fillStyle=c1;x.fillRect(0,0,W,H);if(bg){cover(x,bg,0,0,W,H,.5);x.fillStyle=rgba(c1,.86);x.fillRect(0,0,W,H)}
   x.fillStyle=rgba(c2,.12);x.beginPath();x.arc(W*.85,H*.12,260,0,7);x.fill();
   let y=H*.22;if(fotoImg){const r=150;x.save();x.beginPath();x.arc(W/2,y+r,r,0,7);x.clip();cover(x,fotoImg,W/2-r,y,r*2,r*2,.35);x.restore();x.strokeStyle=c2;x.lineWidth=8;x.beginPath();x.arc(W/2,y+r,r+10,0,7);x.stroke();y+=r*2+90}else y+=60;
@@ -438,14 +436,13 @@ async function draw(){
   if(!FOTOS.length)return; await fontsReady();
   const d=dados(),fmt=rad("fmt"),lay=rad("lay"),W=1080,H=fmt==="story"?1920:1350;
   const list=[];list.push({k:"cover",img:FOTOS[0].img});
-  if(fmt==="carrossel"){const lines=[...d.difs];if(!lines.length){if(d.specs.length)lines.push(d.specs.slice(0,2).join(" e "));if(d.local)lines.push(d.local)}
-    const extra=FOTOS.slice(1);extra.forEach((f,i)=>list.push({k:"photo",img:f.img,line:lines[i%Math.max(1,lines.length)]||d.titulo}));list.push({k:"cta"})}
+  if(fmt==="carrossel"){FOTOS.slice(1).forEach(f=>list.push({k:"photo",img:f.img}));list.push({k:"cta"})}
   const box=$("#slides");box.className="slides"+(list.length===1?" one":"");
   while(box.children.length>list.length)box.lastChild.remove();
   while(box.children.length<list.length){const c=document.createElement("canvas");box.appendChild(c)}
   CANVASES=[...box.children];
   list.forEach((s,i)=>{const c=CANVASES[i];c.width=W;c.height=H;const x=c.getContext("2d");x.clearRect(0,0,W,H);
-    if(s.k==="cover")slideCover(x,W,H,s.img,d,lay);else if(s.k==="photo")slidePhoto(x,W,H,s.img,s.line,i,list.length,lay);else slideCta(x,W,H,d,FOTOS[0]&&FOTOS[0].img);
+    if(s.k==="cover")slideCover(x,W,H,s.img,d,lay);else if(s.k==="photo")slidePhoto(x,W,H,s.img,i,lay);else slideCta(x,W,H,d,FOTOS[0]&&FOTOS[0].img);
     c.setAttribute("aria-label",`Card ${i+1} de ${list.length}`)});
   $("#prevLbl").textContent=fmt==="carrossel"?`Prévia · ${list.length} cards`:fmt==="story"?"Prévia · story":"Prévia · post";
   legenda();howto();
@@ -597,6 +594,11 @@ $("#lkGo").addEventListener("click",puxarLink);
 $("#lkUrl").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();puxarLink()}});
 $("#lkUrl").addEventListener("paste",()=>setTimeout(()=>{if(/utuguacu\.com\.br\/\S+/i.test(v("lkUrl")))puxarLink()},50));
 
+
+$("#pLimpar").addEventListener("click",()=>{["pTitulo","pLocal","pArea","pQ","pS","pV","pValor","pDif","lkUrl"].forEach(id=>$("#"+id).value="");
+  $("#pFin").value="venda";$("#pTipo").selectedIndex=0;FOTOS=[];renderThumbs();$("#slides").innerHTML="";CANVASES=[];$("#prevLbl").textContent="Prévia";
+  const st=$("#lkSt");st.className="lk-st";st.textContent="No site, abra o imóvel, toque em compartilhar e copie o link. Depois é só conferir e ajustar o que quiser.";
+  try{legenda()}catch(_){}toast("Informações apagadas. Pode começar o seu post.")});
 /* ---------- Início ---------- */
 document.querySelectorAll("fieldset input, fieldset select, fieldset textarea").forEach(el=>{if(!el.closest("#kitBox")){el.addEventListener("input",draw);el.addEventListener("change",draw)}});
 kitToForm();
