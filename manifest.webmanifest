@@ -1,6 +1,6 @@
 {
   "name": "Portal de Vendas Utu-Guaçu",
-  "short_name": "PortalVendas",
+  "short_name": "VendasUtu",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
