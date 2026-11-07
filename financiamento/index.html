@@ -154,16 +154,16 @@ const ETAPAS=[
   titulo:"Você está no começo: descobrir o seu poder de compra",
   texto:"Antes de procurar o imóvel, o ideal é saber quanto você consegue financiar. A simulação considera a sua renda, o valor que você tem para a entrada e se dá para usar o FGTS ou somar a renda com cônjuge, filhos ou outros familiares.",
   dicas:["Separe a sua renda mensal e a de quem pode compor renda com você.","Veja quanto você tem disponível para a entrada.","Confira se tem 3 anos ou mais de carteira assinada, somando todos os empregos, para usar o FGTS."]},
- {id:2,nome:"Parcela que cabe",q:"Com a simulação, você já sabe a faixa de preço que pode procurar, a entrada e a parcela que cabem no seu orçamento?",
+ {id:2,nome:"Parcela que cabe",sim:"Sim, já sei",q:"Com a simulação, você já sabe a faixa de preço que pode procurar, a entrada e a parcela que cabem no seu orçamento?",
   titulo:"Você já simulou: agora é achar a parcela confortável",
   texto:"A simulação mostra os números, mas o mais importante é a parcela caber com folga no seu mês. Vale comparar taxas e o custo total entre a Caixa, outros bancos e o banco em que você já tem conta.",
   dicas:["Uma referência comum é a parcela não passar de 30% da renda.","Compare o custo total do financiamento, não só a taxa de juros.","Defina a faixa de preço do imóvel antes de começar as visitas."]},
- {id:3,nome:"Análise de crédito",q:"O banco já analisou e aprovou o seu crédito?",
-  titulo:"Você já sabe o seu orçamento: falta a aprovação do crédito",
-  texto:"A simulação é uma estimativa e não garante aprovação. O banco precisa analisar o seu crédito, e o resultado final também depende da documentação e da avaliação do imóvel escolhido.",
-  dicas:["Com o crédito aprovado, você negocia o imóvel com muito mais segurança.","Mantenha os documentos pessoais e de renda atualizados.","Evite assumir novas dívidas enquanto a análise estiver em andamento."]},
+ {id:3,nome:"Pré-aprovação",sim:"Sim, foi pré-aprovada",q:"A sua simulação já foi pré-aprovada pelo banco ou correspondente?",
+  titulo:"Você já sabe o seu orçamento: falta a pré-aprovação",
+  texto:"A simulação é uma estimativa e não garante aprovação. O próximo passo é o banco analisar o seu cadastro e pré-aprovar o crédito. A aprovação final ainda depende da documentação e da avaliação do imóvel escolhido.",
+  dicas:["Com o crédito pré-aprovado, você negocia o imóvel com muito mais segurança.","Mantenha os documentos pessoais e de renda atualizados.","Evite assumir novas dívidas enquanto a análise estiver em andamento."]},
  {id:4,nome:"Imóvel e negociação",q:"Você já escolheu o imóvel e assinou o compromisso de compra e venda com o proprietário?",
-  titulo:"Crédito aprovado: hora de escolher o imóvel e negociar",
+  titulo:"Crédito pré-aprovado: hora de escolher o imóvel e negociar",
   texto:"O vendedor precisa aceitar financiamento e o imóvel deve atender às exigências do banco. O compromisso de compra e venda define preço, prazos, sinal, entrada e as condições do financiamento.",
   dicas:["Confirme com o proprietário que ele aceita financiamento bancário.","A entrada é a parte não financiada e pode incluir um sinal.","Leia com atenção os prazos combinados no compromisso."]},
  {id:5,nome:"Análises e contrato",q:"O banco já avaliou o imóvel, aprovou a documentação e o contrato bancário já foi assinado?",
@@ -212,7 +212,7 @@ function render(){
     a.innerHTML=`<section class="screen">
       <div class="eyebrow">Pré-requisito ${e.id} de ${NQ} · ${esc(e.nome)}</div>
       <p class="q">${esc(e.q)}</p>
-      <div class="yn"><button class="btn dark" id="sim">Sim, já fiz</button><button class="btn" id="nao">Ainda não</button></div>
+      <div class="yn"><button class="btn dark" id="sim">${esc(e.sim||"Sim, já fiz")}</button><button class="btn" id="nao">Ainda não</button></div>
       ${S.etapa>0?`<button class="btn ghost" id="voltar">Voltar à pergunta anterior</button>`:""}
     </section>`;
     $("#sim").onclick=()=>{if(S.etapa<NQ-1){S.etapa++;render()}else{S.parou=NQ;go("pronto")}};
@@ -251,13 +251,13 @@ function render(){
     const d=S.d;
     a.innerHTML=`<section class="screen">
       <div class="eyebrow">Tudo certo</div>
-      <h2>Você já está com o crédito aprovado</h2>
+      <h2>Você já está com o crédito pré-aprovado</h2>
       ${statusList(NQ)}
-      <p>Ótimo! Com a simulação feita, a parcela definida e o crédito aprovado, você está pronto para a próxima fase: escolher o imóvel e negociar com segurança, com o acompanhamento da Utu-Guaçu.</p>
+      <p>Ótimo! Com a simulação feita, a parcela definida e o crédito pré-aprovado, você está pronto para a próxima fase: escolher o imóvel e negociar com segurança, com o acompanhamento da Utu-Guaçu.</p>
       <form class="card" id="fp" novalidate>
         <p class="sect">Para o seu atendimento</p>
         ${fld("nome","Nome completo",{ac:"name"})}
-        <div class="two">${fld("banco","Banco ou correspondente que aprovou",{opt:true})}${fld("aprov","Valor do crédito aprovado (R$)",{opt:true,im:"decimal"})}</div>
+        <div class="two">${fld("banco","Banco ou correspondente que pré-aprovou",{opt:true})}${fld("aprov","Valor pré-aprovado (R$)",{opt:true,im:"decimal"})}</div>
         <div class="two">${fld("entrada","Valor para a entrada (R$)",{opt:true,im:"decimal"})}${fld("tipoIm","Tipo de imóvel que procura",{opt:true,sel:["Casa","Casa em condomínio","Apartamento","Terreno ou lote","Chácara ou imóvel rural","Ainda não sei"]})}</div>
         <div class="err-msg" id="faltaP" hidden></div>
         <button class="btn dark" type="submit">Ver minha resposta ${ARROW}</button>
@@ -378,8 +378,8 @@ function mensagem(){
 }
 function respostaPronta(){const d=S.d,L=(k,v)=>v?`• ${k}: ${v}`:null;
   return [`Olá! Aqui é ${d.nome}. Respondi o guia do financiamento da Utu-Guaçu e já estou com os pré-requisitos completos:`,"",
-   "• Simulação de financiamento: feita","• Faixa de preço, entrada e parcela: definidas","• Crédito: aprovado",
-   L("Banco ou correspondente",d.banco),L("Crédito aprovado",money(d.aprov)),L("Entrada disponível",money(d.entrada)),L("Imóvel que procuro",d.tipoIm),
+   "• Simulação de financiamento: feita","• Faixa de preço, entrada e parcela: definidas","• Crédito: pré-aprovado",
+   L("Banco ou correspondente",d.banco),L("Crédito pré-aprovado",money(d.aprov)),L("Entrada disponível",money(d.entrada)),L("Imóvel que procuro",d.tipoIm),
    "","Podemos seguir para a escolha do imóvel?"].filter(x=>x!==null).join("\n")}
 function copiar(t,ok){const fb=()=>{const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();let r=false;try{r=document.execCommand("copy")}catch(_){}ta.remove();toast(r?ok:"Não consegui copiar. Segure o dedo sobre o texto para copiar.")};
   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>toast(ok),fb);else fb()}
@@ -401,7 +401,7 @@ function renderCorretor(){
   $("#app").innerHTML=`<section class="screen">
     <div class="eyebrow">Portal de Vendas · Financiamento</div>
     <h1>Enviar o guia do <em>financiamento</em></h1>
-    <p class="lede">Para o cliente que vai comprar financiado. Ele responde o guia, e só volta para você quando estiver com o crédito aprovado. Se faltar algo, o próprio guia encaminha para a ${esc(PARCEIRO.empresa)}.</p>
+    <p class="lede">Para o cliente que vai comprar financiado. Ele responde o guia, e só volta para você quando estiver com o crédito pré-aprovado. Se faltar algo, o próprio guia encaminha para a ${esc(PARCEIRO.empresa)}.</p>
     <form class="card" id="fc" novalidate>
       <div class="field"><span class="legend">Tipo de mensagem</span><div class="seg"><label><input type="radio" name="tipo" value="ini" ${S.c.tipo!=="cont"?"checked":""}><span>Início de conversa</span></label><label><input type="radio" name="tipo" value="cont" ${S.c.tipo==="cont"?"checked":""}><span>Continuação</span></label></div><span class="note" id="tipoHint"></span></div>
       <div class="two">${fldC("cli","Nome do cliente")}<div id="wEu">${fldC("eu","Seu nome")}</div></div>
