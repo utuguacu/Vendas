@@ -382,6 +382,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
 #view-cadastro.done #cdHead{display:none}
 .cd-link{display:flex;flex-direction:column;gap:8px;font-size:13px;line-height:1.45}
 .cd-paste{border:1px dashed var(--line-strong);border-radius:var(--r);padding:10px 12px;background:var(--surface)}.cd-paste summary{cursor:pointer;font-weight:500;font-size:13px}.cd-paste[open]{display:flex;flex-direction:column;gap:8px}.cd-paste textarea{width:100%;padding:9px 11px;border:1px solid var(--line-strong);border-radius:var(--r);background:var(--bg);font:inherit;font-size:16px}
+.cd-msg{border:1.5px dashed var(--gold);background:var(--gold-soft)}.cd-msg summary{font-size:14px}.cd-msg #cdMsgLer{align-self:flex-start}
 .cd-row{display:flex;gap:8px}.cd-row input{flex:1;min-width:0;padding:9px 11px;border:1px solid var(--line-strong);border-radius:var(--r);background:var(--surface)}
 .cd-chips{gap:8px;margin:2px 0 6px}.cd-chips .chip,.cd-ynr .chip{font-size:13.5px;padding:8px 14px;color:var(--fg)}
 .cd-chips .chip[aria-pressed="true"],.cd-ynr .chip[aria-pressed="true"]{color:var(--bg)}
@@ -569,6 +570,13 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
   </div>
   <div class="av-wrap" id="cdWrap">
     <form class="form" id="cdForm" novalidate autocomplete="off">
+      <details class="cd-paste cd-msg" id="cdMsgBox">
+        <summary>Colar mensagem do proprietário</summary>
+        <p class="hint">O proprietário já mandou as informações pelo WhatsApp? Segure o dedo na mensagem, toque em <b>Copiar</b> e cole aqui. A ficha é preenchida com o que der para entender, e a mensagem fica guardada no comentário interno.</p>
+        <textarea id="cdMsgTxt" rows="5" placeholder="Ex.: Oi, sou a Ana Souza, quero alugar minha casa no Terras de São José II, 3 quartos sendo 1 suíte, piscina, 5 mil por mês, condomínio 900. Meu cel 11 98888-7777"></textarea>
+        <button class="btn gold" id="cdMsgLer" type="button">Preencher com a mensagem</button>
+        <p class="hint" id="cdMsgSt"></p>
+      </details>
       <fieldset>
         <legend><small>1</small>Corretor e proprietário</legend>
         <div class="field" data-req><label for="cdCor">Seu nome</label><input id="cdCor" list="cdCorList" placeholder="Nome completo"></div>
@@ -695,7 +703,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
   <div id="dsOut" style="margin-top:22px"></div>
 </section>
 
-<p class="ver">Portal de Locação · versão 10/11/2026 23h40</p>
+<p class="ver">Portal de Locação · versão 11/11/2026 10h45</p>
 </main>
 
 <div class="toast" id="toast" hidden></div>
@@ -1910,7 +1918,7 @@ $("#cdEnviar").addEventListener("click",async()=>{const m=cdLast,files=cdS.fotos
   window.open(cdWaUrl(m.msg),"_blank","noopener");
   if(files.length)toast("Este aparelho não envia fotos direto pelo site. A ficha abriu no WhatsApp; anexe as fotos na conversa.")});
 $("#cdLimpar").addEventListener("click",()=>{$("#cdForm").reset();cdS.one={neg:"Locação"};Object.values(cdS.many).forEach(s=>s.clear());cdS.st={};cdS.yn={};cdS.fotos.forEach(f=>{try{URL.revokeObjectURL(f.u)}catch(_){}});cdS.fotos=[];cdS.ref="";
-  $("#cdUrlSt").textContent="";$("#cdCepSt").textContent="";delete document.body.dataset.cdTried;$("#cdMissing").hidden=true;$$("#cdForm .field").forEach(el=>el.classList.remove("err"));cdPaint();cdFotosPaint();toast("Ficha limpa.")});
+  $("#cdUrlSt").textContent="";$("#cdCepSt").textContent="";$("#cdMsgTxt").value="";$("#cdMsgSt").textContent="";delete document.body.dataset.cdTried;$("#cdMissing").hidden=true;$$("#cdForm .field").forEach(el=>el.classList.remove("err"));cdPaint();cdFotosPaint();toast("Ficha limpa.")});
 /* Puxar dados de um anúncio (qualquer imobiliária ou portal) */
 const CD_ROTAS=[u=>u,u=>"https://api.codetabs.com/v1/proxy/?quest="+encodeURIComponent(u),u=>"https://r.jina.ai/"+u,u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),u=>"https://corsproxy.io/?url="+encodeURIComponent(u)];
 const cdEsc=t=>String(t).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
@@ -1939,7 +1947,8 @@ function cdParse(html,url){
   const venda=/venda|vender|comprar/.test(base),loc=/alug|locac/.test(base);R.neg=venda&&loc?"Venda e Locação":loc?"Locação":venda?"Venda":"";
   const TP=[["casa em condominio","Casa em condomínio"],["terreno em condominio","Terreno em condomínio"],["lote em condominio","Terreno em condomínio"],["apartamento","Apartamento"],["cobertura","Apartamento"],["sobrado","Casa"],["casa","Casa"],["terreno","Terreno"],["lote","Terreno"],["chacara","Chácara"],["sitio","Sítio"],["fazenda","Fazenda"],["haras","Haras"],["sala","Sala comercial"],["galpao","Galpão"],["barracao","Galpão"]];
   for(const [k,v] of TP)if(new RegExp("\\b"+k+"\\b").test(base)){R.tipo=v;break}
-  const cond=[tit,h1,desc].filter(Boolean).join(". ").match(/Condom[íi]nio\s+([A-ZÀ-Ú0-9][^,\-–|/.]{2,50}?)(?=\s*[,\-–|.]|\s+(?:em|na|no)\s|\s+[A-ZÀ-Ú][a-zà-ú]+\/[A-Z]{2}|$)/);
+  let cond=[tit,h1,desc].filter(Boolean).join(". ").match(/Condom[íi]nio\s+([A-ZÀ-Ú0-9][^,\-–|/.]{2,50}?)(?=\s*[,\-–|.]|\s+(?:em|na|no)\s|\s+[A-ZÀ-Ú][a-zà-ú]+\/[A-Z]{2}|$)/);
+  if(cond&&/^(R\$|\d)/.test(cond[1].trim()))cond=null;
   if(cond){R.bairro=cond[1].trim();if(R.tipo==="Casa")R.tipo="Casa em condomínio";if(R.tipo==="Terreno")R.tipo="Terreno em condomínio"}
   else{const b=pj(/^(bairro|neighborhood|district|addresslocality2)$/);if(b)R.bairro=String(b)}
   const cid=[tit,h1,desc].filter(Boolean).join(". ").match(/([A-ZÀ-Ú][A-Za-zÀ-ú ]{1,30})\s*[\/-]\s*(SP|MG|RJ|PR|SC|RS|GO|MS|MT|BA|PE|CE|ES|DF)\b/);
@@ -1963,7 +1972,7 @@ function cdParse(html,url){
   const area=lbl=>{const U="(m2|m²|ha|hectares?|alqueires?)",N="([\\d.]+(?:,\\d+)?)";const pats=[new RegExp(N+"\\s*"+U+"\\s*(?:de\\s*)?(?:area\\s*)?(?:"+lbl+")"),new RegExp("area\\s*(?:"+lbl+")(?:(?!area)[^\\d]){0,25}"+N+"\\s*"+U),new RegExp("(?:"+lbl+")\\s*(?:de|com|:)?\\s*"+N+"\\s*"+U)];
     let num,un;for(const re of pats){const m=T.match(re);if(m){num=m[1];un=m[2];break}}if(!num)return"";let v=nB(num);if(/ha|hect/.test(un))v*=10000;if(/alq/.test(un))v*=24200;return v?v.toLocaleString("pt-BR",{maximumFractionDigits:2}):""};
   R.areaC=area("construida|util|privativa");R.areaT=area("do terreno|de terreno|total|terreno");
-  if(!R.areaC&&!R.areaT){const m=T.match(/([\d.]+(?:,\d+)?)\s*(?:m2|m²)\b/);if(m){const v=String(nB(m[1])).replace(".",",");/Terreno/.test(R.tipo||"")?R.areaT=v:R.areaC=v}}
+  if(!R.areaC&&!R.areaT){const m=T.match(/([\d.]+(?:,\d+)?)\s*(?:m2|m²)(?![a-z0-9])/);if(m){const v=String(nB(m[1])).replace(".",",");/Terreno/.test(R.tipo||"")?R.areaT=v:R.areaC=v}}
   const tem=re=>re.test(T);
   R.yn={};if(tem(/piscina/))R.yn.piscina="Sim";if(tem(/churrasqueira/))R.yn.churras="Sim";if(tem(/varanda gourmet|terraco gourmet|espaco gourmet/))R.yn.varanda="Gourmet";else if(tem(/varanda|sacada/))R.yn.varanda="Simples";if(tem(/aceita (?:animais|pet)|pet friendly|permite (?:animais|pet)/))R.yn.pet="Sim";if(tem(/aceita financiamento|financiavel/))R.yn.fin="Sim";if(tem(/aceita permuta/))R.yn.perm="Sim";
   const IF=[["Ar-condicionado",/ar[- ]condicionado/],["Aquecimento solar",/aquecimento solar|aquecedor solar/],["Aquecimento a gás",/aquecimento a gas|aquecedor a gas/],["Alarme",/alarme/],["Câmeras",/cameras|cftv/],["Interfone",/interfone/],["Portão eletrônico",/portao eletronico|portao automatico/],["Internet / fibra",/fibra otica|internet/],["Gerador",/gerador/],["Lareira",/lareira/],["Mobiliado",/\bmobiliad[oa]\b/],["Semimobiliado",/semi[- ]?mobiliad/],["Sauna",/sauna/],["Ofurô",/ofuro/],["Edícula",/edicula/]];
@@ -1971,7 +1980,7 @@ function cdParse(html,url){
   const AR=[["Closet",/closet/],["Cozinha",/armarios? (?:na |de )?cozinha|cozinha (?:planejada|com armarios)/],["Quartos",/armarios? (?:nos |nos )?(?:quartos|dormitorios)|dormitorios? planejad/]];R.arm=AR.filter(([,re])=>tem(re)).map(([l])=>l);
   const PI=[["Porcelanato",/porcelanato/],["Cerâmica",/ceramica/],["Mármore",/marmore/],["Granito",/granito/],["Laminado",/laminado/],["Tábua",/piso de tabua|assoalho/],["Taco",/\btaco\b/]];R.piso=PI.filter(([,re])=>tem(re)).map(([l])=>l);
   return R}
-function cdAplicar(R,url){const st=$("#cdUrlSt");if(!R.neg&&R.aluguel)R.neg=R.valor?"Venda e Locação":"Locação";if((R.neg||cdS.one.neg)==="Locação"&&!R.pacote&&(R.aluguel||R.valor)){R.pacote=R.aluguel||R.valor;R.valor=0}const ach=[];
+function cdAplicar(R,url,stEl){const st=stEl||$("#cdUrlSt");if(!R.neg&&R.aluguel)R.neg=R.valor?"Venda e Locação":"Locação";if((R.neg||cdS.one.neg)==="Locação"&&!R.pacote&&(R.aluguel||R.valor)){R.pacote=R.aluguel||R.valor;R.valor=0}const ach=[];
     const put=(id,v,lab)=>{if(v&&!cv(id)){$("#"+id).value=v;ach.push(lab)}};
     if(R.neg&&!cdS.one.neg){cdS.one.neg=R.neg;ach.push("negócio")}if(R.tipo&&!cdS.one.tipo){cdS.one.tipo=R.tipo;ach.push("tipo")}
     put("cdValor",R.valor?fmtMoney(R.valor):"","valor");put("cdPacote",R.pacote?fmtMoney(R.pacote):"","pacote");put("cdCond",R.cond?fmtMoney(R.cond):"","condomínio");put("cdIptu",R.iptu?fmtMoney(R.iptu):"","IPTU");
@@ -1984,6 +1993,62 @@ function cdAplicar(R,url){const st=$("#cdUrlSt");if(!R.neg&&R.aluguel)R.neg=R.va
 }
 $("#cdLer").addEventListener("click",()=>{const t=($("#cdTxt").value||"").trim();if(t.length<30){$("#cdUrlSt").textContent="Cole o texto do anúncio (título, valor, quartos, área...).";return}
   try{cdAplicar(cdParse(cdTextoHtml(t),cv("cdUrl")||""),cv("cdUrl")||"")}catch(e){$("#cdUrlSt").textContent="Não consegui ler esse texto. Preencha à mão."}});
+
+/* ===== Colar mensagem do proprietário (texto do WhatsApp) ===== */
+const NUMW={um:1,uma:1,dois:2,duas:2,"três":3,tres:3,quatro:4,cinco:5,seis:6,sete:7,oito:8,nove:9,dez:10};
+function cdNormMsg(t){
+  let s=String(t).replace(/ /g," ");
+  /* "três quartos" -> "3 quartos" */
+  s=s.replace(/\b(uma?|dois|duas|tr[eê]s|quatro|cinco|seis|sete|oito|nove|dez)\s+(?=(quartos?|dormit|su[ií]tes?|banheiros?|vagas?|lavabos?|salas?|garagens?)\b)/gi,(m,w)=>NUMW[w.toLowerCase()]+" ");
+  /* "5 mil" / "1,2 milhão" -> "R$ 5.000" / "R$ 1.200.000" */
+  s=s.replace(/(?:r\$\s*)?(\d+(?:[.,]\d+)?)\s*(mil|milh(?:ão|ao|ões|oes))\b(?:\s*reais)?/gi,(m,n,u)=>{const v=parseFloat(n.replace(/\./g,"").replace(",","."))*(/mil$/i.test(u)?1e3:1e6);return "R$ "+v.toLocaleString("pt-BR",{maximumFractionDigits:2})});
+  s=s.replace(/(\d[\d.]*(?:,\d{1,2})?)\s*reais\b/gi,"R$ $1");
+  /* palavra-chave seguida de número sem R$ */
+  s=s.replace(/\b(aluguel|alugar por|loca[cç][aã]o|valor|venda|vender por|pre[cç]o|condom[ií]nio|iptu)(\s*(?:de|é|e|:|por|fica|sai|em|mensal|anual|do|da)?\s*)(\d[\d.]*(?:,\d{1,2})?)(?!\s*(?:m2|m²|metros|quartos|dorm|anos|%))/gi,(m,k,mid,n)=>`${k}${mid}R$ ${n}`);
+  return s}
+function cdLerMsgProp(){
+  const raw=($("#cdMsgTxt").value||"").trim(),st=$("#cdMsgSt");
+  if(raw.length<15){st.textContent="Cole a mensagem que o proprietário mandou.";return}
+  const t=cdNormMsg(raw),ex=[];
+  const put=(id,val,lab)=>{if(val&&!cv(id)){$("#"+id).value=val;ex.push(lab)}};
+  /* nome */
+  const nm=raw.match(/(?:[Mm]eu nome [ée]|[Mm]e chamo|[Aa]qui [ée]\s+(?:o|a)?|[Ss]ou\s+(?:o|a))\s+([A-ZÀ-Ú][a-zà-ú]+(?:\s+(?:de|da|do|dos|das|e|[A-ZÀ-Ú][a-zà-ú]+))*)/);
+  if(nm){const p=nm[1].trim().split(/\s+/).filter(w=>!/^(e)$/.test(w));put("cdPNome",p[0],"nome");if(p.length>1)put("cdPSobre",p.slice(1).join(" ").replace(/\s+(de|da|do|dos|das)$/,""),"sobrenome")}
+  /* celular */
+  const tels=[...raw.matchAll(/(?:\+?55\s*)?\(?\d{2}\)?\s*9?\s*\d{4}[\s.-]?\d{4}/g)].map(m=>onlyDig(m[0]).replace(/^55(?=\d{10,11}$)/,"")).filter(d=>d.length>=10&&d.length<=11);
+  if(tels[0])put("cdPTel",maskTel(tels[0]),"celular");
+  /* endereço */
+  const rua=raw.match(/\b((?:rua|r\.|avenida|av\.?|alameda|al\.|estrada|rodovia|travessa|pra[cç]a)\s+[^,\n;]{2,60}?)\s*(?:,|\s)\s*(?:n[º°o.]?\s*)?(\d{1,5})\b/i);
+  if(rua){put("cdRua",rua[1].trim().replace(/^r\.\s*/i,"Rua ").replace(/^av\.?\s+/i,"Avenida "),"rua");put("cdNum",rua[2],"número")}
+  const ql=raw.match(/quadra\s*([A-Za-z0-9]{1,4})\D{0,12}lote\s*([A-Za-z0-9]{1,5})/i);
+  if(ql){put("cdRua","Quadra "+ql[1].toUpperCase(),"quadra");put("cdNum","Lote "+ql[2].toUpperCase(),"lote")}
+  const cep=raw.match(/\b(\d{5})-?(\d{3})\b/);if(cep&&!cv("cdCep")){$("#cdCep").value=cep[1]+"-"+cep[2];ex.push("CEP");try{cdViaCep(cep[1]+cep[2])}catch(_){}}
+  /* resto: mesma leitura do anúncio */
+  let R={};try{R=cdParse(cdTextoHtml(t),"")}catch(_){}
+  const T=t.toLowerCase();
+  if(!R.neg){const al=/alug|loca[cç]/.test(T),ve=/vend[ae]r?\b|venda/.test(T);R.neg=al&&ve?"Venda e Locação":al?"Locação":ve?"Venda":""}
+  /* IPTU por mês vira anual */
+  const im=t.match(/iptu[^\n]{0,30}?r\$\s*([\d.]+(?:,\d{1,2})?)[^\n]{0,25}?(por m[eê]s|mensal|\/m[eê]s|ao m[eê]s)/i);
+  if(im){const v=nB(im[1]);if(v>0){R.iptu=v*12;ex.push("IPTU anual (12 × "+fmtMoney(v)+")")}}
+  /* negócio e tipo: vale o que o proprietário escreveu, e o primeiro tipo citado */
+  {const al=/\balug|\bloca[cç]/.test(T),ve=/\bvend[ae]r?\b|\bvenda\b/.test(T);const ng=al&&ve?"Venda e Locação":al?"Locação":ve?"Venda":"";if(ng){R.neg=ng;cdS.one.neg=ng}}
+  {const TP=[["casa em condominio","Casa em condomínio"],["apartamento","Apartamento"],["apto","Apartamento"],["cobertura","Apartamento"],["sobrado","Casa"],["casa","Casa"],["terreno","Terreno"],["lote","Terreno"],["chacara","Chácara"],["sitio","Sítio"],["fazenda","Fazenda"],["haras","Haras"],["sala comercial","Sala comercial"],["galpao","Galpão"],["barracao","Galpão"]];
+   const tn=T.normalize("NFD").replace(/[̀-ͯ]/g,"");let best=null;for(const [k,v] of TP){const m=tn.match(new RegExp("\\b"+k+"\\b"));if(m&&(!best||m.index<best.i))best={i:m.index,v}}
+   if(best&&!(best.v==="Terreno"&&/quadra\s*\w+\D{0,12}lote/.test(tn)&&best.i===tn.search(/\blote\b/))){R.tipo=best.v;if(!cdS.one.tipo||cdS.one.tipo!==best.v)cdS.one.tipo=undefined}}
+  /* valor sem palavra-chave: o maior R$ que não seja condomínio nem IPTU */
+  if(!R.valor&&!R.pacote&&!R.aluguel){const vals=[];for(const m of t.matchAll(/r\$\s*([\d.]+(?:,\d{1,2})?)/gi)){const antes=t.slice(Math.max(0,m.index-22),m.index).toLowerCase();if(/condom|iptu/.test(antes))continue;const v=nB(m[1]);if(v>0)vals.push({v,mes:/^[^\n]{0,25}(por m[eê]s|mensal|\/m[eê]s|ao m[eê]s)/i.test(t.slice(m.index+m[0].length))})}
+    if(vals.length){const top=vals.sort((a,b)=>b.v-a.v)[0];const neg=R.neg||cdS.one.neg||"";if(/Loca/.test(neg)&&(top.mes||top.v<50000||neg==="Locação"))R.pacote=top.v;else R.valor=top.v}}
+  /* condomínio e cidade pelo nome, mesmo sem a palavra "condomínio" */
+  const sa=x=>String(x||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();const ST=sa(raw);
+  if(!R.bairro){const cs=[...document.querySelectorAll("#cdCondList option")].map(o=>o.value).sort((a,b)=>b.length-a.length);const c=cs.find(c=>new RegExp("\\b"+sa(c).replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"(?!\\s*i)\\b").test(ST));if(c){R.bairro=c;if(R.tipo==="Casa")R.tipo="Casa em condomínio";if(R.tipo==="Terreno")R.tipo="Terreno em condomínio"}}
+  if(!R.cidade){const cs=[...document.querySelectorAll("#cdCidList option")].map(o=>o.value);const c=cs.find(c=>new RegExp("\\b"+sa(c)+"\\b").test(ST));if(c){R.cidade=c;R.uf=R.uf||"SP"}}
+  cdAplicar(R,"",st);
+  if(ex.length)st.innerHTML=`Do proprietário: ${esc(ex.join(", "))}. `+st.innerHTML;
+  st.innerHTML=st.innerHTML.replace(/,\s*porque cada site mostra as informações de um jeito\./," antes de enviar para a Rebeca.");
+  /* guarda a mensagem original no comentário interno */
+  const obs=$("#cdObs");if(obs&&!obs.value.includes(raw.slice(0,40)))obs.value=(obs.value?obs.value.trim()+"\n\n":"")+"Mensagem do proprietário:\n"+raw;
+}
+$("#cdMsgLer").addEventListener("click",cdLerMsgProp);
 $("#cdPuxar").addEventListener("click",async()=>{const st=$("#cdUrlSt"),btn=$("#cdPuxar");let url=cv("cdUrl");
   if(!url){st.textContent="Cole o link do anúncio.";return}if(!/^https?:\/\//i.test(url))url="https://"+url;try{new URL(url)}catch(_){st.textContent="Esse link não parece completo.";return}
   btn.disabled=true;const old=btn.textContent;btn.textContent="Buscando…";st.textContent="Abrindo o anúncio…";
