@@ -705,7 +705,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
       <fieldset>
         <legend><small>1</small>Visita</legend>
         <div class="two">
-          <div class="field"><label for="viCor">Seu nome</label><input id="viCor" list="corList" placeholder="Nome completo"></div>
+          
           <div class="field"><label for="viCli">Nome do cliente</label><input id="viCli" autocapitalize="words"></div>
         </div>
         <div class="field"><label for="viTel">WhatsApp do cliente <span class="opt">(opcional)</span></label><input id="viTel" inputmode="tel" placeholder="(11) 90000-0000"></div>
@@ -718,7 +718,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
       </fieldset>
       <fieldset>
         <legend><small>2</small>Imóveis, na ordem da visita</legend>
-        <p class="hint" style="margin:-4px 0 2px">Cole o link do imóvel no nosso site e toque em Puxar: o imóvel e o condomínio vêm sozinhos. Use as setas para mudar a ordem. Endereço com número, ou quadra e lote, ajuda o cliente a chegar.</p>
+        <p class="hint" style="margin:-4px 0 2px">Cole o link do imóvel no nosso site e toque em Puxar: o imóvel e o condomínio vêm sozinhos. O endereço escreva sempre à mão (rua, número e cidade), porque é ele que abre o mapa certo. Use as setas para mudar a ordem.</p>
         <div id="viIms" class="vi-ims"></div>
         <div class="vi-acts"><button class="btn small" id="viAdd" type="button">+ Adicionar imóvel</button><button class="btn small" id="viAgrupa" type="button">Juntar os do mesmo condomínio</button></div>
         <div class="two">
@@ -1087,7 +1087,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 10/11/2026 23h00</p>
+<p class="ver">Portal de Vendas · versão 10/11/2026 23h10</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -2542,7 +2542,7 @@ function viRow(d={}){const r=document.createElement("div");r.className="vi-im";
   <span class="vi-st hint"></span>
   <input class="vi-desc" placeholder="Imóvel (ex.: Casa 4 suítes, código CA1234)" value="${esc(d.desc||"")}">
   <input class="vi-cond" list="cdCondList" placeholder="Condomínio ou bairro" value="${esc(d.cond||"")}">
-  <input class="vi-end" placeholder="Endereço (rua e número, ou quadra e lote) e cidade" value="${esc(d.end||"")}">`;
+  <input class="vi-end" placeholder="Endereço completo, para o mapa (rua, número e cidade)" value="${esc(d.end||"")}">`;
   $("#viIms").appendChild(r)}
 const viList=()=>$$("#viIms .vi-im").map(r=>({url:r.querySelector(".vi-url").value.trim(),desc:r.querySelector(".vi-desc").value.trim(),cond:r.querySelector(".vi-cond").value.trim(),end:r.querySelector(".vi-end").value.trim()}));
 function viSet(list){$("#viIms").innerHTML="";(list.length?list:[{}]).forEach(viRow)}
@@ -2555,15 +2555,15 @@ function viMsg(){
   const ims=viList().filter(i=>i.desc||i.cond||i.end||i.url);const falta=[];
   if(!vv("viCli"))falta.push("nome do cliente");if(!vv("viData"))falta.push("dia");if(!vv("viHora"))falta.push("horário");if(!ims.length)falta.push("pelo menos um imóvel");
   const [h,mi]=(vv("viHora")||"09:00").split(":").map(Number);let t=h*60+mi;const dur=+vv("viDur"),des=+vv("viDesl");
-  const cli=vv("viCli").split(" ")[0],eu=vv("viCor").split(" ")[0]||vv("viCor");
-  const L=[`Olá${cli?", "+cli:""}! Tudo bem? Aqui é ${eu||"[seu nome]"}, da Utu-Guaçu Imóveis.`,"",
-    `Passando para confirmar a nossa visita ${viDia(vv("viData"))||"[dia]"}, às ${vv("viHora")?hhmm(h*60+mi):"[horário]"}. ${ims.length>1?`Separei ${ims.length} imóveis e organizei o roteiro nesta ordem:`:"Segue o endereço do imóvel:"}`,""];
+  const cli=vv("viCli").split(" ")[0];
+  const L=[`Olá${cli?", "+cli:""}! Tudo bem?`,"",
+    `Passando para confirmar a nossa visita ${viDia(vv("viData"))||"[dia]"}, às ${vv("viHora")?hhmm(h*60+mi):"[horário]"}. ${ims.length>1?`Separei ${ims.length} imóveis e organizei o roteiro nesta ordem:`:"Seguem os detalhes do imóvel:"}`,""];
   const horas=[];
   ims.forEach((i,k)=>{horas.push(t);const tit=[i.desc,i.cond].filter(Boolean).join(", ")||"Imóvel";
     L.push(`${ims.length>1?(k+1)+") ":""}${$("#viHoras").checked&&ims.length>1?hhmm(t)+" · ":""}${tit}`);
     const loc=[i.end].filter(Boolean).join("");if(loc)L.push(loc);
     if($("#viLink").checked&&i.url)L.push("Ver o imóvel: "+i.url);
-    if($("#viMapa").checked&&(i.end||i.cond))L.push("Como chegar: "+mapsQ(i.end&&/\d/.test(i.end)&&!/quadra|lote/i.test(i.end)?i.end:[i.cond,i.end].filter(Boolean).join(", ")));
+    if($("#viMapa").checked&&i.end)L.push("Como chegar: "+mapsQ(i.end));
     L.push("");t+=dur+des});
   const temCond=ims.some(i=>i.cond&&/condom|resid|terras|reserva|villa|vila|fazenda|parque|jardim|portal|village|city|xapada|kurumin|athen|campos|theodora|una|gardenville|mont blanc|altavista|saint/i.test(i.cond));
   if($("#viPort").checked&&temCond)L.push(`Já vou deixar o seu nome liberado na portaria${ims.filter(i=>i.cond).length>1?" dos condomínios":""}.${$("#viDoc").checked?" Leve um documento com foto, porque algumas portarias pedem na entrada.":""}`);
@@ -2575,7 +2575,7 @@ function viUpd(){const m=viMsg();$("#viPrev").textContent=m.txt;
   $$("#viIms .vi-im").forEach((r,k)=>{r.querySelector(".vi-n").textContent=(k+1)+"º";const desc=r.querySelector(".vi-desc").value||r.querySelector(".vi-cond").value||r.querySelector(".vi-end").value;const idx=m.ims.length?viList().slice(0,k+1).filter(i=>i.desc||i.cond||i.end).length-1:-1;r.querySelector(".vi-h").textContent=desc&&m.horas[idx]!=null?"previsto "+hhmm(m.horas[idx]):""});
   const f=$("#viFalta");f.hidden=!m.falta.length;f.textContent=m.falta.length?"Ainda falta: "+m.falta.join(", ")+".":"";
   let n=onlyDig(vv("viTel"));if(n.length===10||n.length===11)n="55"+n;$("#viEnviar").href="https://wa.me/"+(n.length>=12?n:"")+"?text="+encodeURIComponent(m.txt);
-  const pts=m.ims.map(i=>[i.end,i.cond].filter(Boolean).join(", ")).filter(Boolean);
+  const pts=m.ims.map(i=>i.end).filter(Boolean);
   $("#viRota").hidden=!pts.length;if(pts.length){const dest=pts[pts.length-1],way=pts.slice(0,-1).slice(0,9);$("#viRota").href="https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(dest)+(way.length?"&waypoints="+encodeURIComponent(way.join("|")):"")+"&travelmode=driving"}}
 $("#viForm").addEventListener("input",viUpd);$("#viForm").addEventListener("change",viUpd);$("#viForm").addEventListener("submit",e=>e.preventDefault());
 $("#viTel").addEventListener("input",e=>{e.target.value=maskTel(e.target.value)});
@@ -2586,8 +2586,8 @@ async function viPuxar(r){const st=r.querySelector(".vi-st"),btn=r.querySelector
     const det=R.suite?`${R.suite} ${R.suite===1?"suíte":"suítes"}`:R.dorm?`${R.dorm} ${R.dorm===1?"dormitório":"dormitórios"}`:(R.areaT&&/Terreno|Chácara|Sítio|Fazenda|Haras/.test(R.tipo||"")?R.areaT+" m²":"");
     const desc=[[R.tipo,det].filter(Boolean).join(" com "),cod?"código "+cod.toUpperCase():""].filter(Boolean).join(", ");
     const ach=[];const put=(cls,v,l)=>{const i=r.querySelector(cls);if(v&&!i.value.trim()){i.value=v;ach.push(l)}};
-    put(".vi-desc",desc,"imóvel");put(".vi-cond",R.bairro,"condomínio ou bairro");put(".vi-end",R.cidade?R.cidade+(R.uf?"/"+R.uf:""):"","cidade");
-    st.textContent=ach.length?`Preenchi: ${ach.join(", ")}. Confira e complete o endereço.`:"Abri o link, mas não consegui ler o imóvel. Preencha à mão.";viUpd()}
+    put(".vi-desc",desc,"imóvel");put(".vi-cond",R.bairro,"condomínio ou bairro");
+    st.textContent=ach.length?`Preenchi: ${ach.join(", ")}. Agora escreva o endereço para o mapa abrir certo.`:"Abri o link, mas não consegui ler o imóvel. Preencha à mão.";viUpd()}
   catch(e){st.textContent="Não consegui abrir esse link agora. Preencha à mão; o link vai na mensagem do mesmo jeito.";viUpd()}finally{btn.disabled=false}}
 $("#viIms").addEventListener("paste",e=>{if(e.target.classList.contains("vi-url"))setTimeout(()=>viPuxar(e.target.closest(".vi-im")),60)});
 $("#viIms").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const r=b.closest(".vi-im");if(b.hasAttribute("data-pux")){viPuxar(r);return}
