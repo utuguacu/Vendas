@@ -1017,7 +1017,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 10/11/2026 22h30</p>
+<p class="ver">Portal de Vendas · versão 10/11/2026 22h20</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -2446,5 +2446,19 @@ cdPaint();cdFotosPaint();
 })();
 </script>
 
+<script>
+/* Atualização automática: o app da tela de início não tem "puxar para atualizar".
+   Ao abrir ou voltar para o app, confere se há versão nova no site e recarrega sozinho (uma vez por versão). */
+(function(){
+  const atual=(document.querySelector("p.ver")||{}).textContent||"";
+  async function checar(){
+    try{const r=await fetch(location.pathname+"?checar="+Date.now(),{cache:"no-store"});if(!r.ok)return;
+      const m=(await r.text()).match(/<p class="ver">([^<]*)<\/p>/);if(!m||m[1]===atual)return;
+      let k="utu.upd."+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,"1")}catch(_){}
+      location.replace(location.pathname+"?v="+Date.now()+location.hash)}catch(_){}}
+  window.addEventListener("load",()=>setTimeout(checar,1500));
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")checar()});
+})();
+</script>
 </body>
 </html>
