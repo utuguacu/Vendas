@@ -174,6 +174,8 @@ h1 em,h2 em{font-style:italic;color:var(--gold)}
 .cd-bar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-bottom:10px}.cd-bar b{color:var(--fg)}
 #cdWrap.rapido .cd-man{display:none!important}#cdWrap.rapido .cd-msgp{border-bottom:0;padding-bottom:0;margin-bottom:0}#cdWrap.rapido .cd-msgp>b{display:none}#cdWrap:not(.rapido) .cd-rap{display:none!important}
 .cd-rec{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.cd-rec .rec{background:#B3261E;border-color:#B3261E;color:#fff}
+#cdFala{width:100%;padding:9px 11px;border:1px solid var(--line-strong);border-radius:var(--r);background:var(--surface);font:inherit;min-height:96px}
+@media (max-width:480px){#cdFala{font-size:16px}}
 .cd-audios{display:flex;flex-direction:column;gap:6px}.cd-audios div{display:flex;align-items:center;gap:8px}.cd-audios audio{flex:1;min-width:0;height:36px}
 .cd-audios button{width:32px;height:32px;border-radius:50%;border:1px solid var(--line-strong);background:var(--surface);cursor:pointer;color:var(--fg)}
 .cd-falta small{display:block;margin-top:6px;color:var(--fg);opacity:.8}
@@ -770,7 +772,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
   </div>
   <div class="cd-modo" id="cdModo">
     <button type="button" class="cd-opt" data-modo="manual"><b>Preencher manualmente</b><span>A ficha completa, para tocar e escolher. Dá para puxar de um anúncio de outro site e colar a mensagem do proprietário para adiantar.</span><i>Abrir a ficha completa →</i></button>
-    <button type="button" class="cd-opt" data-modo="rapido"><b>Mensagem do proprietário e áudio</b><span>Só cole a mensagem que o proprietário mandou e, se quiser, grave um áudio com o que mais souber. As fotos vão junto.</span><i>Fazer do jeito rápido →</i></button>
+    <button type="button" class="cd-opt" data-modo="rapido"><b>Mensagem do proprietário e voz</b><span>Cole a mensagem que o proprietário mandou e, se quiser, fale o que mais souber: a voz vira texto e entra na ficha. As fotos vão junto.</span><i>Fazer do jeito rápido →</i></button>
   </div>
   <div class="av-wrap" id="cdWrap" hidden>
     <div class="cd-bar"><span id="cdModoLbl"></span><button type="button" class="btn ghost small" id="cdTrocar">Trocar o jeito de preencher</button></div>
@@ -852,10 +854,13 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
         <div class="cd-yn" id="cdYn2"></div>
       </fieldset>
       <fieldset class="cd-rap">
-        <legend><small>3</small>Áudio <span class="opt" style="font-family:var(--body);font-size:12px">(opcional)</span></legend>
-        <p class="hint" style="margin:-4px 0 2px">Grave o que a mensagem não diz: nome e contato do proprietário, valor, condições, detalhes do imóvel. O áudio vai junto para a Rebeca.</p>
-        <div class="cd-rec"><button class="btn primary" id="cdRec" type="button">● Gravar áudio</button><span class="hint" id="cdRecSt"></span></div>
-        <div class="cd-audios" id="cdAudios"></div>
+        <legend><small>3</small>Falar as informações <span class="opt" style="font-family:var(--body);font-size:12px">(opcional)</span></legend>
+        <p class="hint" style="margin:-4px 0 2px">Toque em <b>Falar</b> e diga o que a mensagem não tem: nome e celular do proprietário, valor, condomínio, endereço, quartos, suítes, vagas, área. O que você fala vira texto aqui embaixo e entra na ficha.</p>
+        <div class="cd-rec"><button class="btn primary" id="cdRec" type="button">Falar</button><span class="hint" id="cdRecSt"></span></div>
+        <textarea id="cdFala" rows="4" placeholder="O que você falar aparece aqui. Dá para corrigir digitando."></textarea>
+        <p class="hint" id="cdFalaDica" hidden>Neste celular a gravação direta não funciona. Toque no campo acima e use o <b>microfone do teclado</b> para ditar: o texto entra do mesmo jeito.</p>
+        <button class="btn" id="cdLerFala" type="button" style="align-self:flex-start">Adicionar na ficha</button>
+        <p class="hint" id="cdFalaSt"></p>
       </fieldset>
       <fieldset>
         <legend><small>8</small>Fotos</legend>
@@ -1120,7 +1125,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 11/11/2026 11h30</p>
+<p class="ver">Portal de Vendas · versão 11/11/2026 11h40</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -2460,6 +2465,7 @@ function cdCollect(){
   if(cv("cdObs")){L.push("","*COMENTÁRIO INTERNO:*",cv("cdObs"))}
   for(let i=L.length-1;i>0;i--){if(/^\*[^*]+\*$/.test(L[i])&&!/^\*FICHA/.test(L[i])&&(i===L.length-1||L[i+1]===""||/^\*[^*]+\*$/.test(L[i+1]))){L.splice(i,1);if(L[i-1]==="")L.splice(i-1,1)}}
   if(rap&&cv("cdMsgP"))L.push("","*MENSAGEM DO PROPRIETÁRIO:*",cv("cdMsgP"));
+  if(rap&&cv("cdFala"))L.push("","*INFORMAÇÕES DO CORRETOR:*",cv("cdFala"));
   m.ficha=L.join("\n").replace(/\n{3,}/g,"\n\n");
   const f=F.length?` Estão faltando: ${F.length>1?F.slice(0,-1).join(", ")+" e "+F[F.length-1]:F[0]}, que vou providenciar.`:"";
   const na=cdS.audios.length,aud=na?` Mandei também ${na===1?"um áudio":na+" áudios"} com mais informações.`:"";
@@ -2474,7 +2480,7 @@ function cdUpdateErr(){const m=cdCollect();cdLast=m;$$("#cdForm .field").forEach
 $("#cdForm").addEventListener("input",()=>{if(document.body.dataset.cdTried)cdUpdateErr()});
 $("#cdForm").addEventListener("submit",e=>e.preventDefault());
 $("#cdMissing").addEventListener("click",e=>{const a=e.target.closest("[data-cdgo]");if(!a)return;const i=$("#"+a.dataset.cdgo);i.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>i.focus({preventScroll:true}),250)});
-$("#cdGerar").addEventListener("click",()=>{if(cv("cdMsgP")&&cdS.msgLida!==cv("cdMsgP"))$("#cdLerMsgP").click();document.body.dataset.cdTried="1";cdUpdateErr();const m=cdLast;
+$("#cdGerar").addEventListener("click",()=>{if(cdTextoTodo()&&cdS.msgLida!==cdTextoTodo())cdLerTexto(cdTextoTodo(),$("#cdMsgPSt"),"");document.body.dataset.cdTried="1";cdUpdateErr();const m=cdLast;
   if(m.missing.length){$("#cdMissing").scrollIntoView({behavior:"smooth",block:"center"});return}
   const F=m.falta;$("#cdFalta").hidden=!F.length;$("#cdFalta").innerHTML=F.length?`<b>Atenção: estão faltando estas informações</b><ul>${F.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>Se conseguir, providencie antes de enviar: toque em <b>Voltar e editar a ficha</b>.<small>Caso não tenha essas informações agora, pode enviar direto para a Rebeca. Ela será avisada na mensagem de que vão ser providenciadas.</small>`:"";
   $("#cdPrev").textContent=m.msg;$("#cdSoTexto").href=cdWaUrl(m.msg);
@@ -2490,7 +2496,7 @@ $("#cdEnviar").addEventListener("click",async()=>{const m=cdLast,fotos=cdS.fotos
   window.open(cdWaUrl(m.msg),"_blank","noopener");
   if(files.length)toast("Este aparelho não envia fotos direto pelo site. A ficha abriu no WhatsApp; anexe as fotos na conversa.")});
 $("#cdLimpar").addEventListener("click",()=>{$("#cdForm").reset();cdS.one={};Object.values(cdS.many).forEach(s=>s.clear());cdS.st={};cdS.yn={};cdS.fotos.forEach(f=>{try{URL.revokeObjectURL(f.u)}catch(_){}});cdS.fotos=[];cdS.ref="";
-  $("#cdUrlSt").textContent="";$("#cdMsgPSt").textContent="";$("#cdCepSt").textContent="";delete document.body.dataset.cdTried;$("#cdMissing").hidden=true;$$("#cdForm .field").forEach(el=>el.classList.remove("err"));cdS.audios.forEach(a=>{try{URL.revokeObjectURL(a.u)}catch(_){}});cdS.audios=[];cdS.msgLida="";cdAudPaint();cdPaint();cdFotosPaint();toast("Ficha limpa.")});
+  $("#cdUrlSt").textContent="";$("#cdMsgPSt").textContent="";$("#cdCepSt").textContent="";delete document.body.dataset.cdTried;$("#cdMissing").hidden=true;$$("#cdForm .field").forEach(el=>el.classList.remove("err"));cdS.audios=[];$("#cdFalaSt").textContent="";$("#cdRecSt").textContent="";cdS.msgLida="";cdAudPaint();cdPaint();cdFotosPaint();toast("Ficha limpa.")});
 /* Puxar dados de um anúncio (qualquer imobiliária ou portal) */
 const CD_ROTAS=[u=>u,u=>"https://api.codetabs.com/v1/proxy/?quest="+encodeURIComponent(u),u=>"https://r.jina.ai/"+u,u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),u=>"https://corsproxy.io/?url="+encodeURIComponent(u)];
 const cdEsc=t=>String(t).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
@@ -2577,6 +2583,9 @@ function cdMsgParse(raw){
   t=t.replace(/(?:R\$\s*)?(\d+(?:[.,]\d+)?)\s*(milh(?:ão|ões|ao|oes)|mi)\b\.?/gi,(m,n)=>fmt(Math.round(parseFloat(n.replace(",","."))*1e6)));
   t=t.replace(/(?:R\$\s*)?(\d{1,3}(?:[.,]\d+)?)\s*mil\b(?!\s*m)/gi,(m,n)=>fmt(Math.round(parseFloat(n.replace(",","."))*1e3)));
   t=t.replace(/(\d)\s*m2\b/gi,"$1 m²").replace(/(\d)\s*metros?\s*(?:quadrados)?/gi,"$1 m²");
+  const NW={um:1,uma:1,dois:2,duas:2,"três":3,tres:3,quatro:4,cinco:5,seis:6,sete:7,oito:8,nove:9,dez:10};
+  t=t.replace(/\b(um|uma|dois|duas|três|tres|quatro|cinco|seis|sete|oito|nove|dez)\b(?=\s+(?:su[íi]tes?|quartos?|dormit[óo]rios?|vagas?|banheiros?|lavabos?|salas?|carros?))/gi,w=>NW[w.toLowerCase()]);
+  t=t.replace(/(\d+(?:[.,]\d+)?)\s*mil\s+(m²|metros?)/gi,(m,n,u)=>Math.round(parseFloat(n.replace(",","."))*1000)+" m²").replace(/\bmil\s+(m²|metros?(?:\s*quadrados)?)/gi,"1000 m²");
   const um=t.replace(/\n+/g,". ");
   const html=`<html><head><title>${cdEsc(um.slice(0,700))}</title><meta name="description" content="${cdEsc(um).replace(/"/g,"&quot;")}"></head><body><div>${cdEsc(t).replace(/\n/g,"<br>\n")}</div></body></html>`;
   const R=cdParse(html,"");const T=sA(t);
@@ -2597,6 +2606,9 @@ function cdMsgParse(raw){
   if(R.areaC&&R.areaT&&R.areaC===R.areaT&&at&&!acn)R.areaC="";
   const ano=T.match(/(?:construid[ao]|construcao|ano)\D{0,15}((?:19|20)\d{2})\b/);if(ano)R.ano=ano[1];
   const tel=t.match(/\(?\b(\d{2})\)?\s*9?\s?\d{4}[-\s]?\d{4}\b/);if(tel)R.tel=tel[0];
+  if(!R.tel){const tf=t.match(/(?:telefone|celular|contato|whats\w*|n[úu]mero)\D{0,25}((?:\d[\s().-]*){10,11})/i);if(tf){const d=onlyDig(tf[1]);if(d.length>=10)R.tel=d}}
+  const nm=t.match(/(?:propriet[áa]ri[oa]|dono|dona)\s*(?:do im[óo]vel\s*)?(?:é|e|se chama|chama|nome|:)\s*(?:o|a|é)?\s*(?:sr\.?|sra\.?|senhor|senhora|dona|seu)?\s*([A-ZÀ-Ú][a-zà-ú]+)((?:\s+(?:de|da|do|dos|das)?\s*[A-ZÀ-Ú][a-zà-ú]+){0,3})/i);
+  if(nm){const cap=w=>w.charAt(0).toUpperCase()+w.slice(1);R.nome=cap(nm[1]);R.sobrenome=(nm[2]||"").trim().split(/\s+/).filter(Boolean).map(w=>/^(de|da|do|dos|das)$/i.test(w)?w.toLowerCase():cap(w)).join(" ")}
   if(!R.neg){const v=/vend|venda|valor|R\$/i.test(t)&&!/alug|locac/.test(T),a=/alug|locac/.test(T);R.neg=v&&a?"Venda e Locação":a?"Locação":(R.valor?"Venda":"")}
   R.yn=R.yn||{};if(/aceit\w*\s+(?:\w+\s+)?permuta/.test(T))R.yn.perm="Sim";if(/nao aceit\w*\s+(?:\w+\s+)?permuta/.test(T))R.yn.perm="Não";
   if(/aceit\w*\s+(?:\w+\s+)?financiamento/.test(T))R.yn.fin="Sim";if(/aceit\w*\s+(?:\w+\s+)?(?:pet|animais|animal)/.test(T))R.yn.pet="Sim";
@@ -2606,44 +2618,45 @@ function cdMsgParse(raw){
   if(!R.areaC&&!R.areaT){const m=T.match(/([\d.]+(?:,\d+)?)\s*m²/);if(m){/Terreno|Chácara|Sítio|Fazenda|Haras/.test(R.tipo||"")?R.areaT=m[1]:R.areaC=m[1]}}
   ["areaC","areaT"].forEach(k=>{if(R[k]){const n=nB(R[k]);if(n)R[k]=n.toLocaleString("pt-BR",{maximumFractionDigits:2})}});
   return R}
-$("#cdLerMsgP").addEventListener("click",()=>{const t=($("#cdMsgP").value||"").trim(),st=$("#cdMsgPSt");cdS.msgLida=t;
-  if(t.length<15){st.textContent="Cole a mensagem do proprietário.";return}
+function cdLerTexto(t,st,vazio){cdS.msgLida=cdTextoTodo();
+  if(t.length<15){st.textContent=vazio;return}
   try{const R=cdMsgParse(t);const prev=$("#cdUrlSt").innerHTML;cdAplicar(R,"");const ach0=$("#cdUrlSt").textContent;$("#cdUrlSt").innerHTML=prev;
     const ach=[];const put=(id,v,lab)=>{if(v&&!cv(id)){$("#"+id).value=v;ach.push(lab)}};
-    put("cdRua",R.rua,"rua ou quadra");put("cdNum",R.num,"número ou lote");put("cdAno",R.ano,"ano de construção");if(R.tel&&!cv("cdPTel")){$("#cdPTel").value=maskTel(R.tel);ach.push("celular")}
+    put("cdPNome",R.nome,"nome do proprietário");put("cdPSobre",R.sobrenome,"sobrenome do proprietário");put("cdRua",R.rua,"rua ou quadra");put("cdNum",R.num,"número ou lote");put("cdAno",R.ano,"ano de construção");if(R.tel&&!cv("cdPTel")){$("#cdPTel").value=maskTel(R.tel);ach.push("celular")}
     const base=(ach0.match(/^Preenchi: (.*?)\. Confira/)||[])[1]||"";const tudo=[base,ach.join(", ")].filter(Boolean).join(", ");
-    st.innerHTML=tudo?`Preenchi: ${esc(tudo)}. <b>Confira tudo</b>, porque cada proprietário escreve de um jeito.`:"Não consegui entender as informações dessa mensagem. Preencha à mão.";
-  }catch(e){st.textContent="Não consegui ler essa mensagem. Preencha à mão."}});
+    st.innerHTML=tudo?`Preenchi: ${esc(tudo)}. <b>Confira tudo</b>, porque cada um escreve e fala de um jeito.`:"Não consegui entender as informações. Preencha à mão.";
+  }catch(e){st.textContent="Não consegui ler. Preencha à mão."}}
+function cdTextoTodo(){return [cv("cdMsgP"),cdS.modo==="rapido"?cv("cdFala"):""].filter(Boolean).join("\n")}
+$("#cdLerMsgP").addEventListener("click",()=>cdLerTexto(cdTextoTodo(),$("#cdMsgPSt"),"Cole a mensagem do proprietário."));
+$("#cdLerFala").addEventListener("click",()=>cdLerTexto(cdTextoTodo(),$("#cdFalaSt"),"Fale ou escreva as informações primeiro."));
 
 
 /* Dois jeitos de preencher: manual (ficha completa) ou rápido (mensagem do proprietário + áudio) */
 cdS.audios=[];cdS.modo="";
 function cdModo(mo){cdS.modo=mo;$("#cdModo").hidden=!!mo;$("#cdWrap").hidden=!mo;$("#cdWrap").classList.toggle("rapido",mo==="rapido");
   if(!mo){$("#cdLede").hidden=false;return}
-  $("#cdModoLbl").innerHTML=mo==="rapido"?"Jeito rápido: <b>mensagem do proprietário e áudio</b>":"Jeito completo: <b>preencher manualmente</b>";
+  $("#cdModoLbl").innerHTML=mo==="rapido"?"Jeito rápido: <b>mensagem do proprietário e voz</b>":"Jeito completo: <b>preencher manualmente</b>";
   $("#cdLeg2").textContent=mo==="rapido"?"Mensagem do proprietário":"Puxar informações";$("#cdLeg2o").hidden=mo==="rapido";
   ["cdPNome","cdPSobre","cdPTel"].forEach(id=>{const f=$("#"+id).closest(".field");if(mo==="rapido")f.removeAttribute("data-req");else f.setAttribute("data-req","")});
   let n=0;$$("#cdForm > fieldset").forEach(fs=>{if(getComputedStyle(fs).display==="none")return;const sm=fs.querySelector("legend small");if(sm)sm.textContent=++n});
-  $("#cdLede").textContent=mo==="rapido"?"Cole a mensagem do proprietário, grave um áudio se quiser e junte as fotos. Só o seu nome é obrigatório: o que faltar vai avisado para a Rebeca.":"Só o seu nome e o nome e o celular do proprietário são obrigatórios. O resto, preencha o que tiver: o que faltar vai listado na mensagem para a Rebeca.";
+  $("#cdLede").textContent=mo==="rapido"?"Cole a mensagem do proprietário, fale o que mais souber e junte as fotos. Só o seu nome é obrigatório: o que faltar vai avisado para a Rebeca.":"Só o seu nome e o nome e o celular do proprietário são obrigatórios. O resto, preencha o que tiver: o que faltar vai listado na mensagem para a Rebeca.";
   delete document.body.dataset.cdTried;$("#cdMissing").hidden=true;$$("#cdForm .field").forEach(el=>el.classList.remove("err"));window.scrollTo({top:0})}
 $("#cdModo").addEventListener("click",e=>{const b=e.target.closest("[data-modo]");if(b)cdModo(b.dataset.modo)});
 $("#cdTrocar").addEventListener("click",()=>cdModo(""));
-/* Gravar áudio */
-let cdRecObj=null,cdRecT=null;
-function cdAudPaint(){$("#cdAudios").innerHTML=cdS.audios.map((a,i)=>`<div><audio controls src="${a.u}"></audio><button type="button" data-rma="${i}" aria-label="Apagar áudio">×</button></div>`).join("");$("#cdBaixarAud").hidden=!cdS.audios.length}
-$("#cdAudios").addEventListener("click",e=>{const b=e.target.closest("[data-rma]");if(!b)return;const [x]=cdS.audios.splice(+b.dataset.rma,1);try{URL.revokeObjectURL(x.u)}catch(_){}cdAudPaint()});
-$("#cdRec").addEventListener("click",async()=>{const btn=$("#cdRec"),st=$("#cdRecSt");
-  if(cdRecObj&&cdRecObj.state==="recording"){cdRecObj.stop();return}
-  if(!navigator.mediaDevices||!window.MediaRecorder){st.textContent="Este navegador não grava áudio. Grave no WhatsApp e mande depois para a Rebeca.";return}
-  let stream;try{stream=await navigator.mediaDevices.getUserMedia({audio:true})}catch(_){st.textContent="Não consegui usar o microfone. Libere o microfone para este site nas configurações do celular.";return}
-  const tipo=["audio/mp4","audio/webm;codecs=opus","audio/webm","audio/ogg"].find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||"";
-  const rec=new MediaRecorder(stream,tipo?{mimeType:tipo}:undefined);const parts=[];let t0=Date.now();
-  rec.ondataavailable=e=>{if(e.data&&e.data.size)parts.push(e.data)};
-  rec.onstop=()=>{clearInterval(cdRecT);stream.getTracks().forEach(t=>t.stop());const mt=rec.mimeType||tipo||"audio/webm";const ext=/mp4|aac|m4a/.test(mt)?"m4a":/ogg/.test(mt)?"ogg":"webm";
-    const blob=new Blob(parts,{type:mt});if(blob.size<800){st.textContent="O áudio ficou vazio. Tente de novo.";}else{const f=new File([blob],`audio-cadastro-${cdS.audios.length+1}.${ext}`,{type:mt.split(";")[0]});cdS.audios.push({f,u:URL.createObjectURL(blob)});st.textContent=`Áudio ${cdS.audios.length} gravado. Pode gravar outro se quiser.`}
-    btn.classList.remove("rec");btn.textContent="● Gravar áudio";cdAudPaint();cdRecObj=null};
-  rec.start();cdRecObj=rec;btn.classList.add("rec");btn.textContent="■ Parar gravação";
-  cdRecT=setInterval(()=>{const s=Math.round((Date.now()-t0)/1000);st.textContent=`Gravando… ${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`},500)});
+/* Falar: voz vira texto (reconhecimento de voz do próprio celular) */
+function cdAudPaint(){$("#cdBaixarAud").hidden=true}
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let cdSR=null,cdSRon=false,cdSRbase="";
+if(!SR){$("#cdRec").hidden=true;$("#cdFalaDica").hidden=false}
+$("#cdRec").addEventListener("click",()=>{const btn=$("#cdRec"),st=$("#cdRecSt");
+  if(cdSRon){cdSRon=false;try{cdSR.stop()}catch(_){}btn.classList.remove("rec");btn.textContent="Falar";st.textContent="Pronto. Confira o texto e toque em Adicionar na ficha.";return}
+  cdSR=new SR();cdSR.lang="pt-BR";cdSR.continuous=true;cdSR.interimResults=true;cdSRbase=cv("cdFala");cdSRon=true;
+  btn.classList.add("rec");btn.textContent="Parar";st.textContent="Pode falar…";
+  cdSR.onresult=e=>{let fin="",tmp="";for(let k=e.resultIndex;k<e.results.length;k++){const r=e.results[k];if(r.isFinal)fin+=r[0].transcript;else tmp+=r[0].transcript}
+    if(fin){cdSRbase=(cdSRbase?cdSRbase.replace(/\s+$/,"")+" ":"")+fin.trim();cdSRbase=cdSRbase.charAt(0).toUpperCase()+cdSRbase.slice(1)}
+    $("#cdFala").value=cdSRbase+(tmp?(cdSRbase?" ":"")+tmp:"")};
+  cdSR.onerror=e=>{if(e.error==="not-allowed"||e.error==="service-not-allowed"){cdSRon=false;btn.classList.remove("rec");btn.textContent="Falar";$("#cdFalaDica").hidden=false;st.textContent="O celular não liberou o microfone para o site. Use o microfone do teclado."}};
+  cdSR.onend=()=>{if(cdSRon){try{cdSR.start()}catch(_){}}};
+  try{cdSR.start()}catch(_){cdSRon=false;btn.classList.remove("rec");btn.textContent="Falar";$("#cdFalaDica").hidden=false}});
 $("#cdBaixarAud").addEventListener("click",()=>{cdS.audios.forEach(a=>nativeSave(a.f.name,a.f));toast("Áudio baixado. Mande na conversa da Rebeca.")});
 cdModo("");
 
