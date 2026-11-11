@@ -93,7 +93,7 @@ a{color:var(--accent)}
 <body>
 <div class="wrap" id="app"></div>
 <div id="toast" class="toast" role="status" hidden></div>
-<p class="ver" hidden>2026.11.10-1</p>
+<p class="ver" hidden>2026.11.10-2</p>
 <script>
 (function(){
 'use strict';
@@ -300,7 +300,6 @@ function shell(){
 }
 function conexaoBanner(){
   if (S.conectado === 'carregando') return `<div class="muted">Sincronizando…</div>`;
-  if (S.conectado === 'local') return `<div class="banner">Modo deste aparelho: por enquanto, o que você adiciona fica só neste celular. Quando o banco compartilhado for conectado, tudo passa a aparecer para os dois.</div>`;
   if (S.conectado === 'negado') return `<div class="banner">Este e-mail ainda não tem acesso aos dados do N&amp;L. Peça para liberar o seu e-mail.</div>`;
   return '';
 }
@@ -729,6 +728,7 @@ function ajustes(){
       <label class="f">Meta do mês · Lucas<input class="i" id="aj-ml" value="${val('aj-ml', 'metaLucas')}"></label>
       <button class="btn" data-a="ajsalvar">Salvar</button>
     </div>
+    ${S.conectado === 'local' ? `<div class="card"><h2>Sincronização</h2><p class="muted" style="margin:0">Ainda não conectada: por enquanto, os dados ficam salvos neste aparelho.</p></div>` : ''}
     <div class="card"><h2>Instalar no iPhone</h2><p class="muted" style="margin:0">No Safari, abra utuguacu.github.io/Vendas/nl, toque em Compartilhar e depois em "Adicionar à Tela de Início". O N&amp;L se atualiza sozinho quando houver versão nova.</p></div>
     ${FB.user ? `<div class="card"><h2>Conta</h2><p class="muted" style="margin:0">Conectada como ${esc(FB.user.email || '')}</p><button class="btn ghost" data-a="logout">Sair da conta</button></div>` : ''}
     <button class="btn ghost" data-a="tab" data-t="inicio">Voltar</button>`;
