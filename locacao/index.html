@@ -381,6 +381,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
 .dslots{display:flex;flex-direction:column;gap:10px}
 #view-cadastro.done #cdHead{display:none}
 .cd-link{display:flex;flex-direction:column;gap:8px;font-size:13px;line-height:1.45}
+.cd-paste{border:1px dashed var(--line-strong);border-radius:var(--r);padding:10px 12px;background:var(--surface)}.cd-paste summary{cursor:pointer;font-weight:500;font-size:13px}.cd-paste[open]{display:flex;flex-direction:column;gap:8px}.cd-paste textarea{width:100%;padding:9px 11px;border:1px solid var(--line-strong);border-radius:var(--r);background:var(--bg);font:inherit;font-size:16px}
 .cd-row{display:flex;gap:8px}.cd-row input{flex:1;min-width:0;padding:9px 11px;border:1px solid var(--line-strong);border-radius:var(--r);background:var(--surface)}
 .cd-chips{gap:8px;margin:2px 0 6px}.cd-chips .chip,.cd-ynr .chip{font-size:13.5px;padding:8px 14px;color:var(--fg)}
 .cd-chips .chip[aria-pressed="true"],.cd-ynr .chip[aria-pressed="true"]{color:var(--bg)}
@@ -401,6 +402,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
 @media (max-width:480px){.cd-steps{grid-template-columns:repeat(2,minmax(0,1fr))}.cd-row input{font-size:16px}}
 .blk.cad{background:var(--surface);border-color:var(--gold)}
 .blk.dos{background:var(--surface)}
+.blk.mkt{text-decoration:none;background:var(--surface);border-color:var(--line-strong);color:inherit}
 .fi-side .share-prop{white-space:normal;text-align:center;line-height:1.3}
 .fi-side .share-prop span{min-width:0}
 .pull{border:1.5px dashed var(--gold);background:var(--gold-soft);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px}
@@ -582,6 +584,11 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
           <span>Tem o mesmo imóvel anunciado em outra imobiliária ou portal? Cole o link e as informações principais vêm sozinhas.</span>
           <div class="cd-row"><input id="cdUrl" type="url" inputmode="url" placeholder="Cole o link do anúncio"><button class="btn primary" id="cdPuxar" type="button">Puxar</button></div>
           <p class="hint" id="cdUrlSt"></p>
+          <details class="cd-paste" id="cdPasteBox"><summary>Não puxou? Cole o texto do anúncio</summary>
+            <p class="hint">Alguns portais bloqueiam a leitura pelo link. No anúncio, segure o dedo no texto, toque em <b>Selecionar tudo</b>, copie e cole aqui.</p>
+            <textarea id="cdTxt" rows="4" placeholder="Cole aqui o texto do anúncio"></textarea>
+            <button class="btn" id="cdLer" type="button">Ler o texto</button>
+          </details>
         </div>
       </fieldset>
       <fieldset>
@@ -688,7 +695,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
   <div id="dsOut" style="margin-top:22px"></div>
 </section>
 
-<p class="ver">Portal de Locação · versão 10/11/2026 22h45</p>
+<p class="ver">Portal de Locação · versão 10/11/2026 23h40</p>
 </main>
 
 <div class="toast" id="toast" hidden></div>
@@ -1905,9 +1912,18 @@ $("#cdEnviar").addEventListener("click",async()=>{const m=cdLast,files=cdS.fotos
 $("#cdLimpar").addEventListener("click",()=>{$("#cdForm").reset();cdS.one={neg:"Locação"};Object.values(cdS.many).forEach(s=>s.clear());cdS.st={};cdS.yn={};cdS.fotos.forEach(f=>{try{URL.revokeObjectURL(f.u)}catch(_){}});cdS.fotos=[];cdS.ref="";
   $("#cdUrlSt").textContent="";$("#cdCepSt").textContent="";delete document.body.dataset.cdTried;$("#cdMissing").hidden=true;$$("#cdForm .field").forEach(el=>el.classList.remove("err"));cdPaint();cdFotosPaint();toast("Ficha limpa.")});
 /* Puxar dados de um anúncio (qualquer imobiliária ou portal) */
-const CD_ROTAS=[u=>u,u=>"https://corsproxy.io/?url="+encodeURIComponent(u),u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),u=>"https://api.codetabs.com/v1/proxy/?quest="+encodeURIComponent(u)];
-async function cdBaixar(url){let erro;for(const r of CD_ROTAS){const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),15000);
-  try{const res=await fetch(r(url),{signal:ctl.signal,credentials:"omit"});if(!res.ok)throw new Error("HTTP "+res.status);const tx=await res.text();if(tx.length<300||!/<html|<head|<meta/i.test(tx))throw new Error("vazia");return tx}catch(e){erro=e}finally{clearTimeout(t)}}throw erro||new Error("falhou")}
+const CD_ROTAS=[u=>u,u=>"https://api.codetabs.com/v1/proxy/?quest="+encodeURIComponent(u),u=>"https://r.jina.ai/"+u,u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),u=>"https://corsproxy.io/?url="+encodeURIComponent(u)];
+const cdEsc=t=>String(t).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+function cdTextoHtml(tx){tx=String(tx);const tl=(tx.match(/^Title:\s*(.+)$/m)||[])[1];
+  const corpo=tx.replace(/^(Title|URL Source|Published Time|Markdown Content):.*$/gm,"").replace(/!\[[^\]]*\]\([^)]*\)/g,"").replace(/\[([^\]]*)\]\([^)]*\)/g,"$1");
+  const linhas=corpo.split(/\n+/).map(l=>l.trim()).filter(Boolean),t=tl||(linhas[0]||"").slice(0,200),d=linhas.join(". ").replace(/\.\s*\./g,".").slice(0,800);
+  return `<html><head><title>${cdEsc(t)}</title><meta property="og:title" content="${cdEsc(t).replace(/"/g,"&quot;")}"><meta name="description" content="${cdEsc(d).replace(/"/g,"&quot;")}"></head><body><div>${cdEsc(corpo).replace(/\n/g,"<br>\n")}</div></body></html>`}
+async function cdBaixar(url){let erro;for(const r of CD_ROTAS){const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),r(url).includes("r.jina.ai")?25000:12000);
+  try{const res=await fetch(r(url),{signal:ctl.signal,credentials:"omit"});if(!res.ok)throw new Error("HTTP "+res.status);let tx=await res.text();
+    if(!/<html|<head|<meta/i.test(tx)&&tx.length>300)tx=cdTextoHtml(tx);
+    if(tx.length<300||!/<html|<head|<meta/i.test(tx))throw new Error("vazia");
+    if(tx.length<20000&&/captcha|cf-chl|attention required|access denied|acesso negado|are you a robot|verify you are human/i.test(tx))throw new Error("bloqueada");
+    return tx}catch(e){erro=e}finally{clearTimeout(t)}}throw erro||new Error("falhou")}
 const sA=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
 const nB=s=>{s=String(s).trim();if(/,\d{1,2}$/.test(s))s=s.replace(/\./g,"").replace(",",".");else s=s.replace(/[.,](?=\d{3}(\D|$))/g,"");const n=parseFloat(s);return isNaN(n)?0:n};
 function cdParse(html,url){
@@ -1923,10 +1939,10 @@ function cdParse(html,url){
   const venda=/venda|vender|comprar/.test(base),loc=/alug|locac/.test(base);R.neg=venda&&loc?"Venda e Locação":loc?"Locação":venda?"Venda":"";
   const TP=[["casa em condominio","Casa em condomínio"],["terreno em condominio","Terreno em condomínio"],["lote em condominio","Terreno em condomínio"],["apartamento","Apartamento"],["cobertura","Apartamento"],["sobrado","Casa"],["casa","Casa"],["terreno","Terreno"],["lote","Terreno"],["chacara","Chácara"],["sitio","Sítio"],["fazenda","Fazenda"],["haras","Haras"],["sala","Sala comercial"],["galpao","Galpão"],["barracao","Galpão"]];
   for(const [k,v] of TP)if(new RegExp("\\b"+k+"\\b").test(base)){R.tipo=v;break}
-  const cond=(tit+" "+h1+" "+desc).match(/Condom[íi]nio\s+([A-ZÀ-Ú0-9][^,\-–|/.]{2,50}?)(?=\s*[,\-–|.]|\s+(?:em|na|no)\s|\s+[A-ZÀ-Ú][a-zà-ú]+\/[A-Z]{2}|$)/);
+  const cond=[tit,h1,desc].filter(Boolean).join(". ").match(/Condom[íi]nio\s+([A-ZÀ-Ú0-9][^,\-–|/.]{2,50}?)(?=\s*[,\-–|.]|\s+(?:em|na|no)\s|\s+[A-ZÀ-Ú][a-zà-ú]+\/[A-Z]{2}|$)/);
   if(cond){R.bairro=cond[1].trim();if(R.tipo==="Casa")R.tipo="Casa em condomínio";if(R.tipo==="Terreno")R.tipo="Terreno em condomínio"}
   else{const b=pj(/^(bairro|neighborhood|district|addresslocality2)$/);if(b)R.bairro=String(b)}
-  const cid=(tit+" "+h1+" "+desc).match(/([A-ZÀ-Ú][A-Za-zÀ-ú ]{1,30})\s*[\/-]\s*(SP|MG|RJ|PR|SC|RS|GO|MS|MT|BA|PE|CE|ES|DF)\b/);
+  const cid=[tit,h1,desc].filter(Boolean).join(". ").match(/([A-ZÀ-Ú][A-Za-zÀ-ú ]{1,30})\s*[\/-]\s*(SP|MG|RJ|PR|SC|RS|GO|MS|MT|BA|PE|CE|ES|DF)\b/);
   if(cid){R.cidade=cid[1].trim();R.uf=cid[2]}else{const c=pj(/^(cidade|city|addresslocality)$/);if(c)R.cidade=String(c);const u=pj(/^(uf|estado|state|addressregion)$/,v=>String(v).length===2);if(u)R.uf=String(u)}
   const cep=T.match(/\b(\d{5})-?(\d{3})\b/);if(cep&&/cep/.test(T))R.cep=cep[1]+"-"+cep[2];
   const reais=re=>{const m=T.match(re);return m?nB(m[1]):0};
@@ -1934,6 +1950,7 @@ function cdParse(html,url){
   if(!preco){const j=pj(/^(price|preco|valor|valorvenda|saleprice|valor_venda)$/,v=>nB(v)>1000);if(j)preco=nB(j)}
   if(!preco)preco=reais(/(?:venda|valor|preco)[^r]{0,25}r\$\s*([\d.]+(?:,\d{2})?)/);
   if(!preco&&R.neg!=="Locação"){const all=[...T.matchAll(/r\$\s*([\d.]+(?:,\d{2})?)/g)].map(m=>nB(m[1])).filter(v=>v>=20000);if(all.length)preco=Math.max(...all)}
+  R.aluguel=reais(/(?:aluguel|locacao)[^r]{0,25}r\$\s*([\d.]+(?:,\d{2})?)/);
   if(R.neg==="Locação"){R.pacote=preco||reais(/(?:aluguel|locacao)[^r]{0,25}r\$\s*([\d.]+(?:,\d{2})?)/)}else R.valor=preco;
   R.cond=reais(/condominio[^r\d]{0,20}r\$\s*([\d.]+(?:,\d{2})?)/)||nB(pj(/^(condominio|condofee|monthlycondofee|valorcondominio)$/,v=>nB(v)>10)||0);
   R.iptu=reais(/iptu[^r\d]{0,20}r\$\s*([\d.]+(?:,\d{2})?)/)||nB(pj(/^(iptu|yearlyiptu|valoriptu)$/,v=>nB(v)>10)||0);
@@ -1943,7 +1960,8 @@ function cdParse(html,url){
   R.banh=n(/(\d{1,2})\s*banheiros?\b/,/banheiros?\s*:?\s*(\d{1,2})\b/);
   R.vagas=n(/(\d{1,2})\s*(?:vagas?|garagens?)\b/,/(?:vagas?|garagens?)\s*:?\s*(\d{1,2})\b/);
   R.lav=n(/(\d{1,2})\s*lavabos?\b/,/lavabos?\s*:?\s*(\d{1,2})\b/);
-  const area=lbl=>{let m=T.match(new RegExp("area\\s*(?:"+lbl+")(?:(?!area)[^\\d]){0,25}([\\d.]+(?:,\\d+)?)\\s*(m2|m²|ha|hectares?|alqueires?)"));let num,un;if(m){num=m[1];un=m[2]}else{m=T.match(new RegExp("([\\d.]+(?:,\\d+)?)\\s*(m2|m²|ha|hectares?|alqueires?)\\s*(?:de\\s*)?(?:area\\s*)?(?:"+lbl+")"));if(m){num=m[1];un=m[2]}}if(!num)return"";let v=nB(num);if(/ha|hect/.test(un))v*=10000;if(/alq/.test(un))v*=24200;return v?v.toLocaleString("pt-BR",{maximumFractionDigits:2}):""};
+  const area=lbl=>{const U="(m2|m²|ha|hectares?|alqueires?)",N="([\\d.]+(?:,\\d+)?)";const pats=[new RegExp(N+"\\s*"+U+"\\s*(?:de\\s*)?(?:area\\s*)?(?:"+lbl+")"),new RegExp("area\\s*(?:"+lbl+")(?:(?!area)[^\\d]){0,25}"+N+"\\s*"+U),new RegExp("(?:"+lbl+")\\s*(?:de|com|:)?\\s*"+N+"\\s*"+U)];
+    let num,un;for(const re of pats){const m=T.match(re);if(m){num=m[1];un=m[2];break}}if(!num)return"";let v=nB(num);if(/ha|hect/.test(un))v*=10000;if(/alq/.test(un))v*=24200;return v?v.toLocaleString("pt-BR",{maximumFractionDigits:2}):""};
   R.areaC=area("construida|util|privativa");R.areaT=area("do terreno|de terreno|total|terreno");
   if(!R.areaC&&!R.areaT){const m=T.match(/([\d.]+(?:,\d+)?)\s*(?:m2|m²)\b/);if(m){const v=String(nB(m[1])).replace(".",",");/Terreno/.test(R.tipo||"")?R.areaT=v:R.areaC=v}}
   const tem=re=>re.test(T);
@@ -1953,10 +1971,7 @@ function cdParse(html,url){
   const AR=[["Closet",/closet/],["Cozinha",/armarios? (?:na |de )?cozinha|cozinha (?:planejada|com armarios)/],["Quartos",/armarios? (?:nos |nos )?(?:quartos|dormitorios)|dormitorios? planejad/]];R.arm=AR.filter(([,re])=>tem(re)).map(([l])=>l);
   const PI=[["Porcelanato",/porcelanato/],["Cerâmica",/ceramica/],["Mármore",/marmore/],["Granito",/granito/],["Laminado",/laminado/],["Tábua",/piso de tabua|assoalho/],["Taco",/\btaco\b/]];R.piso=PI.filter(([,re])=>tem(re)).map(([l])=>l);
   return R}
-$("#cdPuxar").addEventListener("click",async()=>{const st=$("#cdUrlSt"),btn=$("#cdPuxar");let url=cv("cdUrl");
-  if(!url){st.textContent="Cole o link do anúncio.";return}if(!/^https?:\/\//i.test(url))url="https://"+url;try{new URL(url)}catch(_){st.textContent="Esse link não parece completo.";return}
-  btn.disabled=true;const old=btn.textContent;btn.textContent="Buscando…";st.textContent="Abrindo o anúncio…";
-  try{const R=cdParse(await cdBaixar(url),url);const ach=[];
+function cdAplicar(R,url){const st=$("#cdUrlSt");if(!R.neg&&R.aluguel)R.neg=R.valor?"Venda e Locação":"Locação";if((R.neg||cdS.one.neg)==="Locação"&&!R.pacote&&(R.aluguel||R.valor)){R.pacote=R.aluguel||R.valor;R.valor=0}const ach=[];
     const put=(id,v,lab)=>{if(v&&!cv(id)){$("#"+id).value=v;ach.push(lab)}};
     if(R.neg&&!cdS.one.neg){cdS.one.neg=R.neg;ach.push("negócio")}if(R.tipo&&!cdS.one.tipo){cdS.one.tipo=R.tipo;ach.push("tipo")}
     put("cdValor",R.valor?fmtMoney(R.valor):"","valor");put("cdPacote",R.pacote?fmtMoney(R.pacote):"","pacote");put("cdCond",R.cond?fmtMoney(R.cond):"","condomínio");put("cdIptu",R.iptu?fmtMoney(R.iptu):"","IPTU");
@@ -1964,9 +1979,16 @@ $("#cdPuxar").addEventListener("click",async()=>{const st=$("#cdUrlSt"),btn=$("#
     [["dorm","dormitórios"],["suite","suítes"],["banh","banheiros"],["vagas","vagas"],["lav","lavabos"]].forEach(([k,l])=>{if(R[k]!=null&&cdS.st[k]==null){cdS.st[k]=Math.min(10,R[k]);ach.push(l)}});
     Object.entries(R.yn).forEach(([k,v])=>{if(!cdS.yn[k]){cdS.yn[k]=v}});if(Object.keys(R.yn).length)ach.push("itens como piscina e churrasqueira");
     R.infra.forEach(x=>cdS.many.infra.add(x));R.arm.forEach(x=>cdS.many.arm.add(x));R.piso.forEach(x=>cdS.many.piso.add(x));if(R.infra.length||R.arm.length||R.piso.length)ach.push("infraestrutura");
-    cdS.ref=url;cdPaint();
+    if(url)cdS.ref=url;cdPaint();
     st.innerHTML=ach.length?`Preenchi: ${esc(ach.join(", "))}. <b>Confira tudo</b>, porque cada site mostra as informações de um jeito.`:"Abri o anúncio, mas não consegui ler as informações. Preencha à mão.";
-  }catch(e){st.textContent="Não consegui abrir esse anúncio (alguns portais bloqueiam). Preencha à mão."}finally{btn.disabled=false;btn.textContent=old}});
+}
+$("#cdLer").addEventListener("click",()=>{const t=($("#cdTxt").value||"").trim();if(t.length<30){$("#cdUrlSt").textContent="Cole o texto do anúncio (título, valor, quartos, área...).";return}
+  try{cdAplicar(cdParse(cdTextoHtml(t),cv("cdUrl")||""),cv("cdUrl")||"")}catch(e){$("#cdUrlSt").textContent="Não consegui ler esse texto. Preencha à mão."}});
+$("#cdPuxar").addEventListener("click",async()=>{const st=$("#cdUrlSt"),btn=$("#cdPuxar");let url=cv("cdUrl");
+  if(!url){st.textContent="Cole o link do anúncio.";return}if(!/^https?:\/\//i.test(url))url="https://"+url;try{new URL(url)}catch(_){st.textContent="Esse link não parece completo.";return}
+  btn.disabled=true;const old=btn.textContent;btn.textContent="Buscando…";st.textContent="Abrindo o anúncio…";
+  try{cdAplicar(cdParse(await cdBaixar(url),url),url);
+  }catch(e){st.innerHTML="Esse site não deixou abrir o anúncio. <b>Use a opção logo abaixo:</b> copie o texto do anúncio e cole aqui que eu leio.";const d=$("#cdPasteBox");if(d)d.open=true}finally{btn.disabled=false;btn.textContent=old}});
 cdPaint();cdFotosPaint();
 {const eu=LS.get("utu.loc.eu","");if(eu&&!$("#cdCor").value)$("#cdCor").value=eu;$("#cdCor").addEventListener("change",()=>LS.set("utu.loc.eu",$("#cdCor").value.trim()))}
 
@@ -2026,6 +2048,9 @@ function renderHome(){
     <button class="blk dos" type="button" data-open="mapas">
       <span class="txt"><span class="k">${MAPAS.length?MAPAS.length+" "+(MAPAS.length===1?"mapa":"mapas"):"Em breve"}</span><h2>Mapas</h2><p>Mapas de implantação dos empreendimentos, para abrir na hora com o cliente.</p></span>
       <span class="go">Ver mapas${ARROW}</span></button>
+    <a class="blk mkt" href="marketing/">
+      <span class="txt"><span class="k">Ferramenta</span><h2>Marketing</h2><p>Story, post e carrossel do imóvel para alugar, com a marca e o CRECI da Utu-Guaçu e a legenda pronta.</p></span>
+      <span class="go">Criar post${ARROW}</span></a>
     <button class="blk msg" type="button" data-open="mensagens">
       <span class="txt"><span class="k">${MENSAGENS.length} modelos</span><h2>Modelos de mensagem</h2><p>Textos prontos para atendimento, documentação, contrato, proprietário e saída. É só copiar e mandar no WhatsApp.</p></span>
       <span class="go">Ver mensagens${ARROW}</span></button>

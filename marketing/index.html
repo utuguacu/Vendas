@@ -495,13 +495,16 @@ $("#vary").onclick=()=>{SEED++;const lays=["moldura","faixa","editorial","claro"
 
 /* ---------- Puxar dados pelo link do site da Utu-Guaçu ---------- */
 const LK={rota:0};
-const ROTAS=[u=>u,u=>"https://corsproxy.io/?url="+encodeURIComponent(u),u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),u=>"https://api.codetabs.com/v1/proxy/?quest="+encodeURIComponent(u)];
+const ROTAS=[u=>u,u=>"https://api.codetabs.com/v1/proxy/?quest="+encodeURIComponent(u),u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),u=>"https://r.jina.ai/"+u,u=>"https://corsproxy.io/?url="+encodeURIComponent(u)];
+const escT=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function textoHtml(tx){const tl=(tx.match(/^Title:\s*(.+)$/m)||[])[1]||"";const corpo=tx.replace(/^(Title|URL Source|Published Time|Markdown Content):.*$/gm,"").replace(/!\[[^\]]*\]\([^)]*\)/g,"").replace(/\[([^\]]*)\]\([^)]*\)/g,"$1");
+  const L=corpo.split(/\n+/).map(l=>l.trim()).filter(Boolean);return `<html><head><title>${escT(tl||L[0]||"")}</title><meta property="og:title" content="${escT(tl||L[0]||"")}"><meta name="description" content="${escT(L.join(". ").slice(0,800))}"></head><body><div>${escT(corpo).replace(/\n/g,"<br>\n")}</div></body></html>`}
 async function baixar(url,blob){
   const ordem=[LK.rota,...ROTAS.map((_,i)=>i).filter(i=>i!==LK.rota)];let erro;
   for(const i of ordem){const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),blob?20000:15000);
     try{const r=await fetch(ROTAS[i](url),{signal:ctl.signal,credentials:"omit"});if(!r.ok)throw new Error("HTTP "+r.status);
       if(blob){const b=await r.blob();if(b.size<4000||/text|html|json/.test(b.type))throw new Error("não é foto");LK.rota=i;return b}
-      const tx=await r.text();if(tx.length<300||!/<html|<head|<meta/i.test(tx))throw new Error("página vazia");LK.rota=i;return tx}
+      let tx=await r.text();if(!/<html|<head|<meta/i.test(tx)&&tx.length>300)tx=textoHtml(tx);if(tx.length<300||!/<html|<head|<meta/i.test(tx))throw new Error("página vazia");LK.rota=i;return tx}
     catch(e){erro=e}finally{clearTimeout(t)}}
   throw erro||new Error("falhou")}
 const semAc=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
