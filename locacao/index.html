@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0B0B0A">
-<link rel="apple-touch-icon" href="../icones/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../icones/favicon-32.png">
+<link rel="apple-touch-icon" href="icones/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icones/favicon-32.png">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-title" content="LocaçãoUtu">
 <meta name="application-name" content="LocaçãoUtu">
@@ -664,6 +664,18 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
   <datalist id="cdCondList"><option value="Terras de São José"><option value="Terras de São José II"><option value="Fazenda Vila Real de Itu"><option value="City Castello"><option value="Xapada Parque Ytu"><option value="Fazenda Kurumin"><option value="Jardim Plaza Athénée"><option value="Campos de Santo Antônio"><option value="Village Castelo"><option value="Villas do Golfe"><option value="Reserva Saint Paul"><option value="Jardim Theodora"><option value="Portal de Itu"><option value="Vila dos Manacás"><option value="Condomínio Una"><option value="Gardenville"><option value="Mont Blanc"><option value="Altavista Reserva"></datalist>
 </section>
 
+<!-- ================= MAPAS ================= -->
+<section id="view-mapas" hidden>
+  <div class="files-head">
+    <div>
+      <div class="eyebrow" id="mpEyebrow">Mapas</div>
+      <h1>Mapas <em>dos empreendimentos</em></h1>
+      <p class="lede">Mapas de implantação dos empreendimentos, para abrir na hora com o cliente, compartilhar no WhatsApp ou baixar.</p>
+    </div>
+  </div>
+  <div id="mpOut" style="margin-top:22px"></div>
+</section>
+
 <!-- ================= DOSSIÊS ================= -->
 <section id="view-dossies" hidden>
   <div class="files-head">
@@ -676,7 +688,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
   <div id="dsOut" style="margin-top:22px"></div>
 </section>
 
-<p class="ver">Portal de Locação · versão 10/11/2026 22h35 · <a href="../" style="color:inherit">ir para o Portal de Vendas</a></p>
+<p class="ver">Portal de Locação · versão 10/11/2026 22h45</p>
 </main>
 
 <div class="toast" id="toast" hidden></div>
@@ -1767,10 +1779,10 @@ function saveMe(){LS.set("utu.msg.eu",{nome:$("#mCorretor").value,g:radioV("corG
 {const eu=LS.get("utu.msg.eu",null);if(eu){$("#mCorretor").value=eu.nome||"";if(eu.g==="f")$("#corF").checked=true}else{const n=LS.get("utu.loc.eu","");if(n)$("#mCorretor").value=n}}
 
 /* =====================================================
-   APRENDIZADO (arquivos ficam na pasta do Portal de Vendas)
+   APRENDIZADO (arquivos na pasta locacao/arquivos/)
    ===================================================== */
 const ARQUIVOS=[
- {id:"manual-corretor",titulo:"Manual do Corretor",cat:"Kenlo",descricao:"Como usar o Kenlo: esteira de leads, passo a passo do atendimento, boas práticas e prompts de IA para registros.",arquivo:"../arquivos/Manual-do-Corretor.pdf",capa:"../arquivos/capa-Manual-do-Corretor-1.jpg",meta:"PDF · 1,3 MB · 19 páginas"}
+ {id:"manual-corretor",titulo:"Manual do Corretor",cat:"Kenlo",descricao:"Como usar o Kenlo: esteira de leads, passo a passo do atendimento, boas práticas e prompts de IA para registros.",arquivo:"arquivos/Manual-do-Corretor.pdf",capa:"arquivos/capa-Manual-do-Corretor-1.jpg",meta:"PDF · 1,3 MB · 19 páginas"}
 ];
 const SHARE_I=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>`;
 const DL_I=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v11m0 0 4-4m-4 4-4-4M5 19h14"/></svg>`;
@@ -1961,13 +1973,13 @@ cdPaint();cdFotosPaint();
 
 /* =====================================================
    DOSSIÊS DA LOCAÇÃO. Para incluir, a gerência envia o PDF ao Claude.
-   arquivo/capa podem apontar para ../arquivos/ (mesma pasta do Portal de Vendas).
+   arquivos ficam em locacao/arquivos/.
    ===================================================== */
-/* Os dossiês são os MESMOS do Portal de Vendas: a página lê a lista de lá (../index.html) ao abrir.
-   A lista abaixo é só uma cópia de reserva, usada se a leitura falhar. */
+/* Dossiês e mapas da locação. Lista própria, sem ligação com o Portal de Vendas.
+   Arquivos na pasta locacao/arquivos/. Para incluir ou trocar, a gerência envia o PDF ao Claude. */
 const fmtTam=b=>!b?"":b>=1048576?(b/1048576).toFixed(1).replace(".",",")+" MB":Math.max(1,Math.round(b/1024))+" KB";
 const dosOf=f=>({id:f.id,titulo:f.titulo,cat:f.empreendimento||"Dossiê",descricao:f.descricao||"",
-  arquivo:f.tipo==="link"?f.url:"../arquivos/"+f.nomeArquivo,capa:f.capa?"../arquivos/"+f.capa:"",ordem:f.ordem??999,
+  arquivo:f.tipo==="link"?f.url:"arquivos/"+f.nomeArquivo,capa:f.capa?"arquivos/"+f.capa:"",ordem:f.ordem??999,
   meta:[f.tipo==="link"?"Link":"PDF",fmtTam(f.tamanho),f.paginas?f.paginas+(f.paginas===1?" página":" páginas"):""].filter(Boolean).join(" · ")});
 const DOSSIES=[
  {id:"altavista",titulo:"Altavista Itu & Reserva",empreendimento:"Altavista",descricao:"Loteamento aberto e residencial fechado em Itu, 632 lotes a partir de R$ 178 mil.",tipo:"arquivo",tamanho:2666124,paginas:9,nomeArquivo:"Altavista-Utu-Guacu.pdf",capa:"capa-Altavista-Utu-Guacu-1.jpg",ordem:1},
@@ -1975,26 +1987,28 @@ const DOSSIES=[
  {id:"praia-do-terras",titulo:"Praia do Terras",empreendimento:"Praia do Terras",descricao:"Clube com praia e onda Endless Surf no Terras de São José, títulos a partir de R$ 500 mil.",tipo:"arquivo",tamanho:4780758,paginas:6,nomeArquivo:"Praia-do-Terras-Utu-Guacu.pdf",capa:"capa-Praia-do-Terras-Utu-Guacu-1.jpg",ordem:3},
  {id:"villa-anna",titulo:"Villa Anna Residencial",empreendimento:"Villa Anna",descricao:"Lançamento de casas térreas em condomínio fechado em Cardeal, Elias Fausto, a 10 minutos de Indaiatuba. Casas a partir de R$ 775 mil.",tipo:"arquivo",tamanho:4227220,paginas:10,nomeArquivo:"Dossie-Villa-Anna-Utu-Guacu.pdf",capa:"capa-Dossie-Villa-Anna-Utu-Guacu-1.jpg",ordem:4}
 ].map(dosOf);
-async function syncDossies(){try{
-  const r=await fetch("../index.html?d="+Date.now(),{cache:"no-store"});if(!r.ok)return;const h=await r.text();
-  const i=h.indexOf("const ARQUIVOS=[");if(i<0)return;const j=h.indexOf("\n];",i);if(j<0)return;
-  const arr=Function('"use strict";return '+h.slice(i+15,j+3))();
-  const L=arr.filter(f=>f&&f.categoria==="Dossiês"&&(f.nomeArquivo||f.url)).map(dosOf).sort((a,b)=>a.ordem-b.ordem);
-  if(!L.length)return;DOSSIES.splice(0,DOSSIES.length,...L);renderDossies();renderHome();
-}catch(e){}}
-function renderDossies(){
-  $("#dsEyebrow").textContent=DOSSIES.length?`${DOSSIES.length} ${DOSSIES.length===1?"dossiê":"dossiês"}`:"Dossiês";
-  if(!DOSSIES.length){$("#dsOut").innerHTML=`<div class="note"><b>Em breve</b>Os dossiês da locação vão ficar aqui, prontos para abrir, compartilhar no WhatsApp ou baixar.</div>`;return}
-  $("#dsOut").innerHTML=`<div class="grid">${DOSSIES.map(f=>`<article class="card">
-    <a href="${esc(f.arquivo)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">${f.capa?`<span class="cover"><img src="${esc(f.capa)}" alt="Capa: ${esc(f.titulo)}" loading="lazy"></span>`:`<span class="cover short"><span class="tile"><span class="emp">${esc(f.cat||"Locação")}</span><span class="ext">PDF</span></span></span>`}</a>
-    <div class="card-body"><span class="cat">${esc(f.cat||"Locação")}</span><h3>${esc(f.titulo)}</h3>${f.meta?`<span class="meta">${esc(f.meta)}</span>`:""}${f.descricao?`<p class="desc">${esc(f.descricao)}</p>`:""}
+const MAPAS=[
+ {id:"mapa-una",titulo:"Condomínio Una",empreendimento:"Una",descricao:"Mapa de implantação com quadras, lotes, áreas verdes e quadro de áreas.",tipo:"arquivo",tamanho:3042598,paginas:1,nomeArquivo:"Mapa-Condominio-Una.pdf",capa:"capa-Mapa-Condominio-Una-1.jpg",ordem:1},
+ {id:"mapa-saint-paul",titulo:"Reserva Saint Paul",empreendimento:"Saint Paul",descricao:"Mapa de implantação com lotes residenciais, comerciais, áreas verdes e de lazer.",tipo:"arquivo",tamanho:1073528,paginas:1,nomeArquivo:"Mapa-Reserva-Saint-Paul.pdf",capa:"capa-Mapa-Reserva-Saint-Paul-1.jpg",ordem:2}
+].map(dosOf);
+
+function renderLista(L,out,eye,sing,plur,titulo,vazio){
+  $(eye).textContent=L.length?`${L.length} ${L.length===1?sing:plur}`:titulo;
+  if(!L.length){$(out).innerHTML=`<div class="note"><b>Em breve</b>${vazio}</div>`;return}
+  $(out).innerHTML=`<div class="grid">${L.map(f=>`<article class="card">
+    <a href="${esc(f.arquivo)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">${f.capa?`<span class="cover"><img src="${esc(f.capa)}" alt="Capa: ${esc(f.titulo)}" loading="lazy"></span>`:`<span class="cover short"><span class="tile"><span class="emp">${esc(f.cat||"")}</span><span class="ext">PDF</span></span></span>`}</a>
+    <div class="card-body"><span class="cat">${esc(f.cat||"")}</span><h3>${esc(f.titulo)}</h3>${f.meta?`<span class="meta">${esc(f.meta)}</span>`:""}${f.descricao?`<p class="desc">${esc(f.descricao)}</p>`:""}
     <div class="card-actions three-act"><a class="btn primary" href="${esc(f.arquivo)}" target="_blank" rel="noopener">Abrir</a><button class="btn" type="button" data-share="${esc(f.id)}">${SHARE_I}Compartilhar</button><a class="btn" href="${esc(f.arquivo)}" download>${DL_I}Baixar</a></div></div></article>`).join("")}</div>`;
 }
-$("#dsOut").addEventListener("click",async e=>{const b=e.target.closest("[data-share]");if(!b)return;const f=DOSSIES.find(x=>x.id===b.dataset.share);
+function renderDossies(){renderLista(DOSSIES,"#dsOut","#dsEyebrow","dossiê","dossiês","Dossiês","Os dossiês vão ficar aqui, prontos para abrir, compartilhar no WhatsApp ou baixar.")}
+function renderMapas(){renderLista(MAPAS,"#mpOut","#mpEyebrow","mapa","mapas","Mapas","Os mapas dos empreendimentos vão ficar aqui, para abrir na hora com o cliente.")}
+async function compartilharLista(e){const b=e.target.closest("[data-share]");if(!b)return;const f=[...DOSSIES,...MAPAS].find(x=>x.id===b.dataset.share);if(!f)return;
   const url=new URL(f.arquivo,location.href).href,txt=`${f.titulo} · Utu-Guaçu Imóveis`,old=b.innerHTML;b.disabled=true;b.textContent="Preparando…";
   try{if(navigator.share){try{const blob=await (await fetch(url)).blob();const file=new File([blob],url.split("/").pop(),{type:"application/pdf"});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:txt,text:txt});return}}catch(err){if(err&&err.name==="AbortError")return}
     try{await navigator.share({title:txt,text:txt,url});return}catch(err){if(err&&err.name==="AbortError")return}}
-    window.open("https://wa.me/?text="+encodeURIComponent(txt+"\n"+url),"_blank","noopener")}finally{b.disabled=false;b.innerHTML=old}});
+    window.open("https://wa.me/?text="+encodeURIComponent(txt+"\n"+url),"_blank","noopener")}finally{b.disabled=false;b.innerHTML=old}}
+$("#dsOut").addEventListener("click",compartilharLista);
+$("#mpOut").addEventListener("click",compartilharLista);
 
 
 function renderHome(){
@@ -2007,8 +2021,11 @@ function renderHome(){
       <span class="txt"><span class="k">Ferramenta</span><h2>Ficha de cadastro</h2><p>Imóvel novo para alugar: preencha a ficha, junte as fotos e envie tudo de uma vez para a Rebeca subir no sistema.</p></span>
       <span class="go">Preencher a ficha${ARROW}</span></button>
     <button class="blk dos" type="button" data-open="dossies">
-      <span class="txt"><span class="k">${DOSSIES.length?DOSSIES.length+" "+(DOSSIES.length===1?"dossiê":"dossiês"):"Em breve"}</span><h2>Dossiês</h2><p>Os mesmos dossiês do Portal de Vendas, prontos para mandar ao cliente pelo WhatsApp.</p></span>
+      <span class="txt"><span class="k">${DOSSIES.length?DOSSIES.length+" "+(DOSSIES.length===1?"dossiê":"dossiês"):"Em breve"}</span><h2>Dossiês</h2><p>Apresentações dos empreendimentos, prontas para mandar ao cliente pelo WhatsApp.</p></span>
       <span class="go">Ver dossiês${ARROW}</span></button>
+    <button class="blk dos" type="button" data-open="mapas">
+      <span class="txt"><span class="k">${MAPAS.length?MAPAS.length+" "+(MAPAS.length===1?"mapa":"mapas"):"Em breve"}</span><h2>Mapas</h2><p>Mapas de implantação dos empreendimentos, para abrir na hora com o cliente.</p></span>
+      <span class="go">Ver mapas${ARROW}</span></button>
     <button class="blk msg" type="button" data-open="mensagens">
       <span class="txt"><span class="k">${MENSAGENS.length} modelos</span><h2>Modelos de mensagem</h2><p>Textos prontos para atendimento, documentação, contrato, proprietário e saída. É só copiar e mandar no WhatsApp.</p></span>
       <span class="go">Ver mensagens${ARROW}</span></button>
@@ -2019,7 +2036,7 @@ function renderHome(){
 $("#home").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(!b)return;const o=b.dataset.open;if(o.startsWith("ficha:"))show("ficha",o.slice(6));else show(o)});
 let curView="inicio";
 function show(view,param){
-  ["inicio","fichas","ficha","mensagens","aprendizado","cadastro","dossies"].forEach(v=>$("#view-"+v).hidden=v!==view);
+  ["inicio","fichas","ficha","mensagens","aprendizado","cadastro","dossies","mapas"].forEach(v=>$("#view-"+v).hidden=v!==view);
   curView=view;
   if(view==="ficha"){const fi=FICHAS.find(f=>f.id===param);if(!fi)return show("fichas");renderFicha(fi)}
   if(view==="mensagens"){renderMsgs();syncIa()}
@@ -2030,8 +2047,8 @@ function show(view,param){
 }
 $("#crumb").addEventListener("click",()=>show(curView==="ficha"?"fichas":"inicio"));
 $("#brandHome").addEventListener("click",()=>show("inicio"));
-renderHome(); renderFichas(); renderAprendizado(); renderDossies(); syncDossies();
-{const h=location.hash.replace("#","");if(h.startsWith("ficha-"))show("ficha",h.slice(6));else if(["fichas","mensagens","aprendizado","cadastro","dossies"].includes(h))show(h)}
+renderHome(); renderFichas(); renderAprendizado(); renderDossies(); renderMapas();
+{const h=location.hash.replace("#","");if(h.startsWith("ficha-"))show("ficha",h.slice(6));else if(["fichas","mensagens","aprendizado","cadastro","dossies","mapas"].includes(h))show(h)}
 window.__loc={FICHAS,collect:()=>collect(),show,pdf:()=>fiPdfBlob(),text:()=>{DOC_HDR=CUR.hdr;return toText(fiBlocks(fiLast,PROTO))}};
 })();
 </script>
