@@ -183,10 +183,18 @@ h1 em,h2 em{font-style:italic;color:var(--gold)}
 .cd-thumbs .n{position:absolute;left:4px;top:4px;background:rgba(0,0,0,.55);color:#fff;font-size:10.5px;border-radius:9px;padding:0 6px}
 .cd-thumbs button{position:absolute;right:3px;top:3px;width:22px;height:22px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:14px;line-height:1;cursor:pointer}
 .cd-falta{font-size:13px;line-height:1.5;background:var(--warn-soft);color:var(--warn);border-radius:var(--r);padding:10px 12px}
-.cd-prev{white-space:pre-wrap;font:inherit;font-size:13px;line-height:1.5;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;margin:0}
+.cd-prev{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;font-size:13px;line-height:1.5;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;margin:0}
 @media (max-width:480px){.cd-steps{grid-template-columns:repeat(2,minmax(0,1fr))}.cd-row input{font-size:16px}}
 .blk.cad{background:var(--surface);border-color:var(--gold)}
 #view-parceria.done #paHead{display:none}
+.vi-ims{display:flex;flex-direction:column;gap:10px}
+.vi-im{border:1px solid var(--line);border-radius:var(--r);padding:10px;display:flex;flex-direction:column;gap:6px;background:var(--surface)}
+.vi-im input{width:100%;min-width:0;padding:9px 11px;border:1px solid var(--line-strong);border-radius:var(--r);background:var(--surface)}
+.vi-top{display:flex;align-items:center;gap:8px}.vi-n{font-family:var(--display,serif);font-size:17px;color:var(--gold)}.vi-h{font-size:12px;color:var(--muted)}
+.vi-mv{margin-left:auto;display:flex;gap:4px}.vi-mv button{width:34px;height:32px;border:1px solid var(--line-strong);background:var(--surface);border-radius:var(--r);cursor:pointer;color:var(--fg);font-size:15px}
+.vi-acts{display:flex;gap:8px;flex-wrap:wrap}.vi-acts .btn,.vi-out a.btn{text-decoration:none}
+.vi-out{display:flex;flex-direction:column;gap:10px}
+@media (max-width:480px){.vi-im input{font-size:16px}}
 .pa-ask{border:1px dashed var(--gold-bright,#B89A5E);background:var(--gold-soft,#EFE5D2);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:6px;font-size:13px;line-height:1.45}
 .pa-ask-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}.pa-ask-btns .btn{text-decoration:none}
 .pa-ask summary{cursor:pointer;font-size:12.5px;color:var(--muted);margin-top:2px}
@@ -678,6 +686,60 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
       </div>
       <div class="sheet-scroll"><div class="sheets" id="paSheet"></div></div>
     </div>
+  </div>
+</section>
+
+<!-- ================= VISITAS ================= -->
+<section id="view-visitas" hidden>
+  <div class="prop-head">
+    <div>
+      <div class="eyebrow">Ferramenta</div>
+      <h1>Roteiro <em>de visitas</em></h1>
+      <p class="lede">Monte a ordem dos imóveis, os horários saem sozinhos, e a mensagem de confirmação para o cliente fica pronta com o roteiro e os endereços.</p>
+    </div>
+  </div>
+  <div class="av-wrap">
+    <form class="form" id="viForm" novalidate autocomplete="off">
+      <fieldset>
+        <legend><small>1</small>Visita</legend>
+        <div class="two">
+          <div class="field"><label for="viCor">Seu nome</label><input id="viCor" list="corList" placeholder="Nome completo"></div>
+          <div class="field"><label for="viCli">Nome do cliente</label><input id="viCli" autocapitalize="words"></div>
+        </div>
+        <div class="field"><label for="viTel">WhatsApp do cliente <span class="opt">(opcional)</span></label><input id="viTel" inputmode="tel" placeholder="(11) 90000-0000"></div>
+        <div class="two">
+          <div class="field"><label for="viData">Dia</label><input id="viData" type="date"></div>
+          <div class="field"><label for="viHora">Horário de início</label><input id="viHora" type="time" value="09:00"></div>
+        </div>
+        <div class="field"><label for="viEnc">Onde vocês se encontram <span class="opt">(opcional)</span></label><input id="viEnc" list="viEncList" placeholder="Ex.: na portaria do primeiro condomínio"></div>
+        <datalist id="viEncList"><option value="na portaria do primeiro condomínio"><option value="no primeiro imóvel do roteiro"><option value="na Utu-Guaçu (Rua Paula Souza, 483, Centro, Itu)"><option value="te busco no endereço combinado"></datalist>
+      </fieldset>
+      <fieldset>
+        <legend><small>2</small>Imóveis, na ordem da visita</legend>
+        <p class="hint" style="margin:-4px 0 2px">Use as setas para mudar a ordem. Endereço com número, ou quadra e lote, ajuda o cliente a chegar.</p>
+        <div id="viIms" class="vi-ims"></div>
+        <div class="vi-acts"><button class="btn small" id="viAdd" type="button">+ Adicionar imóvel</button><button class="btn small" id="viAgrupa" type="button">Juntar os do mesmo condomínio</button></div>
+        <div class="two">
+          <div class="field"><label for="viDur">Tempo em cada imóvel</label><select id="viDur"><option value="20">20 min</option><option value="30">30 min</option><option value="40" selected>40 min</option><option value="60">1 hora</option><option value="90">1h30</option></select></div>
+          <div class="field"><label for="viDesl">Deslocamento entre imóveis</label><select id="viDesl"><option value="5">5 min</option><option value="10">10 min</option><option value="15" selected>15 min</option><option value="20">20 min</option><option value="30">30 min</option><option value="45">45 min</option></select></div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend><small>3</small>Na mensagem</legend>
+        <label class="check"><input type="checkbox" id="viMapa" checked><span>Link do mapa em cada endereço</span></label>
+        <label class="check"><input type="checkbox" id="viPort" checked><span>Avisar que o nome do cliente fica liberado na portaria</span></label>
+        <label class="check"><input type="checkbox" id="viDoc" checked><span>Pedir para levar documento com foto</span></label>
+        <label class="check"><input type="checkbox" id="viHoras" checked><span>Mostrar o horário previsto de cada imóvel</span></label>
+      </fieldset>
+      <div class="gen vi-out">
+        <span class="eyebrow">Mensagem para o cliente</span>
+        <pre class="cd-prev" id="viPrev"></pre>
+        <p class="gen-missing" id="viFalta" hidden></p>
+        <a class="btn gold big" id="viEnviar" href="#" target="_blank" rel="noopener">Enviar ao cliente no WhatsApp</a>
+        <div class="vi-acts"><button class="btn" id="viCopiar" type="button">Copiar mensagem</button><a class="btn" id="viRota" href="#" target="_blank" rel="noopener">Abrir a rota no Google Maps</a></div>
+        <button class="btn ghost small" id="viLimpar" type="button">Limpar roteiro</button>
+      </div>
+    </form>
   </div>
 </section>
 
@@ -1271,7 +1333,7 @@ $("#msgsOut").addEventListener("click",e=>{const b=e.target.closest("[data-copy]
 const slug=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 let pendingHash=location.hash.replace("#","");
 function show(view,cat){
-  $("#view-inicio").hidden=view!=="inicio"; $("#view-arquivos").hidden=view!=="arquivos"; $("#view-proposta").hidden=view!=="proposta"; $("#view-mensagens").hidden=view!=="mensagens"; $("#view-documentos").hidden=view!=="documentos"; $("#view-avaliacao").hidden=view!=="avaliacao"; $("#view-parceria").hidden=view!=="parceria"; $("#view-cadastro").hidden=view!=="cadastro"; if(view==="parceria")paUpdate(); $("#view-financiamento").hidden=view!=="financiamento"; if(view==="financiamento")finUpd(); if(view==="avaliacao")avUpdate();
+  $("#view-inicio").hidden=view!=="inicio"; $("#view-arquivos").hidden=view!=="arquivos"; $("#view-proposta").hidden=view!=="proposta"; $("#view-mensagens").hidden=view!=="mensagens"; $("#view-documentos").hidden=view!=="documentos"; $("#view-avaliacao").hidden=view!=="avaliacao"; $("#view-parceria").hidden=view!=="parceria"; $("#view-cadastro").hidden=view!=="cadastro"; $("#view-visitas").hidden=view!=="visitas"; if(view==="parceria")paUpdate(); $("#view-financiamento").hidden=view!=="financiamento"; if(view==="financiamento")finUpd(); if(view==="avaliacao")avUpdate();
   if(view==="mensagens")renderMsgs();
   $("#crumb").hidden=view==="inicio";
   curView=view; $("#crumbLbl").textContent=(view==="proposta"||view==="avaliacao"||view==="parceria")?"Documentos":"Início";
@@ -1283,7 +1345,7 @@ function show(view,cat){
 let curView="inicio";
 $("#crumb").addEventListener("click",()=>show(curView==="proposta"||curView==="avaliacao"||curView==="parceria"?"documentos":"inicio"));
 $("#brandHome").addEventListener("click",()=>show("inicio"));
-$("#home").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(!b)return;const t=b.dataset.open;if(t==="__proposta")show("proposta");else if(t==="__documentos")show("documentos");else if(t==="__financiamento")show("financiamento");else if(t==="__cadastro")show("cadastro");else if(t==="__mensagens")show("mensagens");else show("arquivos",t)});
+$("#home").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(!b)return;const t=b.dataset.open;if(t==="__proposta")show("proposta");else if(t==="__documentos")show("documentos");else if(t==="__financiamento")show("financiamento");else if(t==="__cadastro")show("cadastro");else if(t==="__visitas")show("visitas");else if(t==="__mensagens")show("mensagens");else show("arquivos",t)});
 
 /* =====================================================
    ARQUIVOS
@@ -1319,6 +1381,9 @@ function renderHome(){
   const cadTile=`<button class="blk cad" type="button" data-open="__cadastro">
       <span class="txt"><span class="k">Ferramenta</span><h2>Ficha de cadastro</h2><p>Preencha a ficha do imóvel novo, junte as fotos e envie tudo de uma vez para a Rebeca subir no sistema.</p></span>
       <span class="go">Preencher a ficha${ARROW}</span></button>`;
+  const visTile=`<button class="blk vis" type="button" data-open="__visitas">
+      <span class="txt"><span class="k">Ferramenta</span><h2>Roteiro de visitas</h2><p>Coloque os imóveis na ordem da visita e mande ao cliente a confirmação com dia, horário, roteiro e endereços.</p></span>
+      <span class="go">Montar o roteiro${ARROW}</span></button>`;
   const finTile=`<button class="blk fin" type="button" data-open="__financiamento">
       <span class="txt"><span class="k">Ferramenta</span><h2>Guia do financiamento</h2><p>Envie ao cliente que vai comprar financiado o passo a passo para ver em que etapa ele está, com a parceira de crédito.</p></span>
       <span class="go">Enviar o guia${ARROW}</span></button>`;
@@ -1344,7 +1409,7 @@ function renderHome(){
     if(!cats.length) blocks=`<div class="note" style="grid-column:span 1"><b>Nenhum material ainda</b>${S.editor?"Use “Adicionar arquivo” para criar a primeira seção.":"A gerência adiciona os materiais por aqui."}</div>`;
     if(S.editor) blocks+=`<button class="blk empty" type="button" data-addhome><span class="txt"><span class="k">Gerência</span><h2>Nova seção</h2><p>Adicione um arquivo com um nome de seção novo e ele vira um bloco aqui.</p></span><span class="go">Adicionar${ARROW}</span></button>`;
   }
-  $("#home").innerHTML=lead+cadTile+finTile+mktTile+blocks+msgTile;
+  $("#home").innerHTML=lead+cadTile+visTile+finTile+mktTile+blocks+msgTile;
   $("#catList").innerHTML=[...new Set([...CATS,...catsInUse().map(x=>x.c)])].map(c=>`<option value="${esc(c)}">`).join("");
 }
 $("#home").addEventListener("click",e=>{if(e.target.closest("[data-addhome]"))openPanel(null,"")});
@@ -1536,6 +1601,7 @@ finUpd();
 /* ===== Busca geral do início ===== */
 const nrm=x=>String(x||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
 const SECOES=[
+ {tit:"Roteiro de visitas",sub:"Ordem dos imóveis e mensagem de confirmação para o cliente",chaves:"visita visitas roteiro agenda agendar confirmar confirmacao horario endereco",abre:()=>show("visitas")},
  {tit:"Ficha de cadastro",sub:"Ficha do imóvel novo com fotos, direto para a Rebeca",chaves:"ficha cadastro captacao captar imovel novo rebeca fotos subir kenlo",abre:()=>show("cadastro")},
  {tit:"Guia do Alto Padrão",sub:"Condomínios de Itu: o que oferecer, fichas e como atender",chaves:"alto padrao condominio condominios itu terras sao jose vila real city castello luxo apostila guia fichas",abre:()=>{location.href="alto-padrao/"}},
  {tit:"Análise do perfil",sub:"Nota do seu Instagram, o que melhorar e cronograma do mês",chaves:"analise perfil instagram cronograma calendario frequencia bio seguidores engajamento melhorar",abre:()=>{location.href="marketing/#analise"}},
@@ -2443,6 +2509,60 @@ $("#cdPuxar").addEventListener("click",async()=>{const st=$("#cdUrlSt"),btn=$("#
     st.innerHTML=ach.length?`Preenchi: ${esc(ach.join(", "))}. <b>Confira tudo</b>, porque cada site mostra as informações de um jeito.`:"Abri o anúncio, mas não consegui ler as informações. Preencha à mão.";
   }catch(e){st.textContent="Não consegui abrir esse anúncio (alguns portais bloqueiam). Preencha à mão."}finally{btn.disabled=false;btn.textContent=old}});
 cdPaint();cdFotosPaint();
+
+
+/* ===== ROTEIRO DE VISITAS ===== */
+const vv=id=>($("#"+id).value||"").trim();
+function viRow(d={}){const r=document.createElement("div");r.className="vi-im";
+  r.innerHTML=`<div class="vi-top"><b class="vi-n"></b><span class="vi-h"></span><span class="vi-mv"><button type="button" data-mv="-1" aria-label="Subir">↑</button><button type="button" data-mv="1" aria-label="Descer">↓</button><button type="button" data-rm aria-label="Remover">×</button></span></div>
+  <input class="vi-desc" placeholder="Imóvel (ex.: Casa 4 suítes, código CA1234)" value="${esc(d.desc||"")}">
+  <input class="vi-cond" list="cdCondList" placeholder="Condomínio ou bairro" value="${esc(d.cond||"")}">
+  <input class="vi-end" placeholder="Endereço (rua e número, ou quadra e lote) e cidade" value="${esc(d.end||"")}">`;
+  $("#viIms").appendChild(r)}
+const viList=()=>$$("#viIms .vi-im").map(r=>({desc:r.querySelector(".vi-desc").value.trim(),cond:r.querySelector(".vi-cond").value.trim(),end:r.querySelector(".vi-end").value.trim()}));
+function viSet(list){$("#viIms").innerHTML="";(list.length?list:[{}]).forEach(viRow)}
+const hhmm=m=>{m=((m%1440)+1440)%1440;const h=Math.floor(m/60),mi=m%60;return mi?`${h}h${String(mi).padStart(2,"0")}`:`${h}h`};
+const SEM=["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"];
+function viDia(iso){if(!iso)return"";const [y,m,d]=iso.split("-").map(Number);const dt=new Date(y,m-1,d);const hoje=new Date();hoje.setHours(0,0,0,0);const dif=Math.round((dt-hoje)/864e5);
+  const base=`${SEM[dt.getDay()]}, dia ${String(d).padStart(2,"0")}/${String(m).padStart(2,"0")}`;const pre=dt.getDay()===0||dt.getDay()===6?"no ":"na ";return dif===0?`hoje, ${base}`:dif===1?`amanhã, ${base}`:pre+base}
+const mapsQ=s=>"https://maps.google.com/?q="+encodeURIComponent(s).replace(/%20/g,"+").replace(/%2C/g,",").replace(/%2F/g,"/");
+function viMsg(){
+  const ims=viList().filter(i=>i.desc||i.cond||i.end);const falta=[];
+  if(!vv("viCli"))falta.push("nome do cliente");if(!vv("viData"))falta.push("dia");if(!vv("viHora"))falta.push("horário");if(!ims.length)falta.push("pelo menos um imóvel");
+  const [h,mi]=(vv("viHora")||"09:00").split(":").map(Number);let t=h*60+mi;const dur=+vv("viDur"),des=+vv("viDesl");
+  const cli=vv("viCli").split(" ")[0],eu=vv("viCor").split(" ")[0]||vv("viCor");
+  const L=[`Olá${cli?", "+cli:""}! Tudo bem? Aqui é ${eu||"[seu nome]"}, da Utu-Guaçu Imóveis.`,"",
+    `Passando para confirmar a nossa visita ${viDia(vv("viData"))||"[dia]"}, às ${vv("viHora")?hhmm(h*60+mi):"[horário]"}. ${ims.length>1?`Separei ${ims.length} imóveis e organizei o roteiro nesta ordem:`:"Segue o endereço do imóvel:"}`,""];
+  const horas=[];
+  ims.forEach((i,k)=>{horas.push(t);const tit=[i.desc,i.cond].filter(Boolean).join(", ")||"Imóvel";
+    L.push(`${ims.length>1?(k+1)+") ":""}${$("#viHoras").checked&&ims.length>1?hhmm(t)+" · ":""}${tit}`);
+    const loc=[i.end].filter(Boolean).join("");if(loc)L.push(loc);
+    if($("#viMapa").checked&&(i.end||i.cond))L.push(mapsQ(i.end&&/\d/.test(i.end)&&!/quadra|lote/i.test(i.end)?i.end:[i.cond,i.end].filter(Boolean).join(", ")));
+    L.push("");t+=dur+des});
+  const temCond=ims.some(i=>i.cond&&/condom|resid|terras|reserva|villa|vila|fazenda|parque|jardim|portal|village|city|xapada|kurumin|athen|campos|theodora|una|gardenville|mont blanc|altavista|saint/i.test(i.cond));
+  if($("#viPort").checked&&temCond)L.push(`Já vou deixar o seu nome liberado na portaria${ims.filter(i=>i.cond).length>1?" dos condomínios":""}.${$("#viDoc").checked?" Leve um documento com foto, porque algumas portarias pedem na entrada.":""}`);
+  else if($("#viDoc").checked)L.push("Leve um documento com foto, porque algumas portarias pedem na entrada.");
+  if(vv("viEnc"))L.push(`Te encontro ${vv("viEnc")}.`);
+  L.push("","Qualquer imprevisto, me avise por aqui. Até lá!");
+  return {txt:L.join("\n").replace(/\n{3,}/g,"\n\n"),falta,ims,horas}}
+function viUpd(){const m=viMsg();$("#viPrev").textContent=m.txt;
+  $$("#viIms .vi-im").forEach((r,k)=>{r.querySelector(".vi-n").textContent=(k+1)+"º";const desc=r.querySelector(".vi-desc").value||r.querySelector(".vi-cond").value||r.querySelector(".vi-end").value;const idx=m.ims.length?viList().slice(0,k+1).filter(i=>i.desc||i.cond||i.end).length-1:-1;r.querySelector(".vi-h").textContent=desc&&m.horas[idx]!=null?"previsto "+hhmm(m.horas[idx]):""});
+  const f=$("#viFalta");f.hidden=!m.falta.length;f.textContent=m.falta.length?"Ainda falta: "+m.falta.join(", ")+".":"";
+  let n=onlyDig(vv("viTel"));if(n.length===10||n.length===11)n="55"+n;$("#viEnviar").href="https://wa.me/"+(n.length>=12?n:"")+"?text="+encodeURIComponent(m.txt);
+  const pts=m.ims.map(i=>[i.end,i.cond].filter(Boolean).join(", ")).filter(Boolean);
+  $("#viRota").hidden=!pts.length;if(pts.length){const dest=pts[pts.length-1],way=pts.slice(0,-1).slice(0,9);$("#viRota").href="https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(dest)+(way.length?"&waypoints="+encodeURIComponent(way.join("|")):"")+"&travelmode=driving"}}
+$("#viForm").addEventListener("input",viUpd);$("#viForm").addEventListener("change",viUpd);$("#viForm").addEventListener("submit",e=>e.preventDefault());
+$("#viTel").addEventListener("input",e=>{e.target.value=maskTel(e.target.value)});
+$("#viIms").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const r=b.closest(".vi-im");
+  if(b.hasAttribute("data-rm")){r.remove();if(!$$("#viIms .vi-im").length)viRow()}
+  else{const d=+b.dataset.mv;if(d<0&&r.previousElementSibling)r.parentNode.insertBefore(r,r.previousElementSibling);if(d>0&&r.nextElementSibling)r.parentNode.insertBefore(r.nextElementSibling,r)}viUpd()});
+$("#viAdd").addEventListener("click",()=>{if($$("#viIms .vi-im").length>=10){toast("Até 10 imóveis por roteiro.");return}viRow();viUpd();const l=$$("#viIms .vi-desc");l[l.length-1].focus()});
+$("#viAgrupa").addEventListener("click",()=>{const l=viList();const ord=[];const keyOf=i=>sA(i.cond)||"￿"+ord.length;const seen=new Map();
+  l.forEach(i=>{const k=sA(i.cond);if(k&&seen.has(k))seen.get(k).push(i);else{const g=[i];if(k)seen.set(k,g);ord.push(g)}});viSet(ord.flat());viUpd();toast("Imóveis do mesmo condomínio agora estão em sequência.")});
+$("#viCopiar").addEventListener("click",()=>copyText(viMsg().txt,"Mensagem copiada."));
+$("#viEnviar").addEventListener("click",e=>{const m=viMsg();if(m.falta.length){e.preventDefault();toast("Ainda falta: "+m.falta.join(", ")+".")}});
+$("#viLimpar").addEventListener("click",()=>{$("#viForm").reset();$("#viData").value=today();$("#viHora").value="09:00";viSet([]);viUpd();toast("Roteiro limpo.")});
+$("#viData").value=today();viSet([{},{}]);viUpd();
 
 })();
 </script>
