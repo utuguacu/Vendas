@@ -193,6 +193,7 @@ h1 em,h2 em{font-style:italic;color:var(--gold)}
 .vi-im input{width:100%;min-width:0;padding:9px 11px;border:1px solid var(--line-strong);border-radius:var(--r);background:var(--surface)}
 .vi-top{display:flex;align-items:center;gap:8px}.vi-n{font-family:var(--display,serif);font-size:17px;color:var(--gold)}.vi-h{font-size:12px;color:var(--muted)}
 .vi-mv{margin-left:auto;display:flex;gap:4px}.vi-mv button{width:34px;height:32px;border:1px solid var(--line-strong);background:var(--surface);border-radius:var(--r);cursor:pointer;color:var(--fg);font-size:15px}
+.vi-link{display:flex;gap:6px}.vi-link input{flex:1}.vi-st:empty{display:none}
 .vi-acts{display:flex;gap:8px;flex-wrap:wrap}.vi-acts .btn,.vi-out a.btn{text-decoration:none}
 .vi-out{display:flex;flex-direction:column;gap:10px}
 @media (max-width:480px){.vi-im input{font-size:16px}}
@@ -717,7 +718,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
       </fieldset>
       <fieldset>
         <legend><small>2</small>Imóveis, na ordem da visita</legend>
-        <p class="hint" style="margin:-4px 0 2px">Use as setas para mudar a ordem. Endereço com número, ou quadra e lote, ajuda o cliente a chegar.</p>
+        <p class="hint" style="margin:-4px 0 2px">Cole o link do imóvel no nosso site e toque em Puxar: o imóvel e o condomínio vêm sozinhos. Use as setas para mudar a ordem. Endereço com número, ou quadra e lote, ajuda o cliente a chegar.</p>
         <div id="viIms" class="vi-ims"></div>
         <div class="vi-acts"><button class="btn small" id="viAdd" type="button">+ Adicionar imóvel</button><button class="btn small" id="viAgrupa" type="button">Juntar os do mesmo condomínio</button></div>
         <div class="two">
@@ -727,6 +728,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
       </fieldset>
       <fieldset>
         <legend><small>3</small>Na mensagem</legend>
+        <label class="check"><input type="checkbox" id="viLink" checked><span>Link do imóvel no nosso site</span></label>
         <label class="check"><input type="checkbox" id="viMapa" checked><span>Link do mapa em cada endereço</span></label>
         <label class="check"><input type="checkbox" id="viPort" checked><span>Avisar que o nome do cliente fica liberado na portaria</span></label>
         <label class="check"><input type="checkbox" id="viDoc" checked><span>Pedir para levar documento com foto</span></label>
@@ -1085,7 +1087,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 10/11/2026 23h10</p>
+<p class="ver">Portal de Vendas · versão 10/11/2026 23h00</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -2536,11 +2538,13 @@ cdPaint();cdFotosPaint();
 const vv=id=>($("#"+id).value||"").trim();
 function viRow(d={}){const r=document.createElement("div");r.className="vi-im";
   r.innerHTML=`<div class="vi-top"><b class="vi-n"></b><span class="vi-h"></span><span class="vi-mv"><button type="button" data-mv="-1" aria-label="Subir">↑</button><button type="button" data-mv="1" aria-label="Descer">↓</button><button type="button" data-rm aria-label="Remover">×</button></span></div>
+  <div class="vi-link"><input class="vi-url" type="url" inputmode="url" placeholder="Link do imóvel no nosso site (opcional)" value="${esc(d.url||"")}"><button type="button" class="btn small" data-pux>Puxar</button></div>
+  <span class="vi-st hint"></span>
   <input class="vi-desc" placeholder="Imóvel (ex.: Casa 4 suítes, código CA1234)" value="${esc(d.desc||"")}">
   <input class="vi-cond" list="cdCondList" placeholder="Condomínio ou bairro" value="${esc(d.cond||"")}">
   <input class="vi-end" placeholder="Endereço (rua e número, ou quadra e lote) e cidade" value="${esc(d.end||"")}">`;
   $("#viIms").appendChild(r)}
-const viList=()=>$$("#viIms .vi-im").map(r=>({desc:r.querySelector(".vi-desc").value.trim(),cond:r.querySelector(".vi-cond").value.trim(),end:r.querySelector(".vi-end").value.trim()}));
+const viList=()=>$$("#viIms .vi-im").map(r=>({url:r.querySelector(".vi-url").value.trim(),desc:r.querySelector(".vi-desc").value.trim(),cond:r.querySelector(".vi-cond").value.trim(),end:r.querySelector(".vi-end").value.trim()}));
 function viSet(list){$("#viIms").innerHTML="";(list.length?list:[{}]).forEach(viRow)}
 const hhmm=m=>{m=((m%1440)+1440)%1440;const h=Math.floor(m/60),mi=m%60;return mi?`${h}h${String(mi).padStart(2,"0")}`:`${h}h`};
 const SEM=["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"];
@@ -2548,7 +2552,7 @@ function viDia(iso){if(!iso)return"";const [y,m,d]=iso.split("-").map(Number);co
   const base=`${SEM[dt.getDay()]}, dia ${String(d).padStart(2,"0")}/${String(m).padStart(2,"0")}`;const pre=dt.getDay()===0||dt.getDay()===6?"no ":"na ";return dif===0?`hoje, ${base}`:dif===1?`amanhã, ${base}`:pre+base}
 const mapsQ=s=>"https://maps.google.com/?q="+encodeURIComponent(s).replace(/%20/g,"+").replace(/%2C/g,",").replace(/%2F/g,"/");
 function viMsg(){
-  const ims=viList().filter(i=>i.desc||i.cond||i.end);const falta=[];
+  const ims=viList().filter(i=>i.desc||i.cond||i.end||i.url);const falta=[];
   if(!vv("viCli"))falta.push("nome do cliente");if(!vv("viData"))falta.push("dia");if(!vv("viHora"))falta.push("horário");if(!ims.length)falta.push("pelo menos um imóvel");
   const [h,mi]=(vv("viHora")||"09:00").split(":").map(Number);let t=h*60+mi;const dur=+vv("viDur"),des=+vv("viDesl");
   const cli=vv("viCli").split(" ")[0],eu=vv("viCor").split(" ")[0]||vv("viCor");
@@ -2558,7 +2562,8 @@ function viMsg(){
   ims.forEach((i,k)=>{horas.push(t);const tit=[i.desc,i.cond].filter(Boolean).join(", ")||"Imóvel";
     L.push(`${ims.length>1?(k+1)+") ":""}${$("#viHoras").checked&&ims.length>1?hhmm(t)+" · ":""}${tit}`);
     const loc=[i.end].filter(Boolean).join("");if(loc)L.push(loc);
-    if($("#viMapa").checked&&(i.end||i.cond))L.push(mapsQ(i.end&&/\d/.test(i.end)&&!/quadra|lote/i.test(i.end)?i.end:[i.cond,i.end].filter(Boolean).join(", ")));
+    if($("#viLink").checked&&i.url)L.push("Ver o imóvel: "+i.url);
+    if($("#viMapa").checked&&(i.end||i.cond))L.push("Como chegar: "+mapsQ(i.end&&/\d/.test(i.end)&&!/quadra|lote/i.test(i.end)?i.end:[i.cond,i.end].filter(Boolean).join(", ")));
     L.push("");t+=dur+des});
   const temCond=ims.some(i=>i.cond&&/condom|resid|terras|reserva|villa|vila|fazenda|parque|jardim|portal|village|city|xapada|kurumin|athen|campos|theodora|una|gardenville|mont blanc|altavista|saint/i.test(i.cond));
   if($("#viPort").checked&&temCond)L.push(`Já vou deixar o seu nome liberado na portaria${ims.filter(i=>i.cond).length>1?" dos condomínios":""}.${$("#viDoc").checked?" Leve um documento com foto, porque algumas portarias pedem na entrada.":""}`);
@@ -2574,7 +2579,18 @@ function viUpd(){const m=viMsg();$("#viPrev").textContent=m.txt;
   $("#viRota").hidden=!pts.length;if(pts.length){const dest=pts[pts.length-1],way=pts.slice(0,-1).slice(0,9);$("#viRota").href="https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(dest)+(way.length?"&waypoints="+encodeURIComponent(way.join("|")):"")+"&travelmode=driving"}}
 $("#viForm").addEventListener("input",viUpd);$("#viForm").addEventListener("change",viUpd);$("#viForm").addEventListener("submit",e=>e.preventDefault());
 $("#viTel").addEventListener("input",e=>{e.target.value=maskTel(e.target.value)});
-$("#viIms").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const r=b.closest(".vi-im");
+async function viPuxar(r){const st=r.querySelector(".vi-st"),btn=r.querySelector("[data-pux]");let url=r.querySelector(".vi-url").value.trim();
+  if(!url){st.textContent="Cole o link do imóvel.";return}if(!/^https?:\/\//i.test(url))url="https://"+url;try{new URL(url)}catch(_){st.textContent="Esse link não parece completo.";return}
+  r.querySelector(".vi-url").value=url;btn.disabled=true;st.textContent="Buscando o imóvel…";
+  try{const R=cdParse(await cdBaixar(url),url);const cod=(url.match(/\/([A-Za-z]{1,3}\.?\d{3,6})(?:-[A-Za-z]{2,4})?\/?(?:[?#].*)?$/)||[])[1];
+    const det=R.suite?`${R.suite} ${R.suite===1?"suíte":"suítes"}`:R.dorm?`${R.dorm} ${R.dorm===1?"dormitório":"dormitórios"}`:(R.areaT&&/Terreno|Chácara|Sítio|Fazenda|Haras/.test(R.tipo||"")?R.areaT+" m²":"");
+    const desc=[[R.tipo,det].filter(Boolean).join(" com "),cod?"código "+cod.toUpperCase():""].filter(Boolean).join(", ");
+    const ach=[];const put=(cls,v,l)=>{const i=r.querySelector(cls);if(v&&!i.value.trim()){i.value=v;ach.push(l)}};
+    put(".vi-desc",desc,"imóvel");put(".vi-cond",R.bairro,"condomínio ou bairro");put(".vi-end",R.cidade?R.cidade+(R.uf?"/"+R.uf:""):"","cidade");
+    st.textContent=ach.length?`Preenchi: ${ach.join(", ")}. Confira e complete o endereço.`:"Abri o link, mas não consegui ler o imóvel. Preencha à mão.";viUpd()}
+  catch(e){st.textContent="Não consegui abrir esse link agora. Preencha à mão; o link vai na mensagem do mesmo jeito.";viUpd()}finally{btn.disabled=false}}
+$("#viIms").addEventListener("paste",e=>{if(e.target.classList.contains("vi-url"))setTimeout(()=>viPuxar(e.target.closest(".vi-im")),60)});
+$("#viIms").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const r=b.closest(".vi-im");if(b.hasAttribute("data-pux")){viPuxar(r);return}
   if(b.hasAttribute("data-rm")){r.remove();if(!$$("#viIms .vi-im").length)viRow()}
   else{const d=+b.dataset.mv;if(d<0&&r.previousElementSibling)r.parentNode.insertBefore(r,r.previousElementSibling);if(d>0&&r.nextElementSibling)r.parentNode.insertBefore(r.nextElementSibling,r)}viUpd()});
 $("#viAdd").addEventListener("click",()=>{if($$("#viIms .vi-im").length>=10){toast("Até 10 imóveis por roteiro.");return}viRow();viUpd();const l=$$("#viIms .vi-desc");l[l.length-1].focus()});
