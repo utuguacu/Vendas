@@ -379,6 +379,28 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
 .ph-add{position:relative;overflow:hidden;align-self:flex-start}
 .ph-add input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .dslots{display:flex;flex-direction:column;gap:10px}
+#view-cadastro.done #cdHead{display:none}
+.cd-link{display:flex;flex-direction:column;gap:8px;font-size:13px;line-height:1.45}
+.cd-row{display:flex;gap:8px}.cd-row input{flex:1;min-width:0;padding:9px 11px;border:1px solid var(--line-strong);border-radius:var(--r);background:var(--surface)}
+.cd-chips{gap:8px;margin:2px 0 6px}.cd-chips .chip,.cd-ynr .chip{font-size:13.5px;padding:8px 14px;color:var(--fg)}
+.cd-chips .chip[aria-pressed="true"],.cd-ynr .chip[aria-pressed="true"]{color:var(--bg)}
+#view-cadastro .legend{font-size:12.5px;font-weight:500;margin-top:4px}
+.cd-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.cd-step{border:1px solid var(--line);border-radius:var(--r);padding:8px;display:flex;flex-direction:column;gap:6px;align-items:center;font-size:12.5px}
+.cd-step div{display:flex;align-items:center;gap:10px}.cd-step b{min-width:28px;text-align:center;font-size:17px;font-variant-numeric:tabular-nums}
+.cd-step button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line-strong);background:var(--surface);font-size:18px;line-height:1;cursor:pointer;color:var(--fg)}
+.cd-yn{display:flex;flex-direction:column;gap:6px}.cd-ynr{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid var(--line);padding-top:6px;font-size:13.5px}
+.cd-thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:6px}
+.cd-thumbs div{position:relative;aspect-ratio:4/3;border-radius:6px;overflow:hidden;background:var(--line)}
+.cd-thumbs div.v{outline:2px solid var(--warn);outline-offset:-2px}
+.cd-thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.cd-thumbs .n{position:absolute;left:4px;top:4px;background:rgba(0,0,0,.55);color:#fff;font-size:10.5px;border-radius:9px;padding:0 6px}
+.cd-thumbs button{position:absolute;right:3px;top:3px;width:22px;height:22px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:14px;line-height:1;cursor:pointer}
+.cd-falta{font-size:13px;line-height:1.5;background:var(--warn-soft);color:var(--warn);border-radius:var(--r);padding:10px 12px}
+.cd-prev{white-space:pre-wrap;font:inherit;font-size:13px;line-height:1.5;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;margin:0}
+@media (max-width:480px){.cd-steps{grid-template-columns:repeat(2,minmax(0,1fr))}.cd-row input{font-size:16px}}
+.blk.cad{background:var(--surface);border-color:var(--gold)}
+.blk.dos{background:var(--surface)}
 .fi-side .share-prop{white-space:normal;text-align:center;line-height:1.3}
 .fi-side .share-prop span{min-width:0}
 .pull{border:1.5px dashed var(--gold);background:var(--gold-soft);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px}
@@ -534,7 +556,127 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
   <div id="apOut" style="margin-top:22px"></div>
 </section>
 
-<p class="ver">Portal de Locação · versão 05/11/2026 16h40 · <a href="../" style="color:inherit">ir para o Portal de Vendas</a></p>
+<!-- ================= FICHA DE CADASTRO ================= -->
+<section id="view-cadastro" hidden>
+  <div class="prop-head" id="cdHead">
+    <div>
+      <div class="eyebrow">Ferramenta</div>
+      <h1>Ficha <em>de cadastro</em></h1>
+      <p class="lede">Para subir um imóvel novo para alugar. Só o seu nome e o nome e o celular do proprietário são obrigatórios. O resto, preencha o que tiver: o que faltar vai listado na mensagem para a Rebeca.</p>
+    </div>
+  </div>
+  <div class="av-wrap" id="cdWrap">
+    <form class="form" id="cdForm" novalidate autocomplete="off">
+      <fieldset>
+        <legend><small>1</small>Corretor e proprietário</legend>
+        <div class="field" data-req><label for="cdCor">Seu nome</label><input id="cdCor" list="cdCorList" placeholder="Nome completo"></div>
+        <div class="two">
+          <div class="field" data-req><label for="cdPNome">Nome do proprietário</label><input id="cdPNome" autocapitalize="words"></div>
+          <div class="field" data-req><label for="cdPSobre">Sobrenome do proprietário</label><input id="cdPSobre" autocapitalize="words"></div>
+        </div>
+        <div class="field" data-req><label for="cdPTel">Celular do proprietário</label><input id="cdPTel" inputmode="tel" placeholder="(11) 90000-0000"></div>
+      </fieldset>
+      <fieldset>
+        <legend><small>2</small>Puxar de um anúncio <span class="opt" style="font-family:var(--body);font-size:12px">(opcional)</span></legend>
+        <div class="cd-link">
+          <span>Tem o mesmo imóvel anunciado em outra imobiliária ou portal? Cole o link e as informações principais vêm sozinhas.</span>
+          <div class="cd-row"><input id="cdUrl" type="url" inputmode="url" placeholder="Cole o link do anúncio"><button class="btn primary" id="cdPuxar" type="button">Puxar</button></div>
+          <p class="hint" id="cdUrlSt"></p>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend><small>3</small>Negócio e valores</legend>
+        <span class="legend">Tipo de negócio</span><div class="chips cd-chips" data-one="neg"></div>
+        <div class="two">
+          <div class="field" id="fCdValor"><label for="cdValor">Valor de venda (R$)</label><input id="cdValor" inputmode="decimal" data-money></div>
+          <div class="field" id="fCdPacote" hidden><label for="cdPacote">Pacote locação (R$)</label><input id="cdPacote" inputmode="decimal" data-money></div>
+        </div>
+        <div class="two">
+          <div class="field"><label for="cdCond">Taxa de condomínio (R$)</label><input id="cdCond" inputmode="decimal" data-money></div>
+          <div class="field"><label for="cdIptu">IPTU anual (R$)</label><input id="cdIptu" inputmode="decimal" data-money></div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend><small>4</small>Imóvel e endereço</legend>
+        <span class="legend">Tipo de imóvel</span><div class="chips cd-chips" data-one="tipo"></div>
+        <div class="field"><label for="cdBairro">Bairro ou condomínio</label><input id="cdBairro" list="cdCondList" placeholder="Ex.: Terras de São José II"></div>
+        <div class="two">
+          <div class="field"><label for="cdCep">CEP da portaria</label><input id="cdCep" inputmode="numeric" placeholder="00000-000"><span class="hint" id="cdCepSt"></span></div>
+          <div class="field"><label for="cdCidade">Cidade</label><input id="cdCidade" list="cdCidList"></div>
+        </div>
+        <div class="three">
+          <div class="field"><label for="cdUf">Estado</label><input id="cdUf" maxlength="2" placeholder="SP" style="text-transform:uppercase"></div>
+          <div class="field"><label for="cdRua">Rua / Quadra</label><input id="cdRua"></div>
+          <div class="field"><label for="cdNum">Nº / Lote</label><input id="cdNum"></div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend><small>5</small>Características</legend>
+        <div class="cd-steps" id="cdSteps"></div>
+        <div class="three">
+          <div class="field"><label for="cdAreaC">Área construída (m²)</label><input id="cdAreaC" inputmode="decimal"></div>
+          <div class="field"><label for="cdAreaT">Área do terreno (m²)</label><input id="cdAreaT" inputmode="decimal"></div>
+          <div class="field"><label for="cdAno">Ano de construção</label><input id="cdAno" inputmode="numeric" maxlength="4"></div>
+        </div>
+        <div class="cd-yn" id="cdYn1"></div>
+      </fieldset>
+      <fieldset>
+        <legend><small>6</small>Itens do imóvel <span class="opt" style="font-family:var(--body);font-size:12px">(toque no que tiver)</span></legend>
+        <span class="legend">Armários embutidos</span><div class="chips cd-chips" data-many="arm"></div>
+        <span class="legend">Infraestrutura</span><div class="chips cd-chips" data-many="infra"></div>
+        <span class="legend">Tipo de piso</span><div class="chips cd-chips" data-many="piso"></div>
+      </fieldset>
+      <fieldset>
+        <legend><small>7</small>Condições</legend>
+        <div class="cd-yn" id="cdYn2"></div>
+      </fieldset>
+      <fieldset>
+        <legend><small>8</small>Fotos</legend>
+        <p class="hint" style="margin:-4px 0 2px">Mínimo de 20 fotos, em alta resolução e na horizontal. Elas vão junto com a ficha.</p>
+        <div class="file"><label class="btn" for="cdFotos">Adicionar fotos</label><input type="file" id="cdFotos" accept="image/*" multiple hidden><span class="hint" id="cdFotosSt">Nenhuma foto ainda.</span></div>
+        <div class="cd-thumbs" id="cdThumbs"></div>
+      </fieldset>
+      <fieldset>
+        <legend><small>9</small>Comentário interno</legend>
+        <p class="hint" style="margin:-4px 0 2px">Não vai para os portais. Só a Rebeca e a equipe veem.</p>
+        <div class="field"><textarea id="cdObs" rows="3" placeholder="Ex.: chave na portaria, proprietário prefere contato à tarde, aceita negociar"></textarea></div>
+      </fieldset>
+      <div class="gen">
+        <button class="btn gold big" id="cdGerar" type="button">Gerar ficha de cadastro<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button>
+        <div class="gen-missing" id="cdMissing" hidden></div>
+        <button class="btn ghost small" id="cdLimpar" type="button" style="margin-top:6px">Limpar ficha</button>
+      </div>
+    </form>
+    <div class="side av-side" id="cdSide" hidden>
+      <button class="btn ghost back" id="cdBack" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>Voltar e editar a ficha</button>
+      <div class="cd-falta" id="cdFalta" hidden></div>
+      <div class="actions">
+        <button class="btn gold share-prop" id="cdEnviar" type="button">Enviar ficha e fotos para a Rebeca</button>
+        <a class="btn" id="cdSoTexto" href="#" target="_blank" rel="noopener">Abrir a conversa da Rebeca só com a ficha</a>
+        <button class="btn" id="cdCopiar" type="button">Copiar ficha</button>
+      </div>
+      <p class="hint" id="cdComo"></p>
+      <pre class="cd-prev" id="cdPrev"></pre>
+    </div>
+  </div>
+  <datalist id="cdCorList"><option value="Luis"><option value="Karine"><option value="Maria Cecília"><option value="Roberta"><option value="Nicole"></datalist>
+  <datalist id="cdCidList"><option value="Itu"><option value="Salto"><option value="Indaiatuba"><option value="Cabreúva"><option value="Porto Feliz"><option value="Sorocaba"><option value="Boituva"><option value="Tatuí"><option value="Elias Fausto"></datalist>
+  <datalist id="cdCondList"><option value="Terras de São José"><option value="Terras de São José II"><option value="Fazenda Vila Real de Itu"><option value="City Castello"><option value="Xapada Parque Ytu"><option value="Fazenda Kurumin"><option value="Jardim Plaza Athénée"><option value="Campos de Santo Antônio"><option value="Village Castelo"><option value="Villas do Golfe"><option value="Reserva Saint Paul"><option value="Jardim Theodora"><option value="Portal de Itu"><option value="Vila dos Manacás"><option value="Condomínio Una"><option value="Gardenville"><option value="Mont Blanc"><option value="Altavista Reserva"></datalist>
+</section>
+
+<!-- ================= DOSSIÊS ================= -->
+<section id="view-dossies" hidden>
+  <div class="files-head">
+    <div>
+      <div class="eyebrow" id="dsEyebrow">Dossiês</div>
+      <h1>Dossiês <em>da locação</em></h1>
+      <p class="lede">Apresentações prontas para mandar ao cliente. Abra para consultar, compartilhe no WhatsApp ou baixe no celular.</p>
+    </div>
+  </div>
+  <div id="dsOut" style="margin-top:22px"></div>
+</section>
+
+<p class="ver">Portal de Locação · versão 10/11/2026 22h50 · <a href="../" style="color:inherit">ir para o Portal de Vendas</a></p>
 </main>
 
 <div class="toast" id="toast" hidden></div>
@@ -1648,12 +1790,207 @@ $("#apOut").addEventListener("click",async e=>{const b=e.target.closest("[data-s
 /* =====================================================
    INÍCIO E NAVEGAÇÃO
    ===================================================== */
+/* ===== FICHA DE CADASTRO (vai para a Rebeca, que sobe no Kenlo) ===== */
+const CAD_WA="5511985943067"; /* WhatsApp da Rebeca (cadastro), só números com DDD. Vazio = o corretor escolhe o contato. */
+const CD={one:{neg:["Venda","Locação","Venda e Locação"],tipo:["Casa","Casa em condomínio","Apartamento","Terreno","Terreno em condomínio","Chácara","Sítio","Fazenda","Haras","Sala comercial","Galpão","Outro"]},
+  many:{arm:["Quartos","Cozinha","Banheiro","Closet","Sala","Área de serviço"],
+    infra:["Ar-condicionado","Aquecimento solar","Aquecimento a gás","Alarme","Câmeras","Interfone","Portão eletrônico","Internet / fibra","Gerador","Lareira","Mobiliado","Semimobiliado","Sauna","Ofurô","Edícula"],
+    piso:["Porcelanato","Cerâmica","Mármore","Granito","Laminado","Tábua","Taco","Outro"]},
+  steps:[["dorm","Dormitórios"],["suite","Suítes"],["banh","Banheiros"],["lav","Lavabos"],["salas","Salas"],["vagas","Vagas"]],
+  yn1:[["piscina","Piscina"],["churras","Churrasqueira"],["varanda","Varanda",["Simples","Gourmet","Não"]]],
+  yn2:[["pet","Aceita pet"],["fin","Aceita financiamento"],["perm","Aceita permuta"]]};
+const cdS={one:{neg:"Locação"},many:{arm:new Set(),infra:new Set(),piso:new Set()},st:{},yn:{},fotos:[],ref:""};
+const cv=id=>($("#"+id).value||"").trim();
+function cdBuild(){
+  $$("#view-cadastro [data-one]").forEach(b=>{const k=b.dataset.one;b.innerHTML=CD.one[k].map(o=>`<button type="button" class="chip" data-k="${k}" data-v="${esc(o)}" aria-pressed="false">${esc(o)}</button>`).join("")});
+  $$("#view-cadastro [data-many]").forEach(b=>{const k=b.dataset.many;b.innerHTML=CD.many[k].map(o=>`<button type="button" class="chip" data-m="${k}" data-v="${esc(o)}" aria-pressed="false">${esc(o)}</button>`).join("")});
+  $("#cdSteps").innerHTML=CD.steps.map(([k,l])=>`<div class="cd-step"><span>${l}</span><div><button type="button" data-st="${k}" data-d="-1" aria-label="Menos ${l}">−</button><b id="st-${k}">–</b><button type="button" data-st="${k}" data-d="1" aria-label="Mais ${l}">+</button></div></div>`).join("");
+  const yn=(list)=>list.map(([k,l,o=["Sim","Não"]])=>`<div class="cd-ynr"><span>${l}</span><div class="chips">${o.map(v=>`<button type="button" class="chip" data-yn="${k}" data-v="${v}" aria-pressed="false">${v}</button>`).join("")}</div></div>`).join("");
+  $("#cdYn1").innerHTML=yn(CD.yn1);$("#cdYn2").innerHTML=yn(CD.yn2);
+}
+cdBuild();
+function cdPaint(){
+  $$("#view-cadastro [data-k]").forEach(b=>b.setAttribute("aria-pressed",cdS.one[b.dataset.k]===b.dataset.v));
+  $$("#view-cadastro [data-m]").forEach(b=>b.setAttribute("aria-pressed",cdS.many[b.dataset.m].has(b.dataset.v)));
+  $$("#view-cadastro [data-yn]").forEach(b=>b.setAttribute("aria-pressed",cdS.yn[b.dataset.yn]===b.dataset.v));
+  CD.steps.forEach(([k])=>{$("#st-"+k).textContent=cdS.st[k]==null?"–":(cdS.st[k]>=10?"10+":cdS.st[k])});
+  const neg=cdS.one.neg||"";$("#fCdValor").hidden=neg==="Locação";$("#fCdPacote").hidden=!/Loca/.test(neg);
+}
+$("#view-cadastro").addEventListener("click",e=>{
+  let b=e.target.closest("[data-k]");if(b){const k=b.dataset.k;cdS.one[k]=cdS.one[k]===b.dataset.v?undefined:b.dataset.v;cdPaint();return}
+  b=e.target.closest("[data-m]");if(b){const s=cdS.many[b.dataset.m];s.has(b.dataset.v)?s.delete(b.dataset.v):s.add(b.dataset.v);cdPaint();return}
+  b=e.target.closest("[data-yn]");if(b){const k=b.dataset.yn;cdS.yn[k]=cdS.yn[k]===b.dataset.v?undefined:b.dataset.v;cdPaint();return}
+  b=e.target.closest("[data-st]");if(b){const k=b.dataset.st,d=+b.dataset.d,v=cdS.st[k];cdS.st[k]=v==null?(d>0?1:0):Math.max(0,Math.min(10,v+d));cdPaint();return}
+});
+$("#cdPTel").addEventListener("input",e=>{e.target.value=maskTel(e.target.value)});
+$("#cdCep").addEventListener("input",e=>{let d=onlyDig(e.target.value).slice(0,8);e.target.value=d.length>5?d.slice(0,5)+"-"+d.slice(5):d;if(d.length===8)cdViaCep(d)});
+$$("#cdForm [data-money]").forEach(i=>i.addEventListener("blur",()=>{const n=parseMoney(i.value);if(!isNaN(n)&&n>0)i.value=fmtMoney(n)}));
+async function cdViaCep(d){const st=$("#cdCepSt");st.textContent="Buscando o endereço…";
+  try{const r=await fetch(`https://viacep.com.br/ws/${d}/json/`);const j=await r.json();if(j.erro)throw 0;
+    if(!cv("cdCidade"))$("#cdCidade").value=j.localidade||"";if(!cv("cdUf"))$("#cdUf").value=j.uf||"";if(!cv("cdRua")&&j.logradouro)$("#cdRua").value=j.logradouro;if(!cv("cdBairro")&&j.bairro)$("#cdBairro").value=j.bairro;
+    st.textContent=`${j.logradouro?j.logradouro+", ":""}${j.localidade}/${j.uf}`}catch(_){st.textContent="CEP não encontrado. Preencha à mão."}}
+/* Fotos: guardamos o arquivo original (alta resolução) */
+function cdFotosPaint(){const n=cdS.fotos.length,vert=cdS.fotos.filter(f=>f.v).length;
+  $("#cdThumbs").innerHTML=cdS.fotos.map((f,i)=>`<div class="${f.v?"v":""}"><img src="${f.u}" alt=""><span class="n">${i+1}</span><button type="button" data-rmf="${i}" aria-label="Remover foto">×</button></div>`).join("");
+  $("#cdFotosSt").innerHTML=!n?"Nenhuma foto ainda.":`<b>${n} ${n===1?"foto":"fotos"}</b>${n<20?` · faltam ${20-n} para o mínimo de 20`:" · mínimo atingido"}${vert?` · ${vert} na vertical`:""}`}
+function imgSize(u){return new Promise(ok=>{const i=new Image();i.onload=()=>ok([i.naturalWidth,i.naturalHeight]);i.onerror=()=>ok([0,0]);i.src=u})}
+$("#cdFotos").addEventListener("change",async e=>{for(const f of e.target.files){const u=URL.createObjectURL(f);const [w,h]=await imgSize(u);cdS.fotos.push({f,u,v:h>w*1.05})}e.target.value="";cdFotosPaint()});
+$("#cdThumbs").addEventListener("click",e=>{const b=e.target.closest("[data-rmf]");if(!b)return;const [x]=cdS.fotos.splice(+b.dataset.rmf,1);try{URL.revokeObjectURL(x.u)}catch(_){}cdFotosPaint()});
+/* Monta a ficha */
+const brlTxt=id=>{const n=parseMoney(cv(id));return n>0?"R$ "+fmtMoney(n):""};
+function cdCollect(){
+  const m={missing:[],errs:{},falta:[]};
+  const need=(id,label,ok=true)=>{if(!cv(id)||!ok){m.missing.push({id,label});m.errs[id]=true}};
+  need("cdCor","seu nome");need("cdPNome","nome do proprietário");need("cdPSobre","sobrenome do proprietário");
+  need("cdPTel",cv("cdPTel")?"celular do proprietário com DDD":"celular do proprietário",onlyDig(cv("cdPTel")).length>=10);
+  const neg=cdS.one.neg,tipo=cdS.one.tipo,terr=/Terreno|Chácara|Sítio|Fazenda|Haras/.test(tipo||""),soTerr=/Terreno/.test(tipo||"");
+  const F=m.falta;if(!neg)F.push("tipo de negócio");
+  if(neg&&neg!=="Locação"&&!brlTxt("cdValor"))F.push("valor de venda");if(neg&&/Loca/.test(neg)&&!brlTxt("cdPacote"))F.push("pacote de locação");if(!neg&&!brlTxt("cdValor"))F.push("valor");
+  if(!tipo)F.push("tipo de imóvel");if(!cv("cdBairro"))F.push("bairro ou condomínio");if(!cv("cdCidade"))F.push("cidade");if(!cv("cdRua"))F.push("rua ou quadra");if(!cv("cdNum"))F.push("número ou lote");
+  if(!soTerr&&cdS.st.dorm==null)F.push("dormitórios");if(!soTerr&&!cv("cdAreaC"))F.push("área construída");if(terr&&!cv("cdAreaT"))F.push("área do terreno");
+  const nf=cdS.fotos.length;if(nf<20)F.push(nf?`fotos (enviei ${nf} de 20)`:"fotos");
+  const hoje=new Date(),data=`${String(hoje.getDate()).padStart(2,"0")}/${String(hoje.getMonth()+1).padStart(2,"0")}/${hoje.getFullYear()}`;
+  const L=[];const add=(k,v)=>{if(v!==""&&v!=null)L.push(`${k}: ${v}`)};const sec=t=>{if(L.length&&L[L.length-1]!=="")L.push("");L.push(`*${t}*`)};
+  L.push("*FICHA DE CAPTAÇÃO*");add("Corretor",cv("cdCor"));add("Data",data);
+  sec("Proprietário");add("Nome completo",[cv("cdPNome"),cv("cdPSobre")].filter(Boolean).join(" "));add("Celular",cv("cdPTel"));
+  const ln=L.length;sec("Negócio e valores");add("Tipo de negócio",neg);if(neg!=="Locação")add("Valor",brlTxt("cdValor"));if(/Loca/.test(neg||""))add("Pacote locação",brlTxt("cdPacote"));add("Taxa de condomínio",brlTxt("cdCond"));add("IPTU anual",brlTxt("cdIptu"));if(L.length===ln+1)L.splice(ln);
+  const li=L.length;sec("Imóvel");add("Tipo de imóvel",tipo);add("Bairro/Condomínio",cv("cdBairro"));add("CEP da portaria",cv("cdCep"));add("Cidade",cv("cdCidade"));add("Estado",cv("cdUf").toUpperCase());add("Rua/Quadra",cv("cdRua"));add("Nº/Lote",cv("cdNum"));if(L.length===li+1)L.splice(li);
+  const lc=L.length;sec("Características");CD.steps.forEach(([k,l])=>add(l,cdS.st[k]==null?"":(cdS.st[k]>=10?"10 ou mais":cdS.st[k])));
+  add("Área construída",cv("cdAreaC")?cv("cdAreaC")+" m²":"");add("Área do terreno",cv("cdAreaT")?cv("cdAreaT")+" m²":"");add("Ano de construção",cv("cdAno"));
+  CD.yn1.forEach(([k,l])=>add(l,cdS.yn[k]||""));
+  add("Armários embutidos",[...cdS.many.arm].join(", "));add("Infraestrutura",[...cdS.many.infra].join(", "));add("Tipo de piso",[...cdS.many.piso].join(", "));if(L.length===lc+1)L.splice(lc);
+  const lk=L.length;sec("Condições");CD.yn2.forEach(([k,l])=>add(l,cdS.yn[k]||""));if(L.length===lk+1)L.splice(lk);
+  L.push("");add("Fotos",nf?`${nf} (enviadas junto)`:"não enviadas");if(cdS.ref)add("Anúncio de referência",cdS.ref);
+  if(cv("cdObs")){L.push("","*COMENTÁRIO INTERNO:*",cv("cdObs"))}
+  for(let i=L.length-1;i>0;i--){if(/^\*[^*]+\*$/.test(L[i])&&!/^\*FICHA/.test(L[i])&&(i===L.length-1||L[i+1]===""||/^\*[^*]+\*$/.test(L[i+1]))){L.splice(i,1);if(L[i-1]==="")L.splice(i-1,1)}}
+  m.ficha=L.join("\n").replace(/\n{3,}/g,"\n\n");
+  const f=F.length?` Estão faltando: ${F.length>1?F.slice(0,-1).join(", ")+" e "+F[F.length-1]:F[0]}, que vou providenciar.`:"";
+  m.msg=`Rebeca, segue ficha de um novo cadastro.${f} Qualquer dúvida, estou à disposição.\n\n${m.ficha}`;
+  return m}
+let cdLast=null;
+function cdWaUrl(t){return "https://wa.me/"+(CAD_WA?CAD_WA.replace(/\D/g,""):"")+"?text="+encodeURIComponent(t)}
+function cdUpdateErr(){const m=cdCollect();cdLast=m;$$("#cdForm .field").forEach(el=>el.classList.remove("err"));
+  if(document.body.dataset.cdTried)Object.keys(m.errs).forEach(id=>{const fl=$("#"+id).closest(".field");if(fl)fl.classList.add("err")});
+  const gm=$("#cdMissing");if(!m.missing.length||!document.body.dataset.cdTried)gm.hidden=true;
+  else{gm.hidden=false;gm.innerHTML=`<b>Para gerar a ficha, falta preencher:</b><ul>${m.missing.map(x=>`<li><a data-cdgo="${x.id}">${esc(x.label)}</a></li>`).join("")}</ul>`}}
+$("#cdForm").addEventListener("input",()=>{if(document.body.dataset.cdTried)cdUpdateErr()});
+$("#cdForm").addEventListener("submit",e=>e.preventDefault());
+$("#cdMissing").addEventListener("click",e=>{const a=e.target.closest("[data-cdgo]");if(!a)return;const i=$("#"+a.dataset.cdgo);i.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>i.focus({preventScroll:true}),250)});
+$("#cdGerar").addEventListener("click",()=>{document.body.dataset.cdTried="1";cdUpdateErr();const m=cdLast;
+  if(m.missing.length){$("#cdMissing").scrollIntoView({behavior:"smooth",block:"center"});return}
+  const F=m.falta;$("#cdFalta").hidden=!F.length;$("#cdFalta").innerHTML=F.length?`<b>Vai como pendente para a Rebeca:</b> ${esc(F.join(", "))}.`:"";
+  $("#cdPrev").textContent=m.msg;$("#cdSoTexto").href=cdWaUrl(m.msg);
+  const nf=cdS.fotos.length;$("#cdEnviar").textContent=nf?`Enviar ficha e ${nf} ${nf===1?"foto":"fotos"} para a Rebeca`:"Enviar ficha para a Rebeca";
+  $("#cdComo").textContent=nf?"Ao tocar em enviar, abre o menu do celular: escolha o WhatsApp e a conversa da Rebeca. A ficha vai junto com as fotos e também fica copiada, caso precise colar.":"";
+  $("#cdWrap").classList.add("result");$("#view-cadastro").classList.add("done");$("#cdSide").hidden=false;window.scrollTo({top:0})});
+$("#cdBack").addEventListener("click",()=>{$("#cdWrap").classList.remove("result");$("#view-cadastro").classList.remove("done");$("#cdSide").hidden=true;window.scrollTo({top:0})});
+$("#cdCopiar").addEventListener("click",()=>copyText(cdLast.msg,"Ficha copiada."));
+$("#cdEnviar").addEventListener("click",async()=>{const m=cdLast,files=cdS.fotos.map(x=>x.f);
+  try{navigator.clipboard&&navigator.clipboard.writeText(m.msg).catch(()=>{})}catch(_){}
+  if(files.length&&navigator.canShare&&navigator.canShare({files})){try{await navigator.share({files,text:m.msg});toast("Se a ficha não aparecer junto das fotos, cole na conversa: ela já está copiada.");return}catch(err){if(err&&err.name==="AbortError")return}}
+  window.open(cdWaUrl(m.msg),"_blank","noopener");
+  if(files.length)toast("Este aparelho não envia fotos direto pelo site. A ficha abriu no WhatsApp; anexe as fotos na conversa.")});
+$("#cdLimpar").addEventListener("click",()=>{$("#cdForm").reset();cdS.one={neg:"Locação"};Object.values(cdS.many).forEach(s=>s.clear());cdS.st={};cdS.yn={};cdS.fotos.forEach(f=>{try{URL.revokeObjectURL(f.u)}catch(_){}});cdS.fotos=[];cdS.ref="";
+  $("#cdUrlSt").textContent="";$("#cdCepSt").textContent="";delete document.body.dataset.cdTried;$("#cdMissing").hidden=true;$$("#cdForm .field").forEach(el=>el.classList.remove("err"));cdPaint();cdFotosPaint();toast("Ficha limpa.")});
+/* Puxar dados de um anúncio (qualquer imobiliária ou portal) */
+const CD_ROTAS=[u=>u,u=>"https://corsproxy.io/?url="+encodeURIComponent(u),u=>"https://api.allorigins.win/raw?url="+encodeURIComponent(u),u=>"https://api.codetabs.com/v1/proxy/?quest="+encodeURIComponent(u)];
+async function cdBaixar(url){let erro;for(const r of CD_ROTAS){const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),15000);
+  try{const res=await fetch(r(url),{signal:ctl.signal,credentials:"omit"});if(!res.ok)throw new Error("HTTP "+res.status);const tx=await res.text();if(tx.length<300||!/<html|<head|<meta/i.test(tx))throw new Error("vazia");return tx}catch(e){erro=e}finally{clearTimeout(t)}}throw erro||new Error("falhou")}
+const sA=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+const nB=s=>{s=String(s).trim();if(/,\d{1,2}$/.test(s))s=s.replace(/\./g,"").replace(",",".");else s=s.replace(/[.,](?=\d{3}(\D|$))/g,"");const n=parseFloat(s);return isNaN(n)?0:n};
+function cdParse(html,url){
+  const d=new DOMParser().parseFromString(html,"text/html");
+  const meta=n=>{const x=d.querySelector(`meta[property="${n}"],meta[name="${n}"]`);return x?(x.getAttribute("content")||"").trim():""};
+  const tit=(meta("og:title")||(d.querySelector("title")||{}).textContent||"").trim(),h1=((d.querySelector("h1")||{}).textContent||"").replace(/\s+/g," ").trim(),desc=meta("og:description")||meta("description");
+  const pares=[];const andar=(o,k,n)=>{if(n>10||o==null)return;if(Array.isArray(o)){o.forEach(x=>andar(x,k,n+1));return}if(typeof o==="object"){for(const [kk,vv] of Object.entries(o))andar(vv,kk,n+1);return}pares.push([sA(k),o])};
+  d.querySelectorAll('script[type="application/ld+json"],script[type="application/json"],script#__NEXT_DATA__').forEach(s=>{try{andar(JSON.parse(s.textContent),"",0)}catch(_){}});
+  const pj=(re,ok=()=>true)=>{for(const [k,v] of pares)if(re.test(k)&&v!==""&&v!=null&&ok(v))return v;return null};
+  const d2=new DOMParser().parseFromString(html.replace(/></g,"> <"),"text/html");d2.querySelectorAll("script,style,noscript,svg").forEach(n=>n.remove());
+  const corpo=(d2.body?d2.body.textContent:"").replace(/\s+/g," ");const T=sA([tit,h1,desc,corpo].join(" \n "));const U=sA(decodeURIComponent(url));const base=sA([tit,h1,U.replace(/[-/_]/g," ")].join(" "));
+  const R={};
+  const venda=/venda|vender|comprar/.test(base),loc=/alug|locac/.test(base);R.neg=venda&&loc?"Venda e Locação":loc?"Locação":venda?"Venda":"";
+  const TP=[["casa em condominio","Casa em condomínio"],["terreno em condominio","Terreno em condomínio"],["lote em condominio","Terreno em condomínio"],["apartamento","Apartamento"],["cobertura","Apartamento"],["sobrado","Casa"],["casa","Casa"],["terreno","Terreno"],["lote","Terreno"],["chacara","Chácara"],["sitio","Sítio"],["fazenda","Fazenda"],["haras","Haras"],["sala","Sala comercial"],["galpao","Galpão"],["barracao","Galpão"]];
+  for(const [k,v] of TP)if(new RegExp("\\b"+k+"\\b").test(base)){R.tipo=v;break}
+  const cond=(tit+" "+h1+" "+desc).match(/Condom[íi]nio\s+([A-ZÀ-Ú0-9][^,\-–|/.]{2,50}?)(?=\s*[,\-–|.]|\s+(?:em|na|no)\s|\s+[A-ZÀ-Ú][a-zà-ú]+\/[A-Z]{2}|$)/);
+  if(cond){R.bairro=cond[1].trim();if(R.tipo==="Casa")R.tipo="Casa em condomínio";if(R.tipo==="Terreno")R.tipo="Terreno em condomínio"}
+  else{const b=pj(/^(bairro|neighborhood|district|addresslocality2)$/);if(b)R.bairro=String(b)}
+  const cid=(tit+" "+h1+" "+desc).match(/([A-ZÀ-Ú][A-Za-zÀ-ú ]{1,30})\s*[\/-]\s*(SP|MG|RJ|PR|SC|RS|GO|MS|MT|BA|PE|CE|ES|DF)\b/);
+  if(cid){R.cidade=cid[1].trim();R.uf=cid[2]}else{const c=pj(/^(cidade|city|addresslocality)$/);if(c)R.cidade=String(c);const u=pj(/^(uf|estado|state|addressregion)$/,v=>String(v).length===2);if(u)R.uf=String(u)}
+  const cep=T.match(/\b(\d{5})-?(\d{3})\b/);if(cep&&/cep/.test(T))R.cep=cep[1]+"-"+cep[2];
+  const reais=re=>{const m=T.match(re);return m?nB(m[1]):0};
+  let preco=0;const mp=(tit+" "+h1).match(/R\$\s*([\d.]+(?:,\d{2})?)/);if(mp)preco=nB(mp[1]);
+  if(!preco){const j=pj(/^(price|preco|valor|valorvenda|saleprice|valor_venda)$/,v=>nB(v)>1000);if(j)preco=nB(j)}
+  if(!preco)preco=reais(/(?:venda|valor|preco)[^r]{0,25}r\$\s*([\d.]+(?:,\d{2})?)/);
+  if(!preco&&R.neg!=="Locação"){const all=[...T.matchAll(/r\$\s*([\d.]+(?:,\d{2})?)/g)].map(m=>nB(m[1])).filter(v=>v>=20000);if(all.length)preco=Math.max(...all)}
+  if(R.neg==="Locação"){R.pacote=preco||reais(/(?:aluguel|locacao)[^r]{0,25}r\$\s*([\d.]+(?:,\d{2})?)/)}else R.valor=preco;
+  R.cond=reais(/condominio[^r\d]{0,20}r\$\s*([\d.]+(?:,\d{2})?)/)||nB(pj(/^(condominio|condofee|monthlycondofee|valorcondominio)$/,v=>nB(v)>10)||0);
+  R.iptu=reais(/iptu[^r\d]{0,20}r\$\s*([\d.]+(?:,\d{2})?)/)||nB(pj(/^(iptu|yearlyiptu|valoriptu)$/,v=>nB(v)>10)||0);
+  const n=(a,b)=>{const m=T.match(a)||T.match(b);return m?+m[1]:null};
+  R.dorm=n(/(\d{1,2})\s*(?:dormitorios?|quartos?|dorms?\.?)\b/,/(?:dormitorios?|quartos?)\s*:?\s*(\d{1,2})\b/);
+  R.suite=n(/(\d{1,2})\s*suites?\b/,/suites?\s*:?\s*(\d{1,2})\b/);
+  R.banh=n(/(\d{1,2})\s*banheiros?\b/,/banheiros?\s*:?\s*(\d{1,2})\b/);
+  R.vagas=n(/(\d{1,2})\s*(?:vagas?|garagens?)\b/,/(?:vagas?|garagens?)\s*:?\s*(\d{1,2})\b/);
+  R.lav=n(/(\d{1,2})\s*lavabos?\b/,/lavabos?\s*:?\s*(\d{1,2})\b/);
+  const area=lbl=>{let m=T.match(new RegExp("area\\s*(?:"+lbl+")(?:(?!area)[^\\d]){0,25}([\\d.]+(?:,\\d+)?)\\s*(m2|m²|ha|hectares?|alqueires?)"));let num,un;if(m){num=m[1];un=m[2]}else{m=T.match(new RegExp("([\\d.]+(?:,\\d+)?)\\s*(m2|m²|ha|hectares?|alqueires?)\\s*(?:de\\s*)?(?:area\\s*)?(?:"+lbl+")"));if(m){num=m[1];un=m[2]}}if(!num)return"";let v=nB(num);if(/ha|hect/.test(un))v*=10000;if(/alq/.test(un))v*=24200;return v?v.toLocaleString("pt-BR",{maximumFractionDigits:2}):""};
+  R.areaC=area("construida|util|privativa");R.areaT=area("do terreno|de terreno|total|terreno");
+  if(!R.areaC&&!R.areaT){const m=T.match(/([\d.]+(?:,\d+)?)\s*(?:m2|m²)\b/);if(m){const v=String(nB(m[1])).replace(".",",");/Terreno/.test(R.tipo||"")?R.areaT=v:R.areaC=v}}
+  const tem=re=>re.test(T);
+  R.yn={};if(tem(/piscina/))R.yn.piscina="Sim";if(tem(/churrasqueira/))R.yn.churras="Sim";if(tem(/varanda gourmet|terraco gourmet|espaco gourmet/))R.yn.varanda="Gourmet";else if(tem(/varanda|sacada/))R.yn.varanda="Simples";if(tem(/aceita (?:animais|pet)|pet friendly|permite (?:animais|pet)/))R.yn.pet="Sim";if(tem(/aceita financiamento|financiavel/))R.yn.fin="Sim";if(tem(/aceita permuta/))R.yn.perm="Sim";
+  const IF=[["Ar-condicionado",/ar[- ]condicionado/],["Aquecimento solar",/aquecimento solar|aquecedor solar/],["Aquecimento a gás",/aquecimento a gas|aquecedor a gas/],["Alarme",/alarme/],["Câmeras",/cameras|cftv/],["Interfone",/interfone/],["Portão eletrônico",/portao eletronico|portao automatico/],["Internet / fibra",/fibra otica|internet/],["Gerador",/gerador/],["Lareira",/lareira/],["Mobiliado",/\bmobiliad[oa]\b/],["Semimobiliado",/semi[- ]?mobiliad/],["Sauna",/sauna/],["Ofurô",/ofuro/],["Edícula",/edicula/]];
+  R.infra=IF.filter(([,re])=>tem(re)).map(([l])=>l);if(R.infra.includes("Semimobiliado"))R.infra=R.infra.filter(x=>x!=="Mobiliado");
+  const AR=[["Closet",/closet/],["Cozinha",/armarios? (?:na |de )?cozinha|cozinha (?:planejada|com armarios)/],["Quartos",/armarios? (?:nos |nos )?(?:quartos|dormitorios)|dormitorios? planejad/]];R.arm=AR.filter(([,re])=>tem(re)).map(([l])=>l);
+  const PI=[["Porcelanato",/porcelanato/],["Cerâmica",/ceramica/],["Mármore",/marmore/],["Granito",/granito/],["Laminado",/laminado/],["Tábua",/piso de tabua|assoalho/],["Taco",/\btaco\b/]];R.piso=PI.filter(([,re])=>tem(re)).map(([l])=>l);
+  return R}
+$("#cdPuxar").addEventListener("click",async()=>{const st=$("#cdUrlSt"),btn=$("#cdPuxar");let url=cv("cdUrl");
+  if(!url){st.textContent="Cole o link do anúncio.";return}if(!/^https?:\/\//i.test(url))url="https://"+url;try{new URL(url)}catch(_){st.textContent="Esse link não parece completo.";return}
+  btn.disabled=true;const old=btn.textContent;btn.textContent="Buscando…";st.textContent="Abrindo o anúncio…";
+  try{const R=cdParse(await cdBaixar(url),url);const ach=[];
+    const put=(id,v,lab)=>{if(v&&!cv(id)){$("#"+id).value=v;ach.push(lab)}};
+    if(R.neg&&!cdS.one.neg){cdS.one.neg=R.neg;ach.push("negócio")}if(R.tipo&&!cdS.one.tipo){cdS.one.tipo=R.tipo;ach.push("tipo")}
+    put("cdValor",R.valor?fmtMoney(R.valor):"","valor");put("cdPacote",R.pacote?fmtMoney(R.pacote):"","pacote");put("cdCond",R.cond?fmtMoney(R.cond):"","condomínio");put("cdIptu",R.iptu?fmtMoney(R.iptu):"","IPTU");
+    put("cdBairro",R.bairro,"bairro ou condomínio");put("cdCidade",R.cidade,"cidade");put("cdUf",R.uf,"estado");put("cdCep",R.cep,"CEP");put("cdAreaC",R.areaC,"área construída");put("cdAreaT",R.areaT,"área do terreno");
+    [["dorm","dormitórios"],["suite","suítes"],["banh","banheiros"],["vagas","vagas"],["lav","lavabos"]].forEach(([k,l])=>{if(R[k]!=null&&cdS.st[k]==null){cdS.st[k]=Math.min(10,R[k]);ach.push(l)}});
+    Object.entries(R.yn).forEach(([k,v])=>{if(!cdS.yn[k]){cdS.yn[k]=v}});if(Object.keys(R.yn).length)ach.push("itens como piscina e churrasqueira");
+    R.infra.forEach(x=>cdS.many.infra.add(x));R.arm.forEach(x=>cdS.many.arm.add(x));R.piso.forEach(x=>cdS.many.piso.add(x));if(R.infra.length||R.arm.length||R.piso.length)ach.push("infraestrutura");
+    cdS.ref=url;cdPaint();
+    st.innerHTML=ach.length?`Preenchi: ${esc(ach.join(", "))}. <b>Confira tudo</b>, porque cada site mostra as informações de um jeito.`:"Abri o anúncio, mas não consegui ler as informações. Preencha à mão.";
+  }catch(e){st.textContent="Não consegui abrir esse anúncio (alguns portais bloqueiam). Preencha à mão."}finally{btn.disabled=false;btn.textContent=old}});
+cdPaint();cdFotosPaint();
+{const eu=LS.get("utu.loc.eu","");if(eu&&!$("#cdCor").value)$("#cdCor").value=eu;$("#cdCor").addEventListener("change",()=>LS.set("utu.loc.eu",$("#cdCor").value.trim()))}
+
+
+/* =====================================================
+   DOSSIÊS DA LOCAÇÃO. Para incluir, a gerência envia o PDF ao Claude.
+   arquivo/capa podem apontar para ../arquivos/ (mesma pasta do Portal de Vendas).
+   ===================================================== */
+const DOSSIES=[];
+function renderDossies(){
+  $("#dsEyebrow").textContent=DOSSIES.length?`${DOSSIES.length} ${DOSSIES.length===1?"dossiê":"dossiês"}`:"Dossiês";
+  if(!DOSSIES.length){$("#dsOut").innerHTML=`<div class="note"><b>Em breve</b>Os dossiês da locação vão ficar aqui, prontos para abrir, compartilhar no WhatsApp ou baixar.</div>`;return}
+  $("#dsOut").innerHTML=`<div class="grid">${DOSSIES.map(f=>`<article class="card">
+    <a href="${esc(f.arquivo)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">${f.capa?`<span class="cover"><img src="${esc(f.capa)}" alt="Capa: ${esc(f.titulo)}" loading="lazy"></span>`:`<span class="cover short"><span class="tile"><span class="emp">${esc(f.cat||"Locação")}</span><span class="ext">PDF</span></span></span>`}</a>
+    <div class="card-body"><span class="cat">${esc(f.cat||"Locação")}</span><h3>${esc(f.titulo)}</h3>${f.meta?`<span class="meta">${esc(f.meta)}</span>`:""}${f.descricao?`<p class="desc">${esc(f.descricao)}</p>`:""}
+    <div class="card-actions three-act"><a class="btn primary" href="${esc(f.arquivo)}" target="_blank" rel="noopener">Abrir</a><button class="btn" type="button" data-share="${esc(f.id)}">${SHARE_I}Compartilhar</button><a class="btn" href="${esc(f.arquivo)}" download>${DL_I}Baixar</a></div></div></article>`).join("")}</div>`;
+}
+$("#dsOut").addEventListener("click",async e=>{const b=e.target.closest("[data-share]");if(!b)return;const f=DOSSIES.find(x=>x.id===b.dataset.share);
+  const url=new URL(f.arquivo,location.href).href,txt=`${f.titulo} · Utu-Guaçu Imóveis`,old=b.innerHTML;b.disabled=true;b.textContent="Preparando…";
+  try{if(navigator.share){try{const blob=await (await fetch(url)).blob();const file=new File([blob],url.split("/").pop(),{type:"application/pdf"});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:txt,text:txt});return}}catch(err){if(err&&err.name==="AbortError")return}
+    try{await navigator.share({title:txt,text:txt,url});return}catch(err){if(err&&err.name==="AbortError")return}}
+    window.open("https://wa.me/?text="+encodeURIComponent(txt+"\n"+url),"_blank","noopener")}finally{b.disabled=false;b.innerHTML=old}});
+
+
 function renderHome(){
   $("#home").innerHTML=`<button class="blk lead" type="button" data-open="fichas">
       <span class="minisheet" aria-hidden="true"><i class="h"></i><i></i><i></i><i class="g"></i><i></i><i></i><i></i><i class="g"></i><i></i></span>
       <span class="txt"><span class="k">Ferramenta · ${FICHAS.length} fichas</span><h2>Fichas</h2><p>Todas as fichas da locação: análise, contrato, vistoria, chaves, caução e mais. Preencha, anexe os documentos, gere o PDF e envie.</p></span>
       <span class="go">Ver fichas${ARROW}</span></button>
     ${["analise","contrato"].map(id=>{const f=FICHAS.find(x=>x.id===id);return `<button class="blk" type="button" data-open="ficha:${id}"><span class="txt"><span class="k">Mais usada · vai para o administrativo</span><h2>${esc(f.titulo)}</h2><p>${esc(f.desc)}</p></span><span class="go">Preencher${ARROW}</span></button>`}).join("")}
+    <button class="blk cad" type="button" data-open="cadastro">
+      <span class="txt"><span class="k">Ferramenta</span><h2>Ficha de cadastro</h2><p>Imóvel novo para alugar: preencha a ficha, junte as fotos e envie tudo de uma vez para a Rebeca subir no sistema.</p></span>
+      <span class="go">Preencher a ficha${ARROW}</span></button>
+    <button class="blk dos" type="button" data-open="dossies">
+      <span class="txt"><span class="k">${DOSSIES.length?DOSSIES.length+" "+(DOSSIES.length===1?"dossiê":"dossiês"):"Em breve"}</span><h2>Dossiês</h2><p>Apresentações prontas para mandar ao cliente pelo WhatsApp.</p></span>
+      <span class="go">Ver dossiês${ARROW}</span></button>
     <button class="blk msg" type="button" data-open="mensagens">
       <span class="txt"><span class="k">${MENSAGENS.length} modelos</span><h2>Modelos de mensagem</h2><p>Textos prontos para atendimento, documentação, contrato, proprietário e saída. É só copiar e mandar no WhatsApp.</p></span>
       <span class="go">Ver mensagens${ARROW}</span></button>
@@ -1664,7 +2001,7 @@ function renderHome(){
 $("#home").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(!b)return;const o=b.dataset.open;if(o.startsWith("ficha:"))show("ficha",o.slice(6));else show(o)});
 let curView="inicio";
 function show(view,param){
-  ["inicio","fichas","ficha","mensagens","aprendizado"].forEach(v=>$("#view-"+v).hidden=v!==view);
+  ["inicio","fichas","ficha","mensagens","aprendizado","cadastro","dossies"].forEach(v=>$("#view-"+v).hidden=v!==view);
   curView=view;
   if(view==="ficha"){const fi=FICHAS.find(f=>f.id===param);if(!fi)return show("fichas");renderFicha(fi)}
   if(view==="mensagens"){renderMsgs();syncIa()}
@@ -1675,9 +2012,25 @@ function show(view,param){
 }
 $("#crumb").addEventListener("click",()=>show(curView==="ficha"?"fichas":"inicio"));
 $("#brandHome").addEventListener("click",()=>show("inicio"));
-renderHome(); renderFichas(); renderAprendizado();
-{const h=location.hash.replace("#","");if(h.startsWith("ficha-"))show("ficha",h.slice(6));else if(["fichas","mensagens","aprendizado"].includes(h))show(h)}
+renderHome(); renderFichas(); renderAprendizado(); renderDossies();
+{const h=location.hash.replace("#","");if(h.startsWith("ficha-"))show("ficha",h.slice(6));else if(["fichas","mensagens","aprendizado","cadastro","dossies"].includes(h))show(h)}
 window.__loc={FICHAS,collect:()=>collect(),show,pdf:()=>fiPdfBlob(),text:()=>{DOC_HDR=CUR.hdr;return toText(fiBlocks(fiLast,PROTO))}};
+})();
+</script>
+<script>
+/* Atualização automática: o app da tela de início não tem "puxar para atualizar".
+   Ao abrir ou voltar para o app, confere se há versão nova no site e recarrega sozinho (uma vez por versão).
+   IMPORTANTE: a cada mudança, trocar a data e hora em "Portal de Locação · versão ...". */
+(function(){
+  const ver=t=>{const m=String(t||"").match(/Portal de Locação · versão ([^·<]+)/);return m?m[1].trim():""};
+  const atual=ver((document.querySelector("p.ver")||{}).textContent);
+  async function checar(){
+    try{const r=await fetch(location.pathname+"?checar="+Date.now(),{cache:"no-store"});if(!r.ok)return;
+      const nova=ver(await r.text());if(!nova||!atual||nova===atual)return;
+      let k="utu.loc.upd."+nova;try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,"1")}catch(_){}
+      location.replace(location.pathname+"?v="+Date.now()+location.hash)}catch(_){}}
+  window.addEventListener("load",()=>setTimeout(checar,1500));
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")checar()});
 })();
 </script>
 </body>

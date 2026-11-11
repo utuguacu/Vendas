@@ -1017,7 +1017,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 10/11/2026 22h20</p>
+<p class="ver">Portal de Vendas · versão 10/11/2026 22h50 </p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -2349,7 +2349,8 @@ function cdCollect(){
   const lk=L.length;sec("Condições");CD.yn2.forEach(([k,l])=>add(l,cdS.yn[k]||""));if(L.length===lk+1)L.splice(lk);
   L.push("");add("Fotos",nf?`${nf} (enviadas junto)`:"não enviadas");if(cdS.ref)add("Anúncio de referência",cdS.ref);
   if(cv("cdObs")){L.push("","*COMENTÁRIO INTERNO:*",cv("cdObs"))}
-  m.ficha=L.join("\n");
+  for(let i=L.length-1;i>0;i--){if(/^\*[^*]+\*$/.test(L[i])&&!/^\*FICHA/.test(L[i])&&(i===L.length-1||L[i+1]===""||/^\*[^*]+\*$/.test(L[i+1]))){L.splice(i,1);if(L[i-1]==="")L.splice(i-1,1)}}
+  m.ficha=L.join("\n").replace(/\n{3,}/g,"\n\n");
   const f=F.length?` Estão faltando: ${F.length>1?F.slice(0,-1).join(", ")+" e "+F[F.length-1]:F[0]}, que vou providenciar.`:"";
   m.msg=`Rebeca, segue ficha de um novo cadastro.${f} Qualquer dúvida, estou à disposição.\n\n${m.ficha}`;
   return m}
