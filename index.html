@@ -1126,7 +1126,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 16/11/2026 08h45</p>
+<p class="ver">Portal de Vendas · versão 16/11/2026 09h00</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -1285,7 +1285,7 @@ Que tal chegarmos a um valor mais competitivo, ou melhorar a condição de pagam
   texto:`[cliente], o proprietário d{i:o|a} [imóvel] decidiu não seguir com a proposta neste momento. Sei que é frustrante, mas faz parte da negociação.
 
 Já estou separando outras opções com o mesmo perfil e, se a situação dele mudar, você {k:será o primeiro|será a primeira} a saber. Posso te mandar algumas alternativas ainda esta semana?`},
- {id:"anuncio-conferir",cat:"Proprietário",titulo:"Anúncio pronto para o proprietário conferir",quando:"O anúncio foi montado e você quer a aprovação do proprietário antes de divulgar.",
+ {id:"anuncio-conferir",cat:"Anúncio",titulo:"Anúncio pronto para o proprietário conferir",quando:"O anúncio foi montado e você quer a aprovação do proprietário antes de divulgar.",
   texto:`Olá, [cliente]! Tudo bem?
 
 O anúncio d{i:o|a} {i:seu|sua} [imóvel] ficou pronto e estou encaminhando para sua conferência:
@@ -1319,7 +1319,7 @@ Muito {c:obrigado|obrigada} pela confiança na Utu-Guaçu. Se conhecer alguém p
 Conte comigo para o que precisar!`}
 ];
 
-const MSG_ORDEM=["Captação","Atendimento","Proposta","Contratos","Proprietário","Pós-venda"];
+const MSG_ORDEM=["Captação","Atendimento","Proposta","Contratos","Proprietário","Anúncio","Pós-venda"];
 const MSG_CATS=["Todas",...MSG_ORDEM.filter(c=>MENSAGENS.some(m=>m.cat===c)),...[...new Set(MENSAGENS.map(m=>m.cat))].filter(c=>!MSG_ORDEM.includes(c))];
 let msgCat="Todas";
 const radioV=n=>(document.querySelector(`input[name="${n}"]:checked`)||{}).value;
