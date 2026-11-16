@@ -936,6 +936,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
   <div class="msg-fill">
     <div class="mf-row">
       <div class="field"><label for="mCorretor">Seu nome</label><input id="mCorretor" placeholder="Ex.: Rose"></div>
+      <div class="field"><label for="mCreci">Seu CRECI <span class="opt">(opcional)</span></label><input id="mCreci" placeholder="Ex.: 123456-F"></div>
       <div class="field"><span class="legend">Você é</span><div class="seg"><label><input type="radio" name="corG" id="corM" value="m" checked><span>Corretor</span></label><label><input type="radio" name="corG" id="corF" value="f"><span>Corretora</span></label></div></div>
     </div>
     <div class="mf-row">
@@ -1125,7 +1126,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 12/11/2026 12h35</p>
+<p class="ver">Portal de Vendas · versão 16/11/2026 08h45</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -1284,6 +1285,17 @@ Que tal chegarmos a um valor mais competitivo, ou melhorar a condição de pagam
   texto:`[cliente], o proprietário d{i:o|a} [imóvel] decidiu não seguir com a proposta neste momento. Sei que é frustrante, mas faz parte da negociação.
 
 Já estou separando outras opções com o mesmo perfil e, se a situação dele mudar, você {k:será o primeiro|será a primeira} a saber. Posso te mandar algumas alternativas ainda esta semana?`},
+ {id:"anuncio-conferir",cat:"Proprietário",titulo:"Anúncio pronto para o proprietário conferir",quando:"O anúncio foi montado e você quer a aprovação do proprietário antes de divulgar.",
+  texto:`Olá, [cliente]! Tudo bem?
+
+O anúncio d{i:o|a} {i:seu|sua} [imóvel] ficou pronto e estou encaminhando para sua conferência:
+[link do anúncio]
+
+Peço também que nos avise caso haja qualquer alteração no valor ou na disponibilidade, para mantermos as informações sempre atualizadas.
+
+Fico no aguardo da sua aprovação para iniciarmos a divulgação pela Utu-Guaçu Imóveis.
+
+Posso seguir com a publicação?{assinatura}`},
  {id:"preco-alto",cat:"Proprietário",titulo:"Imóvel com preço acima do mercado",quando:"O imóvel tem visitas mas não recebe propostas.",
   texto:`Olá, [cliente], tudo bem? Quero te passar um retorno sincero sobre {i:o|a} [imóvel].
 
@@ -1314,10 +1326,11 @@ const radioV=n=>(document.querySelector(`input[name="${n}"]:checked`)||{}).value
 function msgCtx(){
   const [tipo,ig]=($("#mTipo").value||"").split("|"), loc=($("#mLocal").value||"").trim();
   let im=""; if(tipo)im=tipo+(loc?" "+loc:""); else if(loc)im="imóvel "+loc;
-  return {c:radioV("corG")==="f",k:radioV("cliG")==="f",i:ig==="f",im,cli:($("#mCliente").value||"").trim(),cor:($("#mCorretor").value||"").trim()};
+  return {c:radioV("corG")==="f",k:radioV("cliG")==="f",i:ig==="f",im,cli:($("#mCliente").value||"").trim(),cor:($("#mCorretor").value||"").trim(),creci:(($("#mCreci")||{}).value||"").trim()};
 }
 function fillMsg(t){
   const x=msgCtx();
+  t=t.replace(/\n*\{assinatura\}/g,x.cor?`\n\n${x.cor}\n${x.c?"Corretora":"Corretor"} Utu-Guaçu Imóveis${x.creci?" · CRECI "+x.creci:""}`:"");
   t=t.replace(/\{([cki]):([^|{}]*)\|([^{}]*)\}/g,(_,w,m,f)=>x[w]?f:m);
   if(x.cli)t=t.split("[cliente]").join(x.cli);
   if(x.cor)t=t.split("[corretor]").join(x.cor);
@@ -1364,10 +1377,10 @@ $("#view-mensagens").addEventListener("input",syncIa);$("#view-mensagens").addEv
 $("#iaGo").addEventListener("click",e=>{syncIa();if(!($("#iaSit").value||"").trim()){e.preventDefault();toast("Descreva a situação primeiro.");$("#iaSit").focus();return}try{navigator.clipboard&&navigator.clipboard.writeText(iaPrompt()).catch(()=>{})}catch(_){}});
 $("#iaCopy").addEventListener("click",()=>{if(!($("#iaSit").value||"").trim()){toast("Descreva a situação primeiro.");$("#iaSit").focus();return}copyText(iaPrompt(),"Pedido copiado. Cole no Gemini ou no ChatGPT.")});
 $("#msgChips").addEventListener("click",e=>{const b=e.target.closest("[data-mc]");if(!b)return;msgCat=b.dataset.mc;renderMsgs()});
-function saveMe(){LS.set("utu.msg.eu",{nome:$("#mCorretor").value,g:radioV("corG")})}
-$("#view-mensagens").addEventListener("input",e=>{if(e.target.closest(".msg-fill")){if(e.target.id==="mCorretor"||e.target.name==="corG")saveMe();renderMsgs()}});
+function saveMe(){LS.set("utu.msg.eu",{nome:$("#mCorretor").value,g:radioV("corG"),creci:$("#mCreci").value})}
+$("#view-mensagens").addEventListener("input",e=>{if(e.target.closest(".msg-fill")){if(e.target.id==="mCorretor"||e.target.id==="mCreci"||e.target.name==="corG")saveMe();renderMsgs()}});
 $("#view-mensagens").addEventListener("change",e=>{if(e.target.closest(".msg-fill")){if(e.target.name==="corG")saveMe();renderMsgs()}});
-{const eu=LS.get("utu.msg.eu",null);if(eu){$("#mCorretor").value=eu.nome||"";if(eu.g==="f")$("#corF").checked=true}}
+{const eu=LS.get("utu.msg.eu",null);if(eu){$("#mCorretor").value=eu.nome||"";$("#mCreci").value=eu.creci||"";if(eu.g==="f")$("#corF").checked=true}}
 function copyText(t,okMsg){
   const fb=()=>{const ta=document.createElement("textarea");ta.value=t;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand("copy")}catch(_){}ta.remove();toast(ok?okMsg:"Não consegui copiar. Segure o dedo sobre o texto para copiar.")};
   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>toast(okMsg),fb);else fb();
