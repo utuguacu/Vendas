@@ -392,6 +392,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
 @media (max-width:480px){#cdFala{font-size:16px}}
 .cd-audios{display:flex;flex-direction:column;gap:6px}.cd-audios div{display:flex;align-items:center;gap:8px}.cd-audios audio{flex:1;min-width:0;height:36px}
 .cd-audios button{width:32px;height:32px;border-radius:50%;border:1px solid var(--line-strong);background:var(--surface);cursor:pointer;color:var(--fg)}
+.cd-nota{margin:0;font-size:12.5px}
 .cd-falta small{display:block;margin-top:6px;color:var(--fg);opacity:.8}
 .cd-msgp{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:6px}.cd-msgp textarea{width:100%;padding:9px 11px;border:1px solid var(--line-strong);border-radius:var(--r);background:var(--surface);font:inherit;min-height:96px}
 @media (max-width:480px){.cd-msgp textarea{font-size:16px}}
@@ -627,16 +628,18 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
           <div class="field" id="fCdPacote" hidden><label for="cdPacote">Pacote locação (R$)</label><input id="cdPacote" inputmode="decimal" data-money></div>
         </div>
         <div class="two">
-          <div class="field"><label for="cdCond">Taxa de condomínio (R$)</label><input id="cdCond" inputmode="decimal" data-money></div>
-          <div class="field"><label for="cdIptu">IPTU anual (R$)</label><input id="cdIptu" inputmode="decimal" data-money></div>
+          <div class="field"><label for="cdIptu">IPTU (R$)</label><input id="cdIptu" inputmode="decimal" data-money></div>
+          <div class="field"><label for="cdIptuPer">Esse valor do IPTU é</label><select id="cdIptuPer"><option value="">Escolha</option><option value="anual">Anual</option><option value="mensal">Mensal</option></select></div>
         </div>
       </fieldset>
       <fieldset class="cd-man">
         <legend><small>4</small>Imóvel e endereço</legend>
         <span class="legend">Tipo de imóvel</span><div class="chips cd-chips" data-one="tipo"></div>
-        <div class="field"><label for="cdBairro">Bairro ou condomínio</label><input id="cdBairro" list="cdCondList" placeholder="Ex.: Terras de São José II"></div>
+        <span class="legend">O imóvel fica em</span><div class="chips cd-chips" data-one="loc"></div>
+        <div class="field"><label for="cdBairro" id="cdBairroLbl">Nome do bairro ou condomínio</label><input id="cdBairro" list="cdCondList" placeholder="Ex.: Terras de São José II"></div>
+        <div class="field" id="fCdCond" hidden><label for="cdCond">Valor do condomínio (R$ por mês)</label><input id="cdCond" inputmode="decimal" data-money></div>
         <div class="two">
-          <div class="field"><label for="cdCep">CEP da portaria</label><input id="cdCep" inputmode="numeric" placeholder="00000-000"><span class="hint" id="cdCepSt"></span></div>
+          <div class="field"><label for="cdCep" id="cdCepLbl">CEP</label><input id="cdCep" inputmode="numeric" placeholder="00000-000"><span class="hint" id="cdCepSt"></span></div>
           <div class="field"><label for="cdCidade">Cidade</label><input id="cdCidade" list="cdCidList"></div>
         </div>
         <div class="three">
@@ -648,6 +651,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
       <fieldset class="cd-man">
         <legend><small>5</small>Características</legend>
         <div class="cd-steps" id="cdSteps"></div>
+        <span class="legend">As vagas de garagem são</span><div class="chips cd-chips" data-one="vagaTipo"></div>
         <div class="three">
           <div class="field"><label for="cdAreaC">Área construída (m²)</label><input id="cdAreaC" inputmode="decimal"></div>
           <div class="field"><label for="cdAreaT">Área do terreno (m²)</label><input id="cdAreaT" inputmode="decimal"></div>
@@ -681,6 +685,11 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
         <div class="cd-thumbs" id="cdThumbs"></div>
       </fieldset>
       <fieldset>
+        <legend><small>9</small>Informações adicionais <span class="opt" style="font-family:var(--body);font-size:12px">(opcional)</span></legend>
+        <p class="hint" style="margin:-4px 0 2px">Escreva à vontade sobre detalhes do imóvel que a ficha não pergunta: reformas, vista, acabamentos, o que mais chama atenção.</p>
+        <div class="field"><textarea id="cdAdic" rows="4" placeholder="Ex.: cozinha reformada em 2023, vista para a mata, pé-direito duplo na sala, casa toda em nível"></textarea></div>
+      </fieldset>
+      <fieldset>
         <legend><small>9</small>Comentário interno</legend>
         <p class="hint" style="margin:-4px 0 2px">Não vai para os portais. Só a Rebeca e a equipe veem.</p>
         <div class="field"><textarea id="cdObs" rows="3" placeholder="Ex.: chave na portaria, proprietário prefere contato à tarde, aceita negociar"></textarea></div>
@@ -695,11 +704,11 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
       <button class="btn ghost back" id="cdBack" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>Voltar e editar a ficha</button>
       <div class="cd-falta" id="cdFalta" hidden></div>
       <div class="actions">
-        <button class="btn gold share-prop" id="cdEnviar" type="button">Enviar ficha e fotos para a Rebeca</button>
-        <a class="btn" id="cdSoTexto" href="#" target="_blank" rel="noopener">Abrir a conversa da Rebeca só com a ficha</a>
+        <button class="btn gold share-prop" id="cdEnviar" type="button">Enviar ficha completa para a Rebeca</button>
         <button class="btn" id="cdCopiar" type="button">Copiar ficha</button>
-        <button class="btn" id="cdBaixarAud" type="button" hidden>Baixar áudio</button>
+        <a id="cdSoTexto" href="#" hidden></a><button id="cdBaixarAud" type="button" hidden></button>
       </div>
+      <p class="hint cd-nota">Se você adicionou as fotos e preencheu a ficha, tudo vai para a Rebeca de uma vez: a ficha e as fotos.</p>
       <p class="hint" id="cdComo"></p>
       <pre class="cd-prev" id="cdPrev"></pre>
     </div>
@@ -733,7 +742,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
   <div id="dsOut" style="margin-top:22px"></div>
 </section>
 
-<p class="ver">Portal de Locação · versão 12/11/2026 12h35</p>
+<p class="ver">Portal de Locação · versão 16/11/2026 09h40</p>
 </main>
 
 <div class="toast" id="toast" hidden></div>
@@ -1849,7 +1858,7 @@ $("#apOut").addEventListener("click",async e=>{const b=e.target.closest("[data-s
    ===================================================== */
 /* ===== FICHA DE CADASTRO (vai para a Rebeca, que sobe no Kenlo) ===== */
 const CAD_WA="5511985943067"; /* WhatsApp da Rebeca (cadastro), só números com DDD. Vazio = o corretor escolhe o contato. */
-const CD={one:{neg:["Venda","Locação","Venda e Locação"],tipo:["Casa","Casa em condomínio","Apartamento","Terreno","Terreno em condomínio","Chácara","Sítio","Fazenda","Haras","Sala comercial","Galpão","Outro"]},
+const CD={one:{loc:["Condomínio","Bairro"],vagaTipo:["Cobertas","Descobertas","Parte coberta"],neg:["Venda","Locação","Venda e Locação"],tipo:["Casa","Casa em condomínio","Apartamento","Terreno","Terreno em condomínio","Chácara","Sítio","Fazenda","Haras","Sala comercial","Galpão","Outro"]},
   many:{arm:["Quartos","Cozinha","Banheiro","Closet","Sala","Área de serviço"],
     infra:["Ar-condicionado","Aquecimento solar","Aquecimento a gás","Alarme","Câmeras","Interfone","Portão eletrônico","Internet / fibra","Gerador","Lareira","Mobiliado","Semimobiliado","Sauna","Ofurô","Edícula"],
     piso:["Porcelanato","Cerâmica","Mármore","Granito","Laminado","Tábua","Taco","Outro"]},
@@ -1872,6 +1881,8 @@ function cdPaint(){
   $$("#view-cadastro [data-yn]").forEach(b=>b.setAttribute("aria-pressed",cdS.yn[b.dataset.yn]===b.dataset.v));
   CD.steps.forEach(([k])=>{$("#st-"+k).textContent=cdS.st[k]==null?"–":(cdS.st[k]>=10?"10+":cdS.st[k])});
   const neg=cdS.one.neg||"";$("#fCdValor").hidden=neg==="Locação";$("#fCdPacote").hidden=!/Loca/.test(neg);
+  const loc=cdS.one.loc||"";$("#fCdCond").hidden=loc!=="Condomínio";$("#cdBairroLbl").textContent=loc==="Condomínio"?"Nome do condomínio":loc==="Bairro"?"Nome do bairro":"Nome do bairro ou condomínio";
+  $("#cdCepLbl").textContent=loc==="Condomínio"?"CEP da portaria":loc==="Bairro"?"CEP da rua":"CEP";$("#cdBairro").placeholder=loc==="Bairro"?"Ex.: Centro":"Ex.: Terras de São José II";
 }
 $("#view-cadastro").addEventListener("click",e=>{
   let b=e.target.closest("[data-k]");if(b){const k=b.dataset.k;cdS.one[k]=cdS.one[k]===b.dataset.v?undefined:b.dataset.v;cdPaint();return}
@@ -1904,7 +1915,7 @@ function cdCollect(){
   const neg=cdS.one.neg,tipo=cdS.one.tipo,terr=/Terreno|Chácara|Sítio|Fazenda|Haras/.test(tipo||""),soTerr=/Terreno/.test(tipo||"");
   const F=m.falta;if(!neg)F.push("tipo de negócio");
   if(neg&&neg!=="Locação"&&!brlTxt("cdValor"))F.push("valor de venda");if(neg&&/Loca/.test(neg)&&!brlTxt("cdPacote"))F.push("pacote de locação");if(!neg&&!brlTxt("cdValor"))F.push("valor");
-  if(!tipo)F.push("tipo de imóvel");if(!cv("cdBairro"))F.push("bairro ou condomínio");if(!cv("cdCidade"))F.push("cidade");if(!cv("cdRua"))F.push("rua ou quadra");if(!cv("cdNum"))F.push("número ou lote");
+  if(!tipo)F.push("tipo de imóvel");const loc=cdS.one.loc;if(!cv("cdBairro"))F.push(loc==="Bairro"?"nome do bairro":loc==="Condomínio"?"nome do condomínio":"bairro ou condomínio");if(loc==="Condomínio"&&!brlTxt("cdCond"))F.push("valor do condomínio");if(brlTxt("cdIptu")&&!cv("cdIptuPer"))F.push("se o IPTU é mensal ou anual");if(!cv("cdCidade"))F.push("cidade");if(!cv("cdRua"))F.push("rua ou quadra");if(!cv("cdNum"))F.push("número ou lote");
   if(!soTerr&&cdS.st.dorm==null)F.push("dormitórios");if(!soTerr&&!cv("cdAreaC"))F.push("área construída");if(terr&&!cv("cdAreaT"))F.push("área do terreno");
   if(rap){const nm=[cv("cdPNome"),cv("cdPSobre")].filter(Boolean).length;if(nm<2)F.unshift("nome completo do proprietário");if(!cv("cdPTel"))F.splice(nm<2?1:0,0,"celular do proprietário")}
   const nf=cdS.fotos.length;if(nf<20)F.push(nf?`fotos (enviei ${nf} de 20)`:"fotos");
@@ -1912,17 +1923,18 @@ function cdCollect(){
   const L=[];const add=(k,v)=>{if(v!==""&&v!=null)L.push(`${k}: ${v}`)};const sec=t=>{if(L.length&&L[L.length-1]!=="")L.push("");L.push(`*${t}*`)};
   L.push("*FICHA DE CAPTAÇÃO*");add("Corretor",cv("cdCor"));add("Data",data);
   sec("Proprietário");add("Nome completo",[cv("cdPNome"),cv("cdPSobre")].filter(Boolean).join(" "));add("Celular",cv("cdPTel"));
-  const ln=L.length;sec("Negócio e valores");add("Tipo de negócio",neg);if(neg!=="Locação")add("Valor",brlTxt("cdValor"));if(/Loca/.test(neg||""))add("Pacote locação",brlTxt("cdPacote"));add("Taxa de condomínio",brlTxt("cdCond"));add("IPTU anual",brlTxt("cdIptu"));if(L.length===ln+1)L.splice(ln);
-  const li=L.length;sec("Imóvel");add("Tipo de imóvel",tipo);add("Bairro/Condomínio",cv("cdBairro"));add("CEP da portaria",cv("cdCep"));add("Cidade",cv("cdCidade"));add("Estado",cv("cdUf").toUpperCase());add("Rua/Quadra",cv("cdRua"));add("Nº/Lote",cv("cdNum"));if(L.length===li+1)L.splice(li);
-  const lc=L.length;sec("Características");CD.steps.forEach(([k,l])=>add(l,cdS.st[k]==null?"":(cdS.st[k]>=10?"10 ou mais":cdS.st[k])));
+  const ln=L.length;sec("Negócio e valores");add("Tipo de negócio",neg);if(neg!=="Locação")add("Valor",brlTxt("cdValor"));if(/Loca/.test(neg||""))add("Pacote locação",brlTxt("cdPacote"));add(cv("cdIptuPer")==="mensal"?"IPTU mensal":cv("cdIptuPer")==="anual"?"IPTU anual":"IPTU",brlTxt("cdIptu"));if(L.length===ln+1)L.splice(ln);
+  const li=L.length;sec("Imóvel");add("Tipo de imóvel",tipo);add(loc==="Condomínio"?"Condomínio":loc==="Bairro"?"Bairro":"Bairro/Condomínio",cv("cdBairro"));if(loc!=="Bairro")add("Valor do condomínio",brlTxt("cdCond")?brlTxt("cdCond")+" por mês":"");add(loc==="Condomínio"?"CEP da portaria":loc==="Bairro"?"CEP da rua":"CEP",cv("cdCep"));add("Cidade",cv("cdCidade"));add("Estado",cv("cdUf").toUpperCase());add("Rua/Quadra",cv("cdRua"));add("Nº/Lote",cv("cdNum"));if(L.length===li+1)L.splice(li);
+  const lc=L.length;sec("Características");CD.steps.forEach(([k,l])=>add(l,cdS.st[k]==null?"":(cdS.st[k]>=10?"10 ou mais":cdS.st[k])+(k==="vagas"&&cdS.one.vagaTipo&&cdS.st[k]?` (${cdS.one.vagaTipo.toLowerCase()})`:"")));if(cdS.st.vagas==null&&cdS.one.vagaTipo)add("Vagas",cdS.one.vagaTipo.toLowerCase());
   add("Área construída",cv("cdAreaC")?cv("cdAreaC")+" m²":"");add("Área do terreno",cv("cdAreaT")?cv("cdAreaT")+" m²":"");add("Ano de construção",cv("cdAno"));
   CD.yn1.forEach(([k,l])=>add(l,cdS.yn[k]||""));
   add("Armários embutidos",[...cdS.many.arm].join(", "));add("Infraestrutura",[...cdS.many.infra].join(", "));add("Tipo de piso",[...cdS.many.piso].join(", "));if(L.length===lc+1)L.splice(lc);
   const lk=L.length;sec("Condições");CD.yn2.forEach(([k,l])=>add(l,cdS.yn[k]||""));if(L.length===lk+1)L.splice(lk);
   L.push("");add("Fotos",nf?`${nf} (enviadas junto)`:"não enviadas");if(cdS.ref)add("Anúncio de referência",cdS.ref);
+  if(cv("cdAdic")){L.push("","*INFORMAÇÕES ADICIONAIS:*",cv("cdAdic"))}
   if(cv("cdObs")){L.push("","*COMENTÁRIO INTERNO:*",cv("cdObs"))}
   for(let i=L.length-1;i>0;i--){if(/^\*[^*]+\*$/.test(L[i])&&!/^\*FICHA/.test(L[i])&&(i===L.length-1||L[i+1]===""||/^\*[^*]+\*$/.test(L[i+1]))){L.splice(i,1);if(L[i-1]==="")L.splice(i-1,1)}}
-  if(rap&&cv("cdMsgP"))L.push("","*MENSAGEM DO PROPRIETÁRIO:*",cv("cdMsgP"));
+  if(cv("cdMsgP"))L.push("","*MENSAGEM DO PROPRIETÁRIO:*",cv("cdMsgP"));
   if(rap&&cv("cdFala"))L.push("","*INFORMAÇÕES DO CORRETOR:*",cv("cdFala"));
   m.ficha=L.join("\n").replace(/\n{3,}/g,"\n\n");
   const f=F.length?` Estão faltando: ${F.length>1?F.slice(0,-1).join(", ")+" e "+F[F.length-1]:F[0]}, que vou providenciar.`:"";
@@ -1942,7 +1954,7 @@ $("#cdGerar").addEventListener("click",()=>{if(cdTextoTodo()&&cdS.msgLida!==cdTe
   if(m.missing.length){$("#cdMissing").scrollIntoView({behavior:"smooth",block:"center"});return}
   const F=m.falta;$("#cdFalta").hidden=!F.length;$("#cdFalta").innerHTML=F.length?`<b>Atenção: estão faltando estas informações</b><ul>${F.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>Se conseguir, providencie antes de enviar: toque em <b>Voltar e editar a ficha</b>.<small>Caso não tenha essas informações agora, pode enviar direto para a Rebeca. Ela será avisada na mensagem de que vão ser providenciadas.</small>`:"";
   $("#cdPrev").textContent=m.msg;$("#cdSoTexto").href=cdWaUrl(m.msg);
-  const nf=cdS.fotos.length,na=cdS.audios.length;const anex=[nf?`${nf} ${nf===1?"foto":"fotos"}`:"",na?(na===1?"o áudio":`${na} áudios`):""].filter(Boolean).join(" e ");$("#cdEnviar").textContent=anex?`Enviar ficha, ${anex} para a Rebeca`.replace(", "+anex," e "+anex):"Enviar ficha para a Rebeca";
+  const nf=cdS.fotos.length,na=cdS.audios.length;const anex=[nf?`${nf} ${nf===1?"foto":"fotos"}`:"",na?(na===1?"o áudio":`${na} áudios`):""].filter(Boolean).join(" e ");$("#cdEnviar").textContent="Enviar ficha completa para a Rebeca";
   $("#cdComo").textContent=(nf||na)?"Ao tocar em enviar, abre o menu do celular: escolha o WhatsApp e a conversa da Rebeca. A ficha vai junto com as fotos e também fica copiada, caso precise colar.":"";
   $("#cdWrap").classList.add("result");$("#view-cadastro").classList.add("done");$("#cdSide").hidden=false;window.scrollTo({top:0})});
 $("#cdBack").addEventListener("click",()=>{$("#cdWrap").classList.remove("result");$("#view-cadastro").classList.remove("done");$("#cdSide").hidden=true;window.scrollTo({top:0})});
@@ -2023,6 +2035,8 @@ function cdAplicar(R,url){const st=$("#cdUrlSt");if(!R.neg&&R.aluguel)R.neg=R.va
     [["dorm","dormitórios"],["suite","suítes"],["banh","banheiros"],["vagas","vagas"],["lav","lavabos"]].forEach(([k,l])=>{if(R[k]!=null&&cdS.st[k]==null){cdS.st[k]=Math.min(10,R[k]);ach.push(l)}});
     Object.entries(R.yn).forEach(([k,v])=>{if(!cdS.yn[k]){cdS.yn[k]=v}});if(Object.keys(R.yn).length)ach.push("itens como piscina e churrasqueira");
     R.infra.forEach(x=>cdS.many.infra.add(x));R.arm.forEach(x=>cdS.many.arm.add(x));R.piso.forEach(x=>cdS.many.piso.add(x));if(R.infra.length||R.arm.length||R.piso.length)ach.push("infraestrutura");
+    if(R.iptuPer&&!cv("cdIptuPer"))$("#cdIptuPer").value=R.iptuPer;if(R.vagaTipo&&!cdS.one.vagaTipo)cdS.one.vagaTipo=R.vagaTipo;
+    if(!cdS.one.loc&&cv("cdBairro")){const nb=sA(cv("cdBairro"));cdS.one.loc=/condom/.test(sA(cdS.one.tipo||""))||R.cond||[...document.querySelectorAll("#cdCondList option")].some(o=>sA(o.value)===nb)?"Condomínio":"Bairro"}
     if(url)cdS.ref=url;cdPaint();
     st.innerHTML=ach.length?`Preenchi: ${esc(ach.join(", "))}. <b>Confira tudo</b>, porque cada site mostra as informações de um jeito.`:"Abri o anúncio, mas não consegui ler as informações. Preencha à mão.";
 }
@@ -2074,6 +2088,8 @@ function cdMsgParse(raw){
   if(R.dorm==null&&R.suite)R.dorm=R.suite;
   if(!R.bairro){const b=t.match(/\bbairro\s*:?\s*([A-ZÀ-Ú][\wÀ-ú ]{2,30}?)(?=[,.\n]|$)/);if(b)R.bairro=b[1].trim();else if(/\bcentro\b/.test(T))R.bairro="Centro"}
   if(!R.areaC&&!R.areaT){const m=T.match(/([\d.]+(?:,\d+)?)\s*m²/);if(m){/Terreno|Chácara|Sítio|Fazenda|Haras/.test(R.tipo||"")?R.areaT=m[1]:R.areaC=m[1]}}
+  if(/iptu[^.\n]{0,40}(?:mensal|por mes|ao mes|\/mes)/.test(T))R.iptuPer="mensal";else if(/iptu[^.\n]{0,40}(?:anual|por ano|ao ano|\/ano)/.test(T))R.iptuPer="anual";
+  if(/(?:vagas?|garage\w*)[^.\n]{0,25}descobert/.test(T))R.vagaTipo="Descobertas";else if(/(?:vagas?|garage\w*)[^.\n]{0,25}cobert/.test(T)||/garagem coberta/.test(T))R.vagaTipo="Cobertas";
   ["areaC","areaT"].forEach(k=>{if(R[k]){const n=nB(R[k]);if(n)R[k]=n.toLocaleString("pt-BR",{maximumFractionDigits:2})}});
   return R}
 function cdLerTexto(t,st,vazio){cdS.msgLida=cdTextoTodo();
@@ -2085,6 +2101,7 @@ function cdLerTexto(t,st,vazio){cdS.msgLida=cdTextoTodo();
     st.innerHTML=tudo?`Preenchi: ${esc(tudo)}. <b>Confira tudo</b>, porque cada um escreve e fala de um jeito.`:"Não consegui entender as informações. Preencha à mão.";
   }catch(e){st.textContent="Não consegui ler. Preencha à mão."}}
 function cdTextoTodo(){return [cv("cdMsgP"),cdS.modo==="rapido"?cv("cdFala"):""].filter(Boolean).join("\n")}
+$("#cdMsgP").addEventListener("paste",()=>setTimeout(()=>{if(cv("cdMsgP").length>=15)cdLerTexto(cdTextoTodo(),$("#cdMsgPSt"),"")},80));
 $("#cdLerMsgP").addEventListener("click",()=>cdLerTexto(cdTextoTodo(),$("#cdMsgPSt"),"Cole a mensagem do proprietário."));
 $("#cdLerFala").addEventListener("click",()=>cdLerTexto(cdTextoTodo(),$("#cdFalaSt"),"Fale ou escreva as informações primeiro."));
 
