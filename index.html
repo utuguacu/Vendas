@@ -245,6 +245,7 @@ h1 em,h2 em{font-style:italic;color:var(--gold)}
 .blk.fin{background:var(--surface);border-color:var(--gold)}
 .fin-form{display:flex;flex-direction:column;gap:12px;margin-top:22px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
 .fin-form .seg{display:flex;width:100%}.fin-form .seg label{flex:1;text-align:center}
+.fin-o span{display:flex;align-items:center;justify-content:center;height:100%;line-height:1.3;padding-top:8px;padding-bottom:8px}
 .fin-prev{margin-top:14px;background:var(--surface);border:1px dashed var(--line-strong)}
 .fin-act{display:flex;flex-direction:column;gap:10px;margin-top:14px;max-width:520px}
 .fin-note{font-size:12px;color:var(--muted);margin:-4px 0 0}
@@ -910,12 +911,13 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
   <div class="files-head">
     <div>
       <div class="eyebrow">Financiamento</div>
-      <h1>Enviar o guia do <em>financiamento</em></h1>
-      <p class="lede">Para o cliente que vai comprar financiado. Ele responde o passo a passo e só volta para você quando estiver com o crédito pré-aprovado. Se faltar algo, o próprio guia encaminha para a CRESAC Comercial, nossa parceira em crédito imobiliário.</p>
+      <h1>Cliente <em>com financiamento</em></h1>
+      <p class="lede">Para o cliente que vai comprar financiado. Peça os dados para a simulação sem custo com o nosso correspondente bancário, explique a diferença entre SAC e PRICE ou, se quiser, mande o guia para o cliente consultar.</p>
     </div>
   </div>
   <form class="fin-form" id="finForm" novalidate>
-    <div class="field"><span class="legend">Tipo de mensagem</span><div class="seg"><label><input type="radio" name="finTipo" id="finIni" value="ini" checked><span>Início de conversa</span></label><label><input type="radio" name="finTipo" id="finCont" value="cont"><span>Continuação</span></label></div><span class="hint" id="finTipoHint"></span></div>
+    <div class="field"><span class="legend">O que você quer enviar</span><div class="seg fin-o"><label><input type="radio" name="finO" value="dados" checked><span>Pedir dados para a simulação</span></label><label><input type="radio" name="finO" value="sac"><span>Explicar SAC e PRICE</span></label><label><input type="radio" name="finO" value="guia"><span>Guia de consulta</span></label></div><span class="hint" id="finOHint"></span></div>
+    <div class="field" id="finTipoW"><span class="legend">Tipo de mensagem</span><div class="seg"><label><input type="radio" name="finTipo" id="finIni" value="ini" checked><span>Início de conversa</span></label><label><input type="radio" name="finTipo" id="finCont" value="cont"><span>Continuação</span></label></div><span class="hint" id="finTipoHint"></span></div>
     <div class="two">
       <div class="field"><label for="finCli">Nome do cliente</label><input id="finCli"></div>
       <div class="field"><span class="legend">Cliente é</span><div class="seg"><label><input type="radio" name="finCg" id="finCgM" value="m" checked><span>Homem</span></label><label><input type="radio" name="finCg" id="finCgF" value="f"><span>Mulher</span></label></div></div>
@@ -926,10 +928,10 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
   <div class="msg-text fin-prev" id="finPrev"></div>
   <div class="fin-act">
     <a class="btn gold big" id="finSend" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 1-13.4 7.9L3 21l1.2-4.4A9 9 0 1 1 21 12z"/></svg><span id="finSendLbl">Enviar ao cliente no WhatsApp</span></a>
-    <p class="hint fin-note">A mensagem e o link vão juntos. É só tocar em enviar no WhatsApp.</p>
+    <p class="hint fin-note fin-g">A mensagem e o link vão juntos. É só tocar em enviar no WhatsApp.</p>
     <button class="btn" id="finCopy" type="button">Copiar mensagem</button>
-    <button class="btn" id="finCopyLink" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>Copiar só o link do guia</button>
-    <a class="btn ghost" href="financiamento/" target="_blank" rel="noopener">Ver o guia como o cliente vê</a>
+    <button class="btn fin-g" id="finCopyLink" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>Copiar só o link do guia</button>
+    <a class="btn ghost fin-g" href="financiamento/" target="_blank" rel="noopener">Ver o guia como o cliente vê</a>
   </div>
 </section>
 
@@ -1135,7 +1137,7 @@ legend small{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-tr
     </aside>
   </div>
 </section>
-<p class="ver">Portal de Vendas · versão 16/11/2026 09h30</p>
+<p class="ver">Portal de Vendas · versão 21/11/2026 10h40</p>
 </main>
 
 <div class="needbar" id="needbar" hidden role="alert"><div class="needbar-in"><b>Para gerar a proposta, falta preencher:</b><ul id="needList"></ul><button class="btn" id="needClose" type="button">Fechar</button></div></div>
@@ -1453,8 +1455,8 @@ function renderHome(){
       <span class="txt"><span class="k">Ferramenta</span><h2>Roteiro de visitas</h2><p>Coloque os imóveis na ordem da visita e mande ao cliente a confirmação com dia, horário, roteiro e endereços.</p></span>
       <span class="go">Montar o roteiro${ARROW}</span></button>`;
   const finTile=`<button class="blk fin" type="button" data-open="__financiamento">
-      <span class="txt"><span class="k">Ferramenta</span><h2>Guia do financiamento</h2><p>Envie ao cliente que vai comprar financiado o passo a passo para ver em que etapa ele está, com a parceira de crédito.</p></span>
-      <span class="go">Enviar o guia${ARROW}</span></button>`;
+      <span class="txt"><span class="k">Ferramenta</span><h2>Financiamento</h2><p>Peça ao cliente os dados para a simulação sem custo com o correspondente, explique SAC e PRICE ou mande o guia de consulta.</p></span>
+      <span class="go">Abrir${ARROW}</span></button>`;
   const mktTile=`<a class="blk mkt" href="marketing/">
       <span class="txt"><span class="k">Ferramenta</span><h2>Marketing</h2><p>Ateliê de artes para criar story, post e carrossel com a sua cara, e análise do seu perfil com cronograma do mês.</p></span>
       <span class="go">Abrir o marketing${ARROW}</span></a>`;
@@ -1649,7 +1651,46 @@ renderDocs(); renderFiles(); refreshEmpList();
 
 /* ===== Guia do financiamento: mensagem do corretor ===== */
 const FIN_LINK="https://utuguacu.github.io/Vendas/financiamento/";
+const FIN_DADOS=cli=>`Olá, ${cli}! Tudo bem?
+
+Para fazermos uma simulação do seu financiamento, sem custo, com o nosso correspondente bancário parceiro, preciso de algumas informações:
+
+• Nome completo
+• RG
+• CPF
+• Data de nascimento
+• Estado civil
+• Se tem filhos
+• Tempo de carteira assinada
+• Se é o seu primeiro imóvel
+• Se tem algum financiamento em andamento
+• Se tem Fundo de Garantia (FGTS) e o valor aproximado
+• Renda bruta mensal
+• Valor do imóvel que pretende comprar
+
+Com essas informações, o correspondente faz a simulação e eu já te mostro as condições de entrada, prazo e parcela. Seus dados são usados só para essa análise.
+
+Qualquer dúvida, estou à disposição.`;
+const FIN_SAC=cli=>`Olá, ${cli}! Vou te explicar de um jeito simples a diferença entre os dois sistemas de financiamento:
+
+*SAC*
+As parcelas começam mais altas e vão diminuindo ao longo do financiamento. Desde a primeira parcela você já abate uma parte da dívida, por isso normalmente o valor total pago em juros é menor.
+
+*PRICE*
+As parcelas começam mais baixas e ficam praticamente iguais até o fim, sem considerar os reajustes previstos no contrato. Nos primeiros anos, a maior parte da parcela é juros, então a dívida diminui mais devagar e normalmente o valor total pago em juros é maior.
+
+*Resumindo*
+SAC: paga mais no começo e economiza juros ao longo do tempo.
+PRICE: começa pagando menos, o que facilita o orçamento inicial, mas geralmente paga mais juros no total.
+
+Quando a parcela da SAC cabe no orçamento, ela costuma ser a melhor escolha. Se a primeira parcela ficar pesada para a renda, a PRICE é uma boa alternativa para comprometer menos no começo.
+
+Os dois dependem das condições e taxas oferecidas pelo banco. Na simulação, te mostro as duas opções lado a lado para você escolher com tranquilidade.
+
+Qualquer dúvida, estou à disposição.`;
 function finMsg(){
+  const o=(document.querySelector('input[name="finO"]:checked')||{}).value||"dados";
+  if(o!=="guia"){const c=($("#finCli").value||"").trim().split(/\s+/)[0]||"[nome do cliente]";return o==="sac"?FIN_SAC(c):FIN_DADOS(c)}
   const cli=($("#finCli").value||"").trim()||"[nome do cliente]", eu=($("#finEu").value||"").trim()||"[seu nome]";
   const cont=(document.querySelector('input[name="finTipo"]:checked')||{}).value==="cont", f=(document.querySelector('input[name="finCg"]:checked')||{}).value==="f";
   const abertura=cont?`Perfeito, ${cli}! Como você mencionou que a forma de pagamento será via financiamento, temos um guia passo a passo para entendermos em que etapa do financiamento você está e o que ainda é preciso:`
@@ -1657,8 +1698,11 @@ function finMsg(){
   return `${abertura}\n${FIN_LINK}\n\nPeço que preencha com atenção. Se for necessário, você será ${f?"encaminhada":"encaminhado"} a um profissional especializado em crédito imobiliário, sem custo, e assim que estiver tudo certo, retomamos o seu atendimento por aqui. Se já estiver tudo em ordem, você volta direto para mim e damos continuidade.\n\nEsse passo é muito importante: com a sua simulação em mãos, conseguimos escolher com muito mais assertividade o imóvel ideal para você.\n\nQualquer dúvida, estou à disposição!`;
 }
 function finUpd(){
+  const o=(document.querySelector('input[name="finO"]:checked')||{}).value||"dados",g=o==="guia";
   const cont=(document.querySelector('input[name="finTipo"]:checked')||{}).value==="cont";
-  $("#finEuW").hidden=cont;
+  $("#finTipoW").hidden=!g;$("#finCgM").closest(".field").hidden=!g;$$(".fin-g").forEach(el=>el.hidden=!g);
+  $("#finOHint").textContent=o==="dados"?"Pede ao cliente as informações para a simulação sem custo. Depois é só repassar ao correspondente.":o==="sac"?"Explica de um jeito simples a diferença entre os dois sistemas.":"O cliente responde um passo a passo sozinho. Bom para consulta e para conhecer o momento dele.";
+  $("#finEuW").hidden=cont||!g;
   $("#finTipoHint").textContent=cont?"Para quando você já está conversando com o cliente.":"Para o primeiro contato, por exemplo depois do pré-atendimento.";
   const t=finMsg(); $("#finPrev").textContent=t;
   let n=($("#finTel").value||"").replace(/\D/g,""); if(n.length===10||n.length===11)n="55"+n;
@@ -1682,7 +1726,7 @@ const SECOES=[
  {tit:"Guia do Alto Padrão",sub:"Condomínios de Itu: o que oferecer, fichas e como atender",chaves:"alto padrao condominio condominios itu terras sao jose vila real city castello luxo apostila guia fichas",abre:()=>{location.href="alto-padrao/"}},
  {tit:"Análise do perfil",sub:"Nota do seu Instagram, o que melhorar e cronograma do mês",chaves:"analise perfil instagram cronograma calendario frequencia bio seguidores engajamento melhorar",abre:()=>{location.href="marketing/#analise"}},
  {tit:"Marketing",sub:"Ateliê de artes: story, post e carrossel com legenda",chaves:"marketing instagram story post feed carrossel legenda redes sociais conteudo arte divulgacao",abre:()=>{location.href="marketing/"}},
- {tit:"Guia do financiamento",sub:"Enviar ao cliente o passo a passo do financiamento",chaves:"financiamento financiado credito banco caixa simulacao cresac parceiro fgts guia",abre:()=>show("financiamento")},
+ {tit:"Financiamento",sub:"Pedir dados para a simulação, explicar SAC e PRICE e guia de consulta",chaves:"financiamento financiado credito banco caixa simulacao cresac parceiro fgts guia sac price tabela correspondente documentos",abre:()=>show("financiamento")},
  {tit:"Gerar documentos",sub:"Proposta de compra, avaliação de imóvel, termo de parceria e outros documentos prontos",chaves:"gerar documento documentos ficha pdf word parceria parceiro termo",abre:()=>show("documentos")},
  {tit:"Modelos de mensagem",sub:"Textos prontos para WhatsApp",chaves:"mensagem mensagens whatsapp texto modelo abordagem cliente",abre:()=>show("mensagens")},
  {tit:"Outra situação",sub:"Monte uma mensagem sob medida com o ChatGPT",chaves:"outra situacao ajuda chatgpt gemini ia inteligencia artificial personalizada",abre:()=>{show("mensagens");msgCat="Outra situação";renderMsgs()}}
