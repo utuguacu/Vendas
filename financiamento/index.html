@@ -194,6 +194,15 @@ function custos(){return `<details class="card"><summary style="cursor:pointer;f
   <p class="note">Os valores e as datas variam conforme o banco. Para planejar, considere de 45 a 90 dias do início ao fim.</p></details>`}
 function go(t){S.tela=t;render();window.scrollTo({top:0})}
 
+const SIM_ITENS=["Nome completo","RG","CPF","Data de nascimento","Estado civil","Se tem filhos","Tempo de carteira assinada","Se é o seu primeiro imóvel","Se tem algum financiamento em andamento","Se tem Fundo de Garantia (FGTS) e o valor aproximado","Renda bruta mensal","Valor do imóvel que pretende comprar"];
+const SIM_MSG="Olá! Respondi o guia do financiamento da Utu-Guaçu e quero fazer a simulação sem custo. Seguem as minhas informações:\n\n"+["Nome completo","RG","CPF","Data de nascimento","Estado civil","Tenho filhos","Tempo de carteira assinada","É o meu primeiro imóvel","Tenho algum financiamento em andamento","FGTS (se tenho e valor aproximado)","Renda bruta mensal","Valor do imóvel que pretendo comprar"].map(x=>x+": ").join("\n");
+function simCard(){return `<div class="card sim"><span class="eyebrow">Simulação sem custo</span><b>Quer saber quanto você consegue financiar?</b>
+  <p style="margin:0">É só mandar uma mensagem para o corretor da Utu-Guaçu que está te atendendo com estas informações. A gente faz a simulação com o nosso correspondente bancário parceiro, <b>sem custo nenhum</b>, e te mostra as condições de entrada, prazo e parcela.</p>
+  <ul class="dicas">${SIM_ITENS.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+  <button class="btn dark" id="simCopiar" type="button">Copiar a lista para preencher</button>
+  <a class="btn" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(SIM_MSG)}">${WA}Abrir o WhatsApp e escolher o corretor</a>
+  <span class="note">A lista vai pronta para você completar e mandar na conversa com quem te enviou este guia.</span></div>`}
+function simLigar(){const b=$("#simCopiar");if(b)b.onclick=()=>copiar(SIM_MSG,"Lista copiada. Cole na conversa com o seu corretor e complete as informações.")}
 function render(){
   trail(); const a=$("#app");
   if(S.visao==="corretor"){renderCorretor();return}
@@ -201,7 +210,7 @@ function render(){
     a.innerHTML=`<section class="screen">
       <div class="eyebrow">Comprar com financiamento</div>
       <h1>Vamos ver em que <em>etapa você está</em></h1>
-      <p class="lede">Responda 3 perguntas rápidas de sim ou não sobre o seu financiamento. No final, você recebe uma orientação sobre o seu momento e o próximo passo para continuar com segurança.</p>
+      <p class="lede">Responda 3 perguntas rápidas de sim ou não sobre o seu financiamento. No final, você vê em que momento está e o que fazer agora. Se quiser, também pode pedir uma simulação sem custo.</p>
       <div class="card tip"><b>Atendimento personalizado Utu-Guaçu Imóveis</b><span class="note" style="color:inherit">Há mais de 46 anos no mercado, desde 1980, ajudando famílias de Itu e região a comprar o imóvel certo. Leva cerca de 2 minutos.</span></div>
       <button class="btn dark" id="go">Começar ${ARROW}</button>
     </section>`;
@@ -229,10 +238,10 @@ function render(){
       <p>${esc(e.texto)}</p>
       <div class="card"><b>O que fazer agora</b><ul class="dicas">${e.dicas.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
       ${custos()}
-      <button class="btn dark" id="prox">Próximo passo ${ARROW}</button>
+      ${simCard()}
       <button class="btn ghost" id="refazer">Refazer as perguntas</button>
     </section>`;
-    $("#prox").onclick=()=>go("parceiro");
+    simLigar();
     $("#refazer").onclick=()=>go("inicio");
   }
   else if(S.tela==="parceiro"){
@@ -248,26 +257,18 @@ function render(){
     $("#form").onclick=()=>go("form"); $("#voltar").onclick=()=>go("etapa");
   }
   else if(S.tela==="pronto"){
-    const d=S.d;
+    const msg="Olá! Respondi o guia do financiamento da Utu-Guaçu e já estou com o crédito pré-aprovado.\n\nBanco ou correspondente: \nValor pré-aprovado: \nValor que tenho para a entrada: \n\nPodemos seguir para a escolha do imóvel?";
     a.innerHTML=`<section class="screen">
       <div class="eyebrow">Tudo certo</div>
       <h2>Você já está com o crédito pré-aprovado</h2>
       ${statusList(NQ)}
       <p>Ótimo! Com a simulação feita, a parcela definida e o crédito pré-aprovado, você está pronto para a próxima fase: escolher o imóvel e negociar com segurança, com o acompanhamento da Utu-Guaçu.</p>
-      <form class="card" id="fp" novalidate>
-        <p class="sect">Para o seu atendimento</p>
-        ${fld("nome","Nome completo",{ac:"name"})}
-        <div class="two">${fld("banco","Banco ou correspondente que pré-aprovou",{opt:true})}${fld("aprov","Valor pré-aprovado (R$)",{opt:true,im:"decimal"})}</div>
-        <div class="two">${fld("entrada","Valor para a entrada (R$)",{opt:true,im:"decimal"})}${fld("tipoIm","Tipo de imóvel que procura",{opt:true,sel:["Casa","Casa em condomínio","Apartamento","Terreno ou lote","Chácara ou imóvel rural","Ainda não sei"]})}</div>
-        <div class="err-msg" id="faltaP" hidden></div>
-        <button class="btn dark" type="submit">Ver minha resposta ${ARROW}</button>
-      </form>
+      <div class="card"><b>Próximo passo</b><p style="margin:0">Mande uma mensagem para o corretor que está te atendendo contando o banco e o valor pré-aprovado. A partir daí, seguimos juntos para a escolha do imóvel.</p>
+        <button class="btn dark" id="prCopiar" type="button">Copiar mensagem para o corretor</button>
+        <a class="btn" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(msg)}">${WA}Abrir o WhatsApp e escolher o corretor</a></div>
       <button class="btn ghost" id="refazer">Refazer as perguntas</button>
     </section>`;
-    $("#fp").addEventListener("input",e=>{const fl=e.target.closest(".field");if(fl)fl.classList.remove("err")});
-    $("#fp").addEventListener("submit",e=>{e.preventDefault();["nome","banco","aprov","entrada","tipoIm"].forEach(k=>S.d[k]=($("#"+k).value||"").trim());
-      if(!S.d.nome){$("#nome").closest(".field").classList.add("err");const f=$("#faltaP");f.hidden=false;f.textContent="Falta preencher: nome completo.";return}
-      go("resposta")});
+    $("#prCopiar").onclick=()=>copiar(msg,"Mensagem copiada. Cole na conversa com o seu corretor e complete.");
     $("#refazer").onclick=()=>go("inicio");
   }
   else if(S.tela==="resposta"){
@@ -401,7 +402,7 @@ function renderCorretor(){
   $("#app").innerHTML=`<section class="screen">
     <div class="eyebrow">Portal de Vendas · Financiamento</div>
     <h1>Enviar o guia do <em>financiamento</em></h1>
-    <p class="lede">Para o cliente que vai comprar financiado. Ele responde o guia, e só volta para você quando estiver com o crédito pré-aprovado. Se faltar algo, o próprio guia encaminha para a ${esc(PARCEIRO.empresa)}.</p>
+    <p class="lede">Guia de consulta para o cliente que vai comprar financiado. Ele responde 3 perguntas e vê em que momento está. No final, o guia convida a pedir uma simulação sem custo mandando as informações para você.</p>
     <form class="card" id="fc" novalidate>
       <div class="field"><span class="legend">Tipo de mensagem</span><div class="seg"><label><input type="radio" name="tipo" value="ini" ${S.c.tipo!=="cont"?"checked":""}><span>Início de conversa</span></label><label><input type="radio" name="tipo" value="cont" ${S.c.tipo==="cont"?"checked":""}><span>Continuação</span></label></div><span class="note" id="tipoHint"></span></div>
       <div class="two">${fldC("cli","Nome do cliente")}<div id="wEu">${fldC("eu","Seu nome")}</div></div>
